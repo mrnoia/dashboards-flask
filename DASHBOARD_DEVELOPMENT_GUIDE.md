@@ -1,0 +1,871 @@
+# 📊 Dashboard Development Guide
+## Complete Data Handling & Drilldown Implementation
+
+This guide provides step-by-step instructions for creating new interactive dashboards with multi-level drilldown functionality.
+
+---
+
+## 🎯 Learning Objectives
+After this guide, you'll be able to:
+- Design hierarchical data structures for drilldown
+- Implement interactive chart drilldown with ApexCharts
+- Handle state management across multiple levels
+- Create responsive dashboard layouts
+- Add summary cards and detailed tables
+
+---
+
+## 📋 Prerequisites
+- Basic HTML, CSS, and JavaScript knowledge
+- Understanding of ApexCharts library
+- Familiarity with Bootstrap 5 grid system
+- JSON data structure knowledge
+
+---
+
+## 🏗️ Core Architecture Overview
+
+### **Dashboard Components**
+1. **Data Layer** - Hierarchical JSON structure
+2. **State Management** - Current level and selection tracking
+3. **Chart Layer** - ApexCharts configuration and updates
+4. **UI Layer** - Summary cards, charts, and tables
+5. **Navigation** - Breadcrumb and back button logic
+
+### **File Structure**
+```
+templates/
+├── your-dashboard.html          # Main dashboard file
+├── base.html                 # Base template (shared)
+└── tutorials/                # Tutorial examples
+
+static/css/
+└── style.css                 # Global styles
+```
+
+---
+
+## 📊 Step 1: Design Your Data Structure
+
+### **Hierarchical Data Pattern**
+```javascript
+const dashboardData = {
+    // Level 1: Main categories
+    categories: [
+        {
+            name: 'Category Name',
+            metric1: value,
+            metric2: value,
+            metric3: value,
+            
+            // Level 2: Subcategories
+            subcategories: [
+                {
+                    name: 'Subcategory Name',
+                    metric1: value,
+                    metric2: value,
+                    metric3: value,
+                    
+                    // Level 3: Detailed items (optional)
+                    items: [
+                        {
+                            name: 'Item Name',
+                            metric1: value,
+                            metric2: value,
+                            metric3: value
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+```
+
+### **Data Design Principles**
+1. **Consistent Metrics**: Same metric names across all levels
+2. **Hierarchical Nesting**: Each level contains the next level
+3. **Complete Data**: Each level has all necessary metrics
+4. **Unique Identifiers**: Use descriptive names for navigation
+
+### **Example: Sales Data Structure**
+```javascript
+const salesData = {
+    categories: [
+        {
+            name: 'Electronics',
+            revenue: 450000,
+            units: 1200,
+            avgPrice: 375,
+            growthRate: 15.2,
+            
+            subcategories: [
+                {
+                    name: 'Computers',
+                    revenue: 250000,
+                    units: 400,
+                    avgPrice: 625,
+                    growthRate: 18.5,
+                    
+                    items: [
+                        {
+                            name: 'Laptops',
+                            revenue: 150000,
+                            units: 200,
+                            avgPrice: 750,
+                            growthRate: 22.1
+                        },
+                        {
+                            name: 'Desktops',
+                            revenue: 100000,
+                            units: 200,
+                            avgPrice: 500,
+                            growthRate: 14.9
+                        }
+                    ]
+                },
+                {
+                    name: 'Phones',
+                    revenue: 200000,
+                    units: 800,
+                    avgPrice: 250,
+                    growthRate: 12.8,
+                    
+                    items: [
+                        {
+                            name: 'Smartphones',
+                            revenue: 180000,
+                            units: 600,
+                            avgPrice: 300,
+                            growthRate: 15.3
+                        },
+                        {
+                            name: 'Accessories',
+                            revenue: 20000,
+                            units: 200,
+                            avgPrice: 100,
+                            growthRate: 8.2
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+```
+
+---
+
+## 🎨 Step 2: Create HTML Structure
+
+### **Basic Dashboard Template**
+```html
+{% extends "base.html" %}
+
+{% block title %}Your Dashboard Title{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Your custom styles here */
+    .metric-card { transition: all 0.3s ease; }
+    .metric-card:hover { transform: translateY(-2px); }
+    .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+    .back-btn:hover { background-color: #5a6268; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb Navigation -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" id="breadcrumb">
+                    <li class="breadcrumb-item active">Overview</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card">
+                <h6 class="text-muted">Total Metric 1</h6>
+                <h2 id="total-metric1">0</h2>
+                <small class="text-success" id="metric1-change">+0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card">
+                <h6 class="text-muted">Total Metric 2</h6>
+                <h2 id="total-metric2">0</h2>
+                <small class="text-success" id="metric2-change">+0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card">
+                <h6 class="text-muted">Total Metric 3</h6>
+                <h2 id="total-metric3">0</h2>
+                <small class="text-success" id="metric3-change">+0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card">
+                <h6 class="text-muted">Top Performer</h6>
+                <h2 id="top-performer">-</h2>
+                <small class="text-muted" id="performer-metric">0</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chart Area -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0" id="chart-title">Main Chart Title</h5>
+                    <button class="back-btn" id="back-btn" style="display: none;" onclick="goBack()">
+                        ← Back
+                    </button>
+                </div>
+                <div id="main-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Charts (Optional) -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Distribution Chart</h5>
+                <div id="distribution-chart"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Performance Chart</h5>
+                <div id="performance-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Data Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="card-title mb-4" id="table-title">Detailed Data</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Metric 1</th>
+                                <th>Metric 2</th>
+                                <th>Metric 3</th>
+                                <th>Growth</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Your JavaScript code will go here
+</script>
+{% endblock %}
+```
+
+---
+
+## ⚙️ Step 3: Implement State Management
+
+### **Global State Variables**
+```javascript
+// Current navigation state
+let currentLevel = 'category';        // Current drilldown level
+let currentCategory = null;           // Selected category
+let currentSubcategory = null;        // Selected subcategory
+
+// Chart instances
+let mainChart = null;
+let distributionChart = null;
+let performanceChart = null;
+
+// Data structure
+const dashboardData = {
+    // Your hierarchical data here
+};
+```
+
+### **State Management Functions**
+```javascript
+// Update breadcrumb navigation
+function updateBreadcrumb(level, category = null, subcategory = null) {
+    const breadcrumb = document.getElementById('breadcrumb');
+    let items = ['<li class="breadcrumb-item"><a href="#" onclick="renderCategoryChart()">Overview</a></li>'];
+    
+    if (level === 'subcategory' || level === 'item') {
+        items.push(`<li class="breadcrumb-item"><a href="#" onclick="renderSubcategoryChart('${category}')">${category}</a></li>`);
+    }
+    
+    if (level === 'item') {
+        items.push(`<li class="breadcrumb-item active">${subcategory}</li>`);
+    } else if (level === 'subcategory') {
+        items.push(`<li class="breadcrumb-item active">${category}</li>`);
+    }
+    
+    breadcrumb.innerHTML = items.join('');
+}
+
+// Update back button visibility
+function updateBackButton(level) {
+    const backBtn = document.getElementById('back-btn');
+    backBtn.style.display = level === 'category' ? 'none' : 'inline-block';
+}
+```
+
+---
+
+## 📈 Step 4: Chart Configuration & Drilldown
+
+### **Main Chart Setup**
+```javascript
+function initializeCharts() {
+    // Main chart options with drilldown capability
+    const chartOptions = {
+        series: [],
+        chart: {
+            type: 'bar',                    // or 'line', 'pie', etc.
+            height: 400,
+            events: {
+                // THIS IS THE KEY - Drilldown event handler
+                dataPointSelection: function(event, chartContext, config) {
+                    handleChartClick(config);
+                }
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 8,
+                dataLabels: {
+                    position: 'top',
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function(val) {
+                return formatMetric(val);        // Your formatting function
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ["#304758"]
+            }
+        },
+        xaxis: {
+            categories: [],
+            position: 'bottom',
+            axisBorder: { show: false },
+            axisTicks: { show: false }
+        },
+        yaxis: {
+            labels: {
+                show: true,
+                formatter: function(val) {
+                    return formatMetric(val);
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function(val) {
+                    return formatMetric(val);
+                }
+            }
+        }
+    };
+
+    mainChart = new ApexCharts(document.querySelector("#main-chart"), chartOptions);
+    mainChart.render();
+
+    // Initialize other charts
+    initializeSecondaryCharts();
+}
+```
+
+### **Core Drilldown Handler**
+```javascript
+function handleChartClick(config) {
+    const dataPointIndex = config.dataPointIndex;
+    
+    // Route to appropriate level based on current state
+    if (currentLevel === 'category') {
+        const categoryName = dashboardData.categories[dataPointIndex].name;
+        renderSubcategoryChart(categoryName);
+    } else if (currentLevel === 'subcategory') {
+        const subcategoryName = dashboardData.categories
+            .find(c => c.name === currentCategory)
+            .subcategories[dataPointIndex].name;
+        renderItemChart(currentCategory, subcategoryName);
+    } else if (currentLevel === 'item') {
+        // Handle item-level interactions if needed
+        handleItemClick(dataPointIndex);
+    }
+}
+```
+
+---
+
+## 🔄 Step 5: Level-Specific Render Functions
+
+### **Category Level Renderer**
+```javascript
+function renderCategoryChart() {
+    currentLevel = 'category';
+    currentCategory = null;
+    currentSubcategory = null;
+    
+    // Extract data for current level
+    const categories = dashboardData.categories.map(item => item.name);
+    const values = dashboardData.categories.map(item => item.metric1);
+    
+    // Update main chart
+    mainChart.updateOptions({
+        xaxis: { categories: categories },
+        title: { text: 'Metrics by Category' }
+    });
+    mainChart.updateSeries([{ name: 'Metric 1', data: values }]);
+    
+    // Update other components
+    updateSummaryCards();
+    updateDistributionChart(categories, values);
+    updatePerformanceChart();
+    updateDetailTable('category');
+    
+    // Update navigation
+    document.getElementById('chart-title').textContent = 'Metrics by Category';
+    document.getElementById('table-title').textContent = 'Category Overview';
+    updateBreadcrumb('category');
+    updateBackButton('category');
+}
+```
+
+### **Subcategory Level Renderer**
+```javascript
+function renderSubcategoryChart(categoryName) {
+    currentLevel = 'subcategory';
+    currentCategory = categoryName;
+    currentSubcategory = null;
+    
+    // Find category data
+    const category = dashboardData.categories.find(c => c.name === categoryName);
+    
+    // Extract subcategory data
+    const subcategories = category.subcategories.map(item => item.name);
+    const values = category.subcategories.map(item => item.metric1);
+    
+    // Update main chart
+    mainChart.updateOptions({
+        xaxis: { categories: subcategories },
+        title: { text: `Metrics by Subcategory in ${categoryName}` }
+    });
+    mainChart.updateSeries([{ name: 'Metric 1', data: values }]);
+    
+    // Update other components
+    updateDistributionChart(subcategories, values);
+    updatePerformanceChart(category.subcategories);
+    updateDetailTable('subcategory', category);
+    
+    // Update navigation
+    document.getElementById('chart-title').textContent = `Metrics by Subcategory in ${categoryName}`;
+    document.getElementById('table-title').textContent = `Subcategories in ${categoryName}`;
+    updateBreadcrumb('subcategory', categoryName);
+    updateBackButton('subcategory');
+}
+```
+
+### **Item Level Renderer**
+```javascript
+function renderItemChart(categoryName, subcategoryName) {
+    currentLevel = 'item';
+    currentCategory = categoryName;
+    currentSubcategory = subcategoryName;
+    
+    // Find subcategory data
+    const category = dashboardData.categories.find(c => c.name === categoryName);
+    const subcategory = category.subcategories.find(s => s.name === subcategoryName);
+    
+    // Extract item data
+    const items = subcategory.items.map(item => item.name);
+    const values = subcategory.items.map(item => item.metric1);
+    
+    // Update main chart
+    mainChart.updateOptions({
+        xaxis: { categories: items },
+        title: { text: `Metrics by Item in ${subcategoryName}` }
+    });
+    mainChart.updateSeries([{ name: 'Metric 1', data: values }]);
+    
+    // Update other components
+    updateDistributionChart(items, values);
+    updatePerformanceChart(subcategory.items);
+    updateDetailTable('item', category, subcategory);
+    
+    // Update navigation
+    document.getElementById('chart-title').textContent = `Metrics by Item in ${subcategoryName}`;
+    document.getElementById('table-title').textContent = `Items in ${subcategoryName}`;
+    updateBreadcrumb('item', categoryName, subcategoryName);
+    updateBackButton('item');
+}
+```
+
+---
+
+## 📊 Step 6: Data Aggregation Functions
+
+### **Summary Cards Calculation**
+```javascript
+function updateSummaryCards(data = null) {
+    let totalMetric1 = 0;
+    let totalMetric2 = 0;
+    let totalMetric3 = 0;
+    let avgPerformance = 0;
+    let topPerformer = '';
+    
+    let dataSource = data;
+    
+    if (!data) {
+        // Use top-level data
+        dataSource = dashboardData.categories;
+    }
+    
+    // Aggregate metrics
+    dataSource.forEach(item => {
+        totalMetric1 += item.metric1;
+        totalMetric2 += item.metric2;
+        totalMetric3 += item.metric3;
+        avgPerformance += item.performance || 0;
+        
+        // Find top performer
+        if (item.metric1 > (dataSource.find(i => i.name === topPerformer)?.metric1 || 0)) {
+            topPerformer = item.name;
+        }
+    });
+    
+    // Calculate averages
+    avgPerformance = Math.round(avgPerformance / dataSource.length);
+    
+    // Update UI
+    document.getElementById('total-metric1').textContent = formatMetric(totalMetric1);
+    document.getElementById('total-metric2').textContent = formatMetric(totalMetric2);
+    document.getElementById('total-metric3').textContent = formatMetric(totalMetric3);
+    document.getElementById('avg-performance').textContent = avgPerformance + '%';
+    document.getElementById('top-performer').textContent = topPerformer;
+}
+```
+
+### **Table Data Generation**
+```javascript
+function updateDetailTable(level, category = null, subcategory = null) {
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = '';
+    
+    let data = [];
+    
+    // Get data based on current level
+    if (level === 'category') {
+        data = dashboardData.categories.map(item => ({
+            name: item.name,
+            metric1: item.metric1,
+            metric2: item.metric2,
+            metric3: item.metric3,
+            growthRate: item.growthRate || 0,
+            performance: item.performance || 0
+        }));
+    } else if (level === 'subcategory') {
+        data = category.subcategories.map(item => ({
+            name: item.name,
+            metric1: item.metric1,
+            metric2: item.metric2,
+            metric3: item.metric3,
+            growthRate: item.growthRate || 0,
+            performance: item.performance || 0
+        }));
+    } else if (level === 'item') {
+        data = subcategory.items.map(item => ({
+            name: item.name,
+            metric1: item.metric1,
+            metric2: item.metric2,
+            metric3: item.metric3,
+            growthRate: item.growthRate || 0,
+            performance: item.performance || 0
+        }));
+    }
+    
+    // Populate table
+    data.forEach(item => {
+        const row = tbody.insertRow();
+        const growthColor = item.growthRate >= 15 ? 'success' : item.growthRate >= 10 ? 'warning' : 'danger';
+        const performanceColor = item.performance >= 85 ? 'success' : item.performance >= 70 ? 'warning' : 'danger';
+        
+        row.innerHTML = `
+            <td><strong>${item.name}</strong></td>
+            <td>${formatMetric(item.metric1)}</td>
+            <td>${formatMetric(item.metric2)}</td>
+            <td>${formatMetric(item.metric3)}</td>
+            <td><span class="text-${growthColor}">${item.growthRate.toFixed(1)}%</span></td>
+            <td><span class="badge bg-${performanceColor}">${item.performance}%</span></td>
+        `;
+    });
+}
+```
+
+---
+
+## 🔙 Step 7: Navigation Logic
+
+### **Back Button Handler**
+```javascript
+function goBack() {
+    if (currentLevel === 'subcategory') {
+        renderCategoryChart();
+    } else if (currentLevel === 'item') {
+        renderSubcategoryChart(currentCategory);
+    }
+}
+```
+
+### **Secondary Chart Updates**
+```javascript
+function updateDistributionChart(labels, values) {
+    if (!distributionChart) return;
+    
+    distributionChart.updateOptions({ labels: labels });
+    distributionChart.updateSeries(values);
+}
+
+function updatePerformanceChart(data = null) {
+    if (!performanceChart) return;
+    
+    let items = [];
+    let values = [];
+    
+    if (!data) {
+        // Use top-level data
+        items = dashboardData.categories.map(item => item.name);
+        values = dashboardData.categories.map(item => item.performance || 0);
+    } else {
+        // Use provided data
+        items = data.map(item => item.name);
+        values = data.map(item => item.performance || 0);
+    }
+    
+    performanceChart.updateOptions({ xaxis: { categories: items } });
+    performanceChart.updateSeries([{ name: 'Performance %', data: values }]);
+}
+```
+
+---
+
+## 🎨 Step 8: Utility Functions
+
+### **Formatting Helpers**
+```javascript
+function formatMetric(value) {
+    if (value >= 1000000) {
+        return '$' + (value / 1000000).toFixed(1) + 'M';
+    } else if (value >= 1000) {
+        return '$' + (value / 1000).toFixed(1) + 'K';
+    } else {
+        return '$' + value.toFixed(0);
+    }
+}
+
+function formatPercent(value) {
+    return (value * 100).toFixed(1) + '%';
+}
+```
+
+---
+
+## 🚀 Step 9: Initialization
+
+### **Document Ready Handler**
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    updateSummaryCards();
+    renderCategoryChart();    // Start with top-level view
+    updateDetailTable('category');
+});
+```
+
+---
+
+## ✅ Step 10: Testing & Validation
+
+### **Test Checklist**
+- [ ] Data structure is properly hierarchical
+- [ ] All levels render correctly
+- [ ] Drilldown works on click
+- [ ] Back button functions properly
+- [ ] Breadcrumb updates correctly
+- [ ] Summary cards calculate accurately
+- [ ] Table data matches chart data
+- [ ] Responsive design works on mobile
+- [ ] No JavaScript errors in console
+
+### **Common Issues & Solutions**
+
+#### **Issue: Chart not updating**
+```javascript
+// Ensure chart instance exists
+if (!mainChart) {
+    console.error('Main chart not initialized');
+    return;
+}
+
+// Use updateSeries for data changes
+mainChart.updateSeries([{ name: 'Metric', data: newData }]);
+
+// Use updateOptions for configuration changes
+mainChart.updateOptions({ xaxis: { categories: newCategories } });
+```
+
+#### **Issue: State management problems**
+```javascript
+// Always update state variables at the start of render functions
+currentLevel = 'subcategory';
+currentCategory = categoryName;
+currentSubcategory = null;  // Reset when changing levels
+```
+
+#### **Issue: Data not found**
+```javascript
+// Add error handling for data lookup
+const category = dashboardData.categories.find(c => c.name === categoryName);
+if (!category) {
+    console.error(`Category "${categoryName}" not found`);
+    return;
+}
+```
+
+---
+
+## 🎯 Advanced Features
+
+### **Multi-Chart Synchronization**
+```javascript
+function syncAllCharts(level, data) {
+    updateMainChart(level, data);
+    updateDistributionChart(level, data);
+    updatePerformanceChart(level, data);
+    updateSummaryCards(data);
+    updateDetailTable(level, data);
+}
+```
+
+### **Animation & Transitions**
+```javascript
+function animateTransition(callback) {
+    const chartContainer = document.querySelector('#main-chart');
+    chartContainer.style.opacity = '0.5';
+    
+    setTimeout(() => {
+        callback();
+        chartContainer.style.opacity = '1';
+    }, 300);
+}
+```
+
+### **Data Export**
+```javascript
+function exportCurrentData() {
+    let data = getCurrentLevelData();
+    const csv = convertToCSV(data);
+    downloadCSV(csv, `dashboard-${currentLevel}.csv`);
+}
+```
+
+---
+
+## 📚 Complete Example Template
+
+Copy this template and modify for your specific use case:
+
+```html
+{% extends "base.html" %}
+{% block title %}Your Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+.metric-card { transition: all 0.3s ease; }
+.metric-card:hover { transform: translateY(-2px); }
+.back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+.back-btn:hover { background-color: #5a6268; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Your HTML structure from Step 2 -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// State variables
+let currentLevel = 'category';
+let currentCategory = null;
+let currentSubcategory = null;
+let mainChart = null;
+
+// Your data structure from Step 1
+const dashboardData = {
+    // Your hierarchical data here
+};
+
+// All functions from Steps 3-9
+// initializeCharts(), handleChartClick(), renderCategoryChart(), etc.
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    renderCategoryChart();
+});
+</script>
+{% endblock %}
+```
+
+---
+
+## 🎉 Conclusion
+
+You now have a complete understanding of how to:
+1. **Structure hierarchical data** for multi-level drilldown
+2. **Implement interactive charts** with ApexCharts
+3. **Manage state** across navigation levels
+4. **Create responsive layouts** with Bootstrap
+5. **Handle data aggregation** and calculations
+6. **Build navigation** with breadcrumbs and back buttons
+
+Follow this pattern to create any dashboard with drilldown functionality. The key is maintaining consistent data structures and proper state management across all levels.
+
+---
+
+## 📞 Support & Resources
+
+- **ApexCharts Documentation**: https://apexcharts.com/docs/
+- **Bootstrap Documentation**: https://getbootstrap.com/docs/
+- **Flask Documentation**: https://flask.palletsprojects.com/
+
+For questions or issues, refer to the existing dashboards in the `templates/` folder as working examples.

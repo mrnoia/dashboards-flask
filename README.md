@@ -94,27 +94,55 @@ Get up and running in **3 simple steps**:
 
 ### 💰 Sales Analytics Dashboard
 **Sales Analytics** (`/sales-drilldown`) - Multi-level sales performance analysis
-- **Features**: Category → Subcategory drilldown, breadcrumb navigation
+- **Features**: Category → Subcategory drilldown, breadcrumb navigation, real-time calculations
 - **Key Metrics**: Total Revenue, Units Sold, Average Order Value, Top Category
 - **Charts**: Interactive column charts with drilldown capability
-- **Interactivity**: Click categories to drill down, back navigation
+- **Interactivity**: Click categories to drill down, back navigation, hover tooltips
 - **Use Case**: Analyze sales performance across product hierarchies
+
+#### How It Works:
+1. **Data Structure**: Uses hierarchical JSON data with categories containing subcategories
+2. **Chart Rendering**: ApexCharts column chart displays revenue by category
+3. **Drilldown Logic**: Click events trigger chart re-rendering with subcategory data
+4. **Summary Calculations**: JavaScript functions aggregate data across all categories
+5. **State Management**: Tracks current view level (category/subcategory) and selected category
+6. **Navigation**: Breadcrumb updates dynamically based on drilldown state
+7. **Data Updates**: Summary cards recalculate when switching between levels
 
 ### 🌍 Geographic Analytics Dashboard
 **Geographic Analytics** (`/geographic-drilldown`) - Regional performance analysis
-- **Features**: Region → Country drilldown, geographic performance comparison
+- **Features**: Region → Country → State/Province drilldown, geographic performance comparison
 - **Key Metrics**: Total Revenue, Active Regions, Top Region, Average Performance
 - **Charts**: Regional revenue distribution with country-level details
-- **Interactivity**: Click regions to explore country-specific data
+- **Interactivity**: Click regions to explore country-specific data, performance indicators
 - **Use Case**: Understand geographic market performance and opportunities
+
+#### How It Works:
+1. **Hierarchical Data**: Multi-level geographic structure (regions → countries → states/provinces)
+2. **Performance Scoring**: Each location has performance metrics (revenue, orders, customers, growth rate)
+3. **Dynamic Chart Updates**: Click handlers re-render charts with deeper geographic levels
+4. **Performance Lists**: JavaScript categorizes locations into top performers, high growth, and needs attention
+5. **State Tracking**: Maintains current geographic level and selected location for navigation
+6. **Aggregation Logic**: Calculates regional totals from country and state/province data
+7. **Visual Indicators**: Color-coded performance metrics and growth trends
 
 ### ⏰ Time Analytics Dashboard
 **Time Analytics** (`/time-drilldown`) - Temporal analysis and trend identification
-- **Features**: Yearly → Monthly → Daily → Hourly drilldown
+- **Features**: Yearly → Monthly → Daily → Hourly drilldown, time period selector
 - **Key Metrics**: Peak/off-peak indicators, trend analysis, time-based comparisons
 - **Charts**: Time series charts with multiple granularity levels
-- **Interactivity**: Time period selector, breadcrumb navigation
+- **Interactivity**: Time period selector, breadcrumb navigation, trend analysis
 - **Use Case**: Identify temporal patterns, seasonal trends, and peak periods
+
+#### How It Works:
+1. **Hierarchical Time Data**: Multi-level structure (yearly → monthly → daily → hourly)
+2. **Dynamic Data Generation**: JavaScript functions generate realistic time-based data with patterns
+3. **Weekend/Weekend Patterns**: Automatic multiplier for weekend vs weekday activity
+4. **Chart Type Switching**: Different chart types for different time granularities
+5. **Trend Calculation**: Compares current period against previous periods
+6. **Multiple Chart Views**: Main time series, day-of-week analysis, hourly distribution
+7. **State Management**: Tracks current view level and selected time periods
+8. **Table Updates**: Detailed data table updates based on selected time granularity
 
 ### 👥 User Behavior Dashboard
 **User Behavior** (`/user-behavior-drilldown`) - Customer journey and conversion analysis
@@ -124,6 +152,16 @@ Get up and running in **3 simple steps**:
 - **Interactivity**: Click funnel steps for detailed analysis, segment exploration
 - **Use Case**: Optimize conversion rates and understand user engagement patterns
 
+#### How It Works:
+1. **Funnel Data Structure**: Hierarchical conversion data with overall and segment-specific funnels
+2. **Conversion Calculations**: Automatic calculation of conversion rates between funnel steps
+3. **Segment Analysis**: Different user segments (New, Returning, VIP) with unique behavior patterns
+4. **Heatmap Generation**: Dynamic table showing user journey paths between pages/steps
+5. **Drop-off Analysis**: Identifies and categorizes reasons for user abandonment
+6. **Time Tracking**: Average time spent at each funnel step
+7. **Interactive Drilldown**: Click funnel steps to see segment-specific details
+8. **Performance Comparison**: Compares segments against overall benchmarks
+
 ### 🎯 Customer Analytics Dashboard
 **Customer Analytics** (`/customer-analytics`) - Customer segmentation and retention analysis
 - **Features**: Customer segment drilldown, loyalty analysis, churn prediction
@@ -131,6 +169,16 @@ Get up and running in **3 simple steps**:
 - **Charts**: Segment distribution, retention curves, loyalty indicators
 - **Interactivity**: Click segments for detailed demographics, trend analysis
 - **Use Case**: Customer relationship management and retention strategies
+
+#### How It Works:
+1. **Segment Data Structure**: Hierarchical customer data with detailed segment information
+2. **Demographic Analysis**: Age, income, location data for each customer segment
+3. **Behavioral Tracking**: Purchase frequency, category preferences, device usage patterns
+4. **Loyalty Scoring**: Algorithmic calculation based on purchase history and engagement
+5. **Churn Risk Assessment**: Predictive scoring based on activity patterns and metrics
+6. **Lifetime Value Calculation**: Revenue projection based on historical data and retention rates
+7. **Retention Analysis**: Cohort-based retention tracking and trend analysis
+8. **Segment Comparison**: Side-by-side comparison of segment performance metrics
 
 ### 📢 Marketing Performance Dashboard
 **Marketing Performance** (`/marketing-performance`) - Campaign effectiveness and ROI analysis
@@ -140,6 +188,16 @@ Get up and running in **3 simple steps**:
 - **Interactivity**: Campaign drilldown, channel filtering, time period selection
 - **Use Case**: Marketing budget optimization and campaign performance tracking
 
+#### How It Works:
+1. **Campaign Data Structure**: Hierarchical data with campaigns, channels, and performance metrics
+2. **ROI Calculation**: Revenue attribution and cost analysis for each campaign
+3. **Channel Attribution**: Multi-touch attribution modeling across different marketing channels
+4. **Conversion Tracking**: End-to-end conversion funnel analysis for marketing campaigns
+5. **Engagement Metrics**: Click-through rates, bounce rates, time on page calculations
+6. **Performance Benchmarking**: Campaign comparison against historical averages
+7. **Budget Allocation**: Optimization suggestions based on ROI and performance data
+8. **Trend Analysis**: Time-based performance tracking and seasonal pattern identification
+
 ### 📦 Inventory Management Dashboard
 **Inventory Management** (`/inventory-management`) - Stock optimization and supply chain analytics
 - **Features**: Category-level inventory drilldown, stock status monitoring, turnover analysis
@@ -147,6 +205,16 @@ Get up and running in **3 simple steps**:
 - **Charts**: Inventory distribution, stock status indicators, turnover trends
 - **Interactivity**: Category drilldown, stock alerts, reordering insights
 - **Use Case**: Inventory optimization and supply chain management
+
+#### How It Works:
+1. **Inventory Hierarchy**: Category → Subcategory → SKU level inventory tracking
+2. **Stock Status Calculation**: Real-time stock level monitoring with threshold alerts
+3. **Turnover Analysis**: Inventory turnover rate calculation and trend identification
+4. **Value Assessment**: Total inventory value calculation and category-wise distribution
+5. **Reorder Point Logic**: Automatic calculation of reorder points based on demand patterns
+6. **Stock Aging Analysis**: Identification of slow-moving and obsolete inventory
+7. **Supply Chain Metrics**: Lead time tracking and supplier performance analysis
+8. **Optimization Recommendations**: Data-driven suggestions for inventory improvements
 
 ### 💹 Financial Overview Dashboard
 **Financial Overview** (`/financial-overview`) - Comprehensive financial health monitoring
@@ -156,6 +224,16 @@ Get up and running in **3 simple steps**:
 - **Interactivity**: Account category exploration, period comparisons
 - **Use Case**: Financial planning and performance monitoring
 
+#### How It Works:
+1. **Financial Data Structure**: Hierarchical account structure with categories and sub-accounts
+2. **Revenue Tracking**: Multi-stream revenue aggregation and growth calculation
+3. **Expense Categorization**: Fixed vs variable expense analysis and trend monitoring
+4. **Profit Calculation**: Real-time profit margin and EBITDA calculations
+5. **Growth Metrics**: Year-over-year and month-over-month growth rate calculations
+6. **Cash Flow Analysis**: Operating, investing, and financing cash flow tracking
+7. **Performance Ratios**: Key financial ratios and benchmark comparisons
+8. **Forecasting**: Trend-based financial projections and scenario analysis
+
 ### 📊 Product Analytics Dashboard
 **Product Analytics** (`/product-analytics`) - Product performance and insights
 - **Features**: Product performance comparison, category analysis, top performer identification
@@ -164,6 +242,16 @@ Get up and running in **3 simple steps**:
 - **Interactivity**: Product filtering, category selection, performance sorting
 - **Use Case**: Product portfolio optimization and performance tracking
 
+#### How It Works:
+1. **Product Data Structure**: Flat product catalog with performance metrics and categorization
+2. **Performance Scoring**: Multi-factor scoring algorithm considering sales, ratings, and profitability
+3. **Category Analysis**: Product grouping and category-wise performance aggregation
+4. **Trend Tracking**: Historical performance tracking and trend identification
+5. **Comparison Logic**: Side-by-side product comparison with normalized metrics
+6. **Ranking Algorithm**: Dynamic product ranking based on weighted performance criteria
+7. **Inventory Correlation**: Product performance vs inventory level analysis
+8. **Recommendation Engine**: Product suggestions based on performance patterns
+
 ### 🏪 Product Hierarchy Dashboard
 **Product Hierarchy** (`/product-hierarchy-drilldown`) - Multi-level product catalog analysis
 - **Features**: Category → Subcategory → SKU drilldown, product catalog navigation
@@ -171,6 +259,16 @@ Get up and running in **3 simple steps**:
 - **Charts**: Hierarchical product distribution, performance by level
 - **Interactivity**: Multi-level drilldown, breadcrumb navigation, SKU details
 - **Use Case**: Product catalog management and hierarchical analysis
+
+#### How It Works:
+1. **Hierarchical Structure**: Multi-level product taxonomy (Category → Subcategory → SKU)
+2. **Drilldown Navigation**: Click-based navigation through product hierarchy levels
+3. **Performance Aggregation**: Rollup calculations from SKU to category level
+4. **Inventory Tracking**: Stock levels at each hierarchy level with aggregation logic
+5. **Breadcrumb Management**: Dynamic breadcrumb trail showing current navigation path
+6. **State Management**: Tracking of current hierarchy level and selected product node
+7. **Detail Views**: Expanded product information at each hierarchy level
+8. **Search and Filter**: Product search functionality across hierarchy levels
 
 ### 📚 Tutorial Pages
 

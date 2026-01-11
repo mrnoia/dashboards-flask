@@ -1,0 +1,512 @@
+{% extends "base.html" %}
+
+{% block title %}Product Hierarchy Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>📦 Product Hierarchy Analytics</h1>
+        <p>Multi-level product dashboard with category and subcategory drilldown</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Total Products</h6>
+                <h2 id="total-products">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Active Categories</h6>
+                <h2 id="active-categories">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Total SKUs</h6>
+                <h2 id="total-skus">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Top Category</h6>
+                <h2 id="top-category">-</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chart Area -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0" id="chart-title">Products by Category</h5>
+                    <button class="back-btn" id="back-btn" style="display: none;" onclick="goBack()">
+                        ← Back
+                    </button>
+                </div>
+                <div id="main-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Charts -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Product Distribution</h5>
+                <div id="distribution-chart"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Category Performance</h5>
+                <div id="performance-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="card-title mb-4" id="table-title">Product Details</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Subcategory</th>
+                                <th>SKU Count</th>
+                                <th>Status</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-table">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Product hierarchy data structure
+const productData = {
+    categories: [
+        {
+            name: 'Electronics',
+            value: 1250,
+            subcategories: [
+                {
+                    name: 'Computers',
+                    value: 450,
+                    products: [
+                        { id: 'E001', name: 'Laptop Pro', skus: 15, status: 'Active', performance: 92 },
+                        { id: 'E002', name: 'Desktop Elite', skus: 8, status: 'Active', performance: 88 },
+                        { id: 'E003', name: 'Gaming PC', skus: 12, status: 'Active', performance: 95 }
+                    ]
+                },
+                {
+                    name: 'Mobile Devices',
+                    value: 380,
+                    products: [
+                        { id: 'E004', name: 'Smartphone X', skus: 25, status: 'Active', performance: 90 },
+                        { id: 'E005', name: 'Tablet Pro', skus: 18, status: 'Active', performance: 85 }
+                    ]
+                },
+                {
+                    name: 'Accessories',
+                    value: 420,
+                    products: [
+                        { id: 'E006', name: 'Wireless Mouse', skus: 30, status: 'Active', performance: 78 },
+                        { id: 'E007', name: 'USB-C Hub', skus: 22, status: 'Active', performance: 82 }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Clothing',
+            value: 890,
+            subcategories: [
+                {
+                    name: 'Men\'s Wear',
+                    value: 420,
+                    products: [
+                        { id: 'C001', name: 'Business Shirt', skus: 45, status: 'Active', performance: 75 },
+                        { id: 'C002', name: 'Casual Jeans', skus: 38, status: 'Active', performance: 80 }
+                    ]
+                },
+                {
+                    name: 'Women\'s Wear',
+                    value: 470,
+                    products: [
+                        { id: 'C003', name: 'Dress Collection', skus: 52, status: 'Active', performance: 88 },
+                        { id: 'C004', name: 'Handbag Series', skus: 28, status: 'Active', performance: 92 }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Home & Garden',
+            value: 680,
+            subcategories: [
+                {
+                    name: 'Furniture',
+                    value: 350,
+                    products: [
+                        { id: 'H001', name: 'Office Chair', skus: 12, status: 'Active', performance: 85 },
+                        { id: 'H002', name: 'Standing Desk', skus: 8, status: 'Active', performance: 90 }
+                    ]
+                },
+                {
+                    name: 'Garden Tools',
+                    value: 330,
+                    products: [
+                        { id: 'H003', name: 'Lawn Mower', skus: 15, status: 'Active', performance: 78 },
+                        { id: 'H004', name: 'Garden Set', skus: 20, status: 'Active', performance: 82 }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Sports & Outdoors',
+            value: 520,
+            subcategories: [
+                {
+                    name: 'Fitness Equipment',
+                    value: 280,
+                    products: [
+                        { id: 'S001', name: 'Yoga Mat', skus: 35, status: 'Active', performance: 88 },
+                        { id: 'S002', name: 'Dumbbell Set', skus: 18, status: 'Active', performance: 85 }
+                    ]
+                },
+                {
+                    name: 'Outdoor Gear',
+                    value: 240,
+                    products: [
+                        { id: 'S003', name: 'Camping Tent', skus: 22, status: 'Active', performance: 92 },
+                        { id: 'S004', name: 'Hiking Backpack', skus: 25, status: 'Active', performance: 87 }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+let currentLevel = 'category';
+let currentCategory = null;
+let currentSubcategory = null;
+let mainChart = null;
+let distributionChart = null;
+let performanceChart = null;
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    updateSummaryCards();
+    renderCategoryChart();
+    updateProductTable();
+});
+
+function initializeCharts() {
+    // Main chart options
+    const chartOptions = {
+        series: [],
+        chart: {
+            type: 'bar',
+            height: 400,
+            events: {
+                dataPointSelection: function(event, chartContext, config) {
+                    handleChartClick(config);
+                }
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 8,
+                dataLabels: {
+                    position: 'top',
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function(val) {
+                return val;
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ["#304758"]
+            }
+        },
+        xaxis: {
+            categories: [],
+            position: 'bottom',
+            axisBorder: {
+                show: false
+            },
+            axisTicks: {
+                show: false
+            }
+        },
+        yaxis: {
+            axisBorder: {
+                show: false
+            },
+            axisTicks: {
+                show: false,
+            },
+            labels: {
+                show: true,
+                formatter: function(val) {
+                    return val;
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function(val) {
+                    return val + " products"
+                }
+            }
+        }
+    };
+
+    mainChart = new ApexCharts(document.querySelector("#main-chart"), chartOptions);
+    mainChart.render();
+
+    // Distribution chart
+    distributionChart = new ApexCharts(document.querySelector("#distribution-chart"), {
+        series: [],
+        chart: { type: 'donut', height: 300 },
+        labels: [],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }]
+    });
+    distributionChart.render();
+
+    // Performance chart
+    performanceChart = new ApexCharts(document.querySelector("#performance-chart"), {
+        series: [],
+        chart: { type: 'radar', height: 300 },
+        xaxis: { categories: [] },
+        yaxis: { show: true, labels: { show: true } }
+    });
+    performanceChart.render();
+}
+
+function updateSummaryCards() {
+    let totalProducts = 0;
+    let totalSKUs = 0;
+    let activeCategories = productData.categories.length;
+    let topCategory = '';
+
+    productData.categories.forEach(category => {
+        totalProducts += category.value;
+        category.subcategories.forEach(subcategory => {
+            subcategory.products.forEach(product => {
+                totalSKUs += product.skus;
+            });
+        });
+        if (category.value > (productData.categories.find(c => c.name === topCategory)?.value || 0)) {
+            topCategory = category.name;
+        }
+    });
+
+    document.getElementById('total-products').textContent = totalProducts.toLocaleString();
+    document.getElementById('active-categories').textContent = activeCategories;
+    document.getElementById('total-skus').textContent = totalSKUs.toLocaleString();
+    document.getElementById('top-category').textContent = topCategory;
+}
+
+function renderCategoryChart() {
+    currentLevel = 'category';
+    const categories = productData.categories.map(cat => cat.name);
+    const values = productData.categories.map(cat => cat.value);
+
+    mainChart.updateOptions({
+        xaxis: { categories: categories },
+        title: { text: 'Products by Category' }
+    });
+    mainChart.updateSeries([{ name: 'Products', data: values }]);
+
+    updateDistributionChart(categories, values);
+    updatePerformanceChart();
+    
+    document.getElementById('chart-title').textContent = 'Products by Category';
+    document.getElementById('table-title').textContent = 'Category Overview';
+    document.getElementById('back-btn').style.display = 'none';
+}
+
+function renderSubcategoryChart(categoryName) {
+    currentLevel = 'subcategory';
+    currentCategory = categoryName;
+    const category = productData.categories.find(cat => cat.name === categoryName);
+    
+    const subcategories = category.subcategories.map(sub => sub.name);
+    const values = category.subcategories.map(sub => sub.value);
+
+    mainChart.updateOptions({
+        xaxis: { categories: subcategories },
+        title: { text: `Subcategories in ${categoryName}` }
+    });
+    mainChart.updateSeries([{ name: 'Products', data: values }]);
+
+    updateDistributionChart(subcategories, values);
+    updatePerformanceChart(category.subcategories);
+    
+    document.getElementById('chart-title').textContent = `Subcategories in ${categoryName}`;
+    document.getElementById('table-title').textContent = `Subcategories in ${categoryName}`;
+    document.getElementById('back-btn').style.display = 'inline-block';
+}
+
+function renderProductChart(categoryName, subcategoryName) {
+    currentLevel = 'product';
+    currentSubcategory = subcategoryName;
+    const category = productData.categories.find(cat => cat.name === categoryName);
+    const subcategory = category.subcategories.find(sub => sub.name === subcategoryName);
+    
+    const products = subcategory.products.map(prod => prod.name);
+    const values = subcategory.products.map(prod => prod.skus);
+
+    mainChart.updateOptions({
+        xaxis: { categories: products },
+        title: { text: `Products in ${subcategoryName}` }
+    });
+    mainChart.updateSeries([{ name: 'SKUs', data: values }]);
+
+    updateDistributionChart(products, values);
+    updatePerformanceChart(subcategory.products);
+    
+    document.getElementById('chart-title').textContent = `Products in ${subcategoryName}`;
+    document.getElementById('table-title').textContent = `Products in ${subcategoryName}`;
+    document.getElementById('back-btn').style.display = 'inline-block';
+}
+
+function handleChartClick(config) {
+    const dataPointIndex = config.dataPointIndex;
+    
+    if (currentLevel === 'category') {
+        const categoryName = productData.categories[dataPointIndex].name;
+        renderSubcategoryChart(categoryName);
+    } else if (currentLevel === 'subcategory') {
+        const subcategoryName = productData.categories
+            .find(cat => cat.name === currentCategory)
+            .subcategories[dataPointIndex].name;
+        renderProductChart(currentCategory, subcategoryName);
+    }
+}
+
+function goBack() {
+    if (currentLevel === 'subcategory') {
+        renderCategoryChart();
+    } else if (currentLevel === 'product') {
+        renderSubcategoryChart(currentCategory);
+    }
+}
+
+function updateDistributionChart(labels, values) {
+    distributionChart.updateOptions({ labels: labels });
+    distributionChart.updateSeries(values);
+}
+
+function updatePerformanceChart(data = null) {
+    if (!data) {
+        // Category level performance
+        const categories = productData.categories.map(cat => cat.name);
+        const values = productData.categories.map(cat => 
+            Math.round(cat.value / productData.categories.reduce((a, b) => a + b.value, 0) * 100)
+        );
+        
+        performanceChart.updateOptions({ xaxis: { categories: categories } });
+        performanceChart.updateSeries([{ name: 'Performance %', data: values }]);
+    } else {
+        // Subcategory/Product level performance
+        const items = data.map(item => item.name || item.product);
+        const values = data.map(item => item.performance || 85);
+        
+        performanceChart.updateOptions({ xaxis: { categories: items } });
+        performanceChart.updateSeries([{ name: 'Performance %', data: values }]);
+    }
+}
+
+function updateProductTable() {
+    const tbody = document.getElementById('product-table');
+    tbody.innerHTML = '';
+
+    let products = [];
+    
+    if (currentLevel === 'category') {
+        // Show category summary
+        productData.categories.forEach(category => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>-</td>
+                <td>${category.name}</td>
+                <td>${category.name}</td>
+                <td>All Subcategories</td>
+                <td>${category.value}</td>
+                <td><span class="badge bg-success">Active</span></td>
+                <td>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar" style="width: ${Math.round(category.value / 20)}%">${Math.round(category.value / 20)}%</div>
+                    </div>
+                </td>
+            `;
+        });
+    } else if (currentLevel === 'subcategory') {
+        // Show subcategory details
+        const category = productData.categories.find(cat => cat.name === currentCategory);
+        category.subcategories.forEach(subcategory => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>-</td>
+                <td>${subcategory.name}</td>
+                <td>${currentCategory}</td>
+                <td>${subcategory.name}</td>
+                <td>${subcategory.value}</td>
+                <td><span class="badge bg-success">Active</span></td>
+                <td>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar" style="width: ${Math.round(subcategory.value / 10)}%">${Math.round(subcategory.value / 10)}%</div>
+                    </div>
+                </td>
+            `;
+        });
+    } else if (currentLevel === 'product') {
+        // Show product details
+        const category = productData.categories.find(cat => cat.name === currentCategory);
+        const subcategory = category.subcategories.find(sub => sub.name === currentSubcategory);
+        subcategory.products.forEach(product => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${product.id}</td>
+                <td>${product.name}</td>
+                <td>${currentCategory}</td>
+                <td>${currentSubcategory}</td>
+                <td>${product.skus}</td>
+                <td><span class="badge bg-success">${product.status}</span></td>
+                <td>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar" style="width: ${product.performance}%">${product.performance}%</div>
+                    </div>
+                </td>
+            `;
+        });
+    }
+}
+</script>
+{% endblock %}

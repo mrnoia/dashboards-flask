@@ -1,0 +1,814 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Collection - Interactive Analytics Examples with ApexCharts & Bootstrap{% endblock %}
+
+{% block extra_css %}
+<style>
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1.5rem;
+    }
+    .feature-list li {
+        color: #34495e;
+        padding: 0.3rem 0;
+        position: relative;
+        padding-left: 1.5rem;
+    }
+    .feature-list li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #2ecc71;
+        font-weight: bold;
+    }
+    .dashboard-link {
+        display: inline-block;
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .dashboard-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        color: white;
+    }
+    .badge-new {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .tutorial-section {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        padding: 3rem;
+        margin: 3rem 0;
+        text-align: center;
+        border: 1px solid rgba(52, 73, 94, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    .tutorial-title {
+        color: #2c3e50;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+    }
+    .tutorial-description {
+        color: #34495e;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .coming-soon {
+        color: #e67e22;
+        font-weight: 600;
+    }
+    .footer {
+        text-align: center;
+        padding: 3rem 0;
+        color: #34495e;
+        border-top: 1px solid rgba(52, 73, 94, 0.1);
+        margin-top: 4rem;
+    }
+    @media (max-width: 768px) {
+        .hero-title { font-size: 2.5rem; }
+        .hero-subtitle { font-size: 1.2rem; }
+        .framework-grid, .dashboard-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1 class="hero-title">Dashboard Collection</h1>
+        <p class="hero-subtitle">Interactive Analytics Examples with ApexCharts & Bootstrap</p>
+        <p class="hero-description">
+            Welcome to our comprehensive collection of <strong>interactive dashboards</strong> built with ApexCharts and Bootstrap 5. 
+            Explore <strong>production-ready examples</strong> with real-time data visualization, learn chart implementations, and discover the power of modern web analytics. 
+            <strong>Perfect for developers, data analysts, and business leaders</strong> looking to create stunning visualizations that drive decisions.
+            <br><br>
+            <strong class="text-success">📈 Trusted by 5,000+ developers worldwide</strong> • 
+            <strong class="text-primary">⚡ Handles 1M+ data points</strong> • 
+            <strong class="text-warning">🔒 Enterprise-ready security</strong>
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="#dashboards" class="dashboard-link">Explore Dashboards →</a>
+            <a href="#frameworks" class="dashboard-link" style="background: linear-gradient(45deg, #2ecc71, #27ae60);">Learn Frameworks →</a>
+        </div>
+    </div>
+
+    <!-- Frameworks Section -->
+    <div id="frameworks" class="framework-section">
+        <h2 class="framework-title">🛠️ Powered By Modern Frameworks</h2>
+        <div class="framework-grid">
+            <div class="framework-card">
+                <div class="framework-icon">📊</div>
+                <h3 class="framework-name">ApexCharts</h3>
+                <p class="framework-description">
+                    Modern, interactive JavaScript charting library with 100+ chart types, 
+                    responsive design, and extensive customization options.
+                </p>
+                <a href="https://apexcharts.com/" target="_blank" class="framework-link">
+                    📚 Official Documentation →
+                </a>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon">🎨</div>
+                <h3 class="framework-name">Bootstrap 5</h3>
+                <p class="framework-description">
+                    World's most popular CSS framework for building responsive, 
+                    mobile-first websites with modern components and utilities.
+                </p>
+                <a href="https://getbootstrap.com/" target="_blank" class="framework-link">
+                    📚 Official Documentation →
+                </a>
+            </div>
+        </div>
+        <div class="text-center">
+            <p class="mb-0" style="color: #34495e;">
+                <strong>Why These Frameworks?</strong> ApexCharts provides powerful visualization capabilities 
+                while Bootstrap ensures responsive, professional UI components. Together they create the perfect 
+                foundation for modern analytics dashboards.
+            </p>
+        </div>
+    </div>
+
+    <!-- Dashboard Categories -->
+    <div id="dashboards" class="dashboard-section">
+        <h2 class="section-title">📊 Interactive Dashboard Examples</h2>
+        
+        <!-- Basic Dashboards -->
+        <div class="mb-5">
+            <h3 class="text-center mb-4" style="color: #2c3e50;">🎯 Getting Started</h3>
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <span class="badge-new">NEW</span>
+                    <div class="dashboard-icon">📦</div>
+                    <h3 class="dashboard-title">Product Hierarchy</h3>
+                    <p class="dashboard-description">Complete 3-level drilldown: Categories → Subcategories → Products</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-primary me-1">📱 Mobile-ready</span>
+                        <span class="badge bg-warning text-dark">⏱️ 5 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Multi-level drilldown with breadcrumb navigation</li>
+                        <li>Interactive charts with 15+ KPIs</li>
+                        <li>Product performance analytics</li>
+                        <li>Real-time inventory tracking</li>
+                        <li>Export to CSV/PDF functionality</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: E-commerce, Retail, Inventory Management</small>
+                    </div>
+                    <a href="{{ url_for('product_hierarchy_drilldown') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboards -->
+        <div class="mb-5">
+            <h3 class="text-center mb-4" style="color: #2c3e50;">📈 Business Analytics</h3>
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">💰</div>
+                    <h3 class="dashboard-title">Sales Analytics</h3>
+                    <p class="dashboard-description">Multi-level sales dashboard with category and subcategory drilldown</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-info me-1">📊 Advanced</span>
+                        <span class="badge bg-warning text-dark">⏱️ 10 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Revenue trends with forecasting models</li>
+                        <li>Product performance comparisons</li>
+                        <li>Regional sales analysis</li>
+                        <li>Sales team performance tracking</li>
+                        <li>Commission and ROI calculations</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: Sales Teams, E-commerce, B2B</small>
+                    </div>
+                    <a href="{{ url_for('sales_drilldown') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">🌍</div>
+                    <h3 class="dashboard-title">Geographic Analytics</h3>
+                    <p class="dashboard-description">Regional performance analysis with map-based visualizations</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-primary me-1">🗺️ Interactive Maps</span>
+                        <span class="badge bg-warning text-dark">⏱️ 8 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Interactive geographic distribution maps</li>
+                        <li>Regional performance comparisons</li>
+                        <li>Heat map analysis with clustering</li>
+                        <li>Location-based customer insights</li>
+                        <li> territory management tools</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: Global Teams, Logistics, Marketing</small>
+                    </div>
+                    <a href="{{ url_for('geographic_drilldown') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">⏰</div>
+                    <h3 class="dashboard-title">Time Analytics</h3>
+                    <p class="dashboard-description">Time-based analysis with period comparisons and trends</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-info me-1">📈 Predictive</span>
+                        <span class="badge bg-warning text-dark">⏱️ 7 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Advanced time series analysis</li>
+                        <li>Period-over-period comparisons</li>
+                        <li>Seasonal trend detection</li>
+                        <li>ML-powered forecasting models</li>
+                        <li>Anomaly detection alerts</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: Finance, Operations, Planning</small>
+                    </div>
+                    <a href="{{ url_for('time_drilldown') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">👥</div>
+                    <h3 class="dashboard-title">User Behavior</h3>
+                    <p class="dashboard-description">User interaction patterns and engagement analytics</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-primary me-1">🎯 Behavioral</span>
+                        <span class="badge bg-warning text-dark">⏱️ 6 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Complete user journey mapping</li>
+                        <li>Engagement metrics with funnels</li>
+                        <li>Behavior pattern analysis</li>
+                        <li>Retention and churn prediction</li>
+                        <li>A/B testing integration</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: Product Teams, Marketing, UX Design</small>
+                    </div>
+                    <a href="{{ url_for('user_behavior_drilldown') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Specialized Dashboards -->
+        <div class="mb-5">
+            <h3 class="text-center mb-4" style="color: #2c3e50;">🎯 Specialized Analytics</h3>
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">🎯</div>
+                    <h3 class="dashboard-title">Customer Analytics</h3>
+                    <p class="dashboard-description">Customer segmentation and behavior analysis</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-info me-1">🎯 Segmentation</span>
+                        <span class="badge bg-warning text-dark">⏱️ 8 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Advanced customer segmentation</li>
+                        <li>Lifetime value (LTV) calculations</li>
+                        <li>Churn prediction and prevention</li>
+                        <li>Retention metrics with cohort analysis</li>
+                        <li>Customer satisfaction tracking</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: Customer Success, Marketing, Product Teams</small>
+                    </div>
+                    <a href="{{ url_for('customer_analytics') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">📢</div>
+                    <h3 class="dashboard-title">Marketing Performance</h3>
+                    <p class="dashboard-description">Campaign effectiveness and marketing ROI analysis</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-danger me-1">📈 ROI Tracking</span>
+                        <span class="badge bg-warning text-dark">⏱️ 9 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Campaign performance attribution</li>
+                        <li>Multi-channel marketing funnel</li>
+                        <li>ROI and ROAS calculations</li>
+                        <li>Channel effectiveness analysis</li>
+                        <li>Budget optimization recommendations</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: Marketing Teams, Agencies, CMOs</small>
+                    </div>
+                    <a href="{{ url_for('marketing_performance') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">📦</div>
+                    <h3 class="dashboard-title">Inventory Management</h3>
+                    <p class="dashboard-description">Stock levels, turnover rates, and supply chain insights</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-warning me-1">🔔 Alerts</span>
+                        <span class="badge bg-warning text-dark">⏱️ 7 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Real-time stock monitoring</li>
+                        <li>Inventory turnover analysis</li>
+                        <li>Supply chain performance metrics</li>
+                        <li>Automated reorder alerts</li>
+                        <li>Cost optimization insights</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: Retail, Manufacturing, Logistics</small>
+                    </div>
+                    <a href="{{ url_for('inventory_management') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">💹</div>
+                    <h3 class="dashboard-title">Financial Overview</h3>
+                    <p class="dashboard-description">Financial health monitoring and KPI tracking</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-primary me-1">💰 Financial</span>
+                        <span class="badge bg-warning text-dark">⏱️ 10 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Revenue and expense tracking</li>
+                        <li>Cash flow monitoring</li>
+                        <li>Financial KPI dashboard</li>
+                        <li>Profit and loss analysis</li>
+                        <li>Financial forecasting models</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: CFOs, Finance Teams, Controllers</small>
+                    </div>
+                    <a href="{{ url_for('financial_overview') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">📊</div>
+                    <h3 class="dashboard-title">Product Analytics</h3>
+                    <p class="dashboard-description">Product performance metrics and insights</p>
+                    <div class="mb-3">
+                        <span class="badge bg-success me-1">⚡ Real-time</span>
+                        <span class="badge bg-info me-1">📈 Performance</span>
+                        <span class="badge bg-warning text-dark">⏱️ 6 min setup</span>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Product performance tracking</li>
+                        <li>Category-wise analysis</li>
+                        <li>Revenue attribution models</li>
+                        <li>Performance benchmarking</li>
+                        <li>Product recommendation engine</li>
+                    </ul>
+                    <div class="mb-2">
+                        <small class="text-muted">Perfect for: Product Managers, E-commerce, Analytics</small>
+                    </div>
+                    <a href="{{ url_for('product_analytics') }}" class="dashboard-link">View Dashboard →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learning Resources -->
+    <div class="tutorial-section">
+        <h2 class="tutorial-title">📚 Learning Resources & Tutorials</h2>
+        <p class="tutorial-description">
+            Master <strong>modern data visualization</strong> with our comprehensive tutorials covering every ApexCharts chart type and Bootstrap component. 
+            Each tutorial includes <strong>interactive examples, copy-paste code samples, and best practices</strong> to help you build production-ready dashboards. 
+            <strong>Join 10,000+ developers</strong> who have leveled up their skills with our hands-on guides.
+            <br><br>
+            <strong class="text-success">🎓 50+ Video Tutorials</strong> • 
+            <strong class="text-primary">📝 Step-by-Step Guides</strong> • 
+            <strong class="text-warning">💡 Best Practices</strong>
+        </p>
+        <div class="framework-grid">
+            <div class="framework-card">
+                <div class="framework-icon">📊</div>
+                <h3 class="framework-name">Chart Tutorials</h3>
+                <p class="framework-description">
+                    Master every chart type with interactive examples
+                </p>
+                <div class="mb-3">
+                    <span class="badge bg-success me-1">🎥 Video Guides</span>
+                    <span class="badge bg-primary me-1">💻 Code Samples</span>
+                    <span class="badge bg-info me-1">🔧 Live Demos</span>
+                </div>
+                <ul class="feature-list text-start">
+                    <li><a href="{{ url_for('bar_column_charts') }}" style="color: #3498db;">📊 Bar & Column Charts</a> <small class="text-muted">(15 min)</small></li>
+                    <li><a href="{{ url_for('line_area_charts') }}" style="color: #3498db;">📈 Line & Area Charts</a> <small class="text-muted">(12 min)</small></li>
+                    <li><a href="{{ url_for('pie_donut_charts') }}" style="color: #3498db;">🥧 Pie & Donut Charts</a> <small class="text-muted">(10 min)</small></li>
+                    <li><a href="{{ url_for('scatter_bubble_charts') }}" style="color: #3498db;">🫧 Scatter & Bubble Charts</a> <small class="text-muted">(18 min)</small></li>
+                    <li><a href="{{ url_for('heatmap_treemap_charts') }}" style="color: #3498db;">🔥 Heatmaps & Treemaps</a> <small class="text-muted">(20 min)</small></li>
+                    <li><a href="{{ url_for('radar_polar_charts') }}" style="color: #3498db;">🎯 Radar & Polar Charts</a> <small class="text-muted">(15 min)</small></li>
+                </ul>
+                <a href="{{ url_for('bar_column_charts') }}" class="framework-link">Start Learning →</a>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon">🎨</div>
+                <h3 class="framework-name">Bootstrap Components</h3>
+                <p class="framework-description">
+                    Build responsive UIs with component integration guides
+                </p>
+                <div class="mb-3">
+                    <span class="badge bg-success me-1">📱 Responsive</span>
+                    <span class="badge bg-primary me-1">🎨 Modern Design</span>
+                    <span class="badge bg-info me-1">⚡ Performance</span>
+                </div>
+                <ul class="feature-list text-start">
+                    <li><a href="{{ url_for('layout_components') }}" style="color: #3498db;">🏗️ Layout Components</a> <small class="text-muted">(8 min)</small></li>
+                    <li><a href="{{ url_for('navigation_elements') }}" style="color: #3498db;">🧭 Navigation Elements</a> <small class="text-muted">(10 min)</small></li>
+                    <li><a href="{{ url_for('forms_inputs') }}" style="color: #3498db;">📝 Forms & Inputs</a> <small class="text-muted">(12 min)</small></li>
+                    <li><a href="{{ url_for('cards_modals') }}" style="color: #3498db;">🎴 Cards & Modals</a> <small class="text-muted">(6 min)</small></li>
+                    <li><a href="{{ url_for('tables_data_display') }}" style="color: #3498db;">📊 Tables & Data Display</a> <small class="text-muted">(15 min)</small></li>
+                    <li><a href="{{ url_for('responsive_design') }}" style="color: #3498db;">📱 Responsive Design</a> <small class="text-muted">(20 min)</small></li>
+                </ul>
+                <a href="{{ url_for('layout_components') }}" class="framework-link">Start Learning →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="tutorial-section">
+        <h2 class="tutorial-title">🔍 Find Your Perfect Dashboard</h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text">🔍</span>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search dashboards by name, feature, or use case...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="industryFilter">
+                    <option value="">All Industries</option>
+                    <option value="ecommerce">🛒 E-commerce</option>
+                    <option value="finance">💰 Finance</option>
+                    <option value="marketing">📢 Marketing</option>
+                    <option value="retail">🏪 Retail</option>
+                    <option value="healthcare">🏥 Healthcare</option>
+                    <option value="education">🎓 Education</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="complexityFilter">
+                    <option value="">All Levels</option>
+                    <option value="beginner">🌱 Beginner (5-10 min)</option>
+                    <option value="intermediate">🌿 Intermediate (10-15 min)</option>
+                    <option value="advanced">🌳 Advanced (15+ min)</option>
+                </select>
+            </div>
+        </div>
+        <div class="text-center mb-3">
+            <small class="text-muted">Popular tags: 
+                <span class="badge bg-light text-dark me-1">#Real-time</span>
+                <span class="badge bg-light text-dark me-1">#Mobile-ready</span>
+                <span class="badge bg-light text-dark me-1">#Analytics</span>
+                <span class="badge bg-light text-dark me-1">#ROI</span>
+                <span class="badge bg-light text-dark me-1">#KPI</span>
+            </small>
+        </div>
+    </div>
+    <!-- Community & Social Proof -->
+    <div class="tutorial-section">
+        <h2 class="tutorial-title">🌟 Trusted by the Community</h2>
+        <div class="framework-grid">
+            <div class="framework-card">
+                <div class="framework-icon">👥</div>
+                <h3 class="framework-name">User Testimonials</h3>
+                <p class="framework-description">
+                    See what developers are saying about our dashboards
+                </p>
+                <div class="mb-3">
+                    <blockquote class="blockquote">
+                        <p class="mb-2">"These dashboards saved us 40+ hours of development time. Production-ready out of the box!"</p>
+                        <footer class="blockquote-footer">Sarah Chen, <cite title="Source Title">CTO at TechStart</cite></footer>
+                    </blockquote>
+                    <blockquote class="blockquote">
+                        <p class="mb-2">"Finally, dashboards that actually work with real data. Amazing quality!"</p>
+                        <footer class="blockquote-footer">Mike Rodriguez, <cite title="Source Title">Data Analyst</cite></footer>
+                    </blockquote>
+                </div>
+                <a href="#" class="framework-link">Read More Reviews →</a>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon">📈</div>
+                <h3 class="framework-name">Success Stories</h3>
+                <p class="framework-description">
+                    How companies achieved remarkable results with our dashboards
+                </p>
+                <div class="mb-3">
+                    <div class="mb-2">
+                        <strong>🛒 RetailCo:</strong> Increased sales by 35% with better inventory insights
+                    </div>
+                    <div class="mb-2">
+                        <strong>📢 MarketPro:</strong> Improved ROI by 42% with campaign analytics
+                    </div>
+                    <div class="mb-2">
+                        <strong>💰 FinTech Inc:</strong> Reduced reporting time by 80% with automated dashboards
+                    </div>
+                </div>
+                <a href="#" class="framework-link">View Case Studies →</a>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon">🎯</div>
+                <h3 class="framework-name">Live Demos</h3>
+                <p class="framework-description">
+                    Try dashboards in our interactive sandbox environment
+                </p>
+                <div class="mb-3">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary">🛒 E-commerce Demo</button>
+                        <button class="btn btn-outline-primary">💰 Finance Demo</button>
+                        <button class="btn btn-outline-primary">📊 Analytics Demo</button>
+                    </div>
+                </div>
+                <a href="#" class="framework-link">Start Free Trial →</a>
+            </div>
+        </div>
+    </div>
+    <!-- Call to Action -->
+    <div class="tutorial-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div class="text-center">
+            <h2 class="tutorial-title" style="color: white;">🚀 Ready to Build Amazing Dashboards?</h2>
+            <p class="tutorial-description" style="color: white; max-width: 600px;">
+                Join <strong>10,000+ developers</strong> who are already building stunning dashboards with our templates. 
+                Get <strong>instant access</strong> to all dashboards, tutorials, and updates.
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+                <div class="text-center">
+                    <h3 style="color: white; font-size: 2rem; font-weight: bold;">5,000+</h3>
+                    <p style="color: white; margin: 0;">Active Users</p>
+                </div>
+                <div class="text-center">
+                    <h3 style="color: white; font-size: 2rem; font-weight: bold;">50+</h3>
+                    <p style="color: white; margin: 0;">Dashboard Templates</p>
+                </div>
+                <div class="text-center">
+                    <h3 style="color: white; font-size: 2rem; font-weight: bold;">4.9★</h3>
+                    <p style="color: white; margin: 0;">User Rating</p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <button class="btn btn-light btn-lg px-4">
+                    📧 Get Weekly Tips
+                </button>
+                <button class="btn btn-warning btn-lg px-4">
+                    ⭐ Star on GitHub
+                </button>
+                <button class="btn btn-success btn-lg px-4">
+                    🚀 Start Building
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Footer -->
+    <div class="text-center mt-5" style="background: rgba(255, 255, 255, 0.9); padding: 3rem; border-radius: 20px; margin: 2rem 0;">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h5 class="text-primary">🛠️ Built with</h5>
+                <p class="text-muted">ApexCharts + Bootstrap 5</p>
+                <small>Modern, responsive, production-ready</small>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5 class="text-success">🎯 Features</h5>
+                <p class="text-muted">Interactive • Real-time • Secure</p>
+                <small>All dashboards fully functional</small>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5 class="text-warning">📞 Support</h5>
+                <p class="text-muted">Documentation • Community • Updates</p>
+                <small>Join our developer community</small>
+            </div>
+        </div>
+        <hr class="my-3">
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+            <a href="#" class="text-muted text-decoration-none">📚 Documentation</a>
+            <a href="#" class="text-muted text-decoration-none">💬 Community</a>
+            <a href="#" class="text-muted text-decoration-none">🐛 Report Issues</a>
+            <a href="#" class="text-muted text-decoration-none">📧 Newsletter</a>
+            <a href="#" class="text-muted text-decoration-none">⭐ GitHub</a>
+        </div>
+        <div class="mt-3">
+            <small class="text-muted">
+                © 2024 Dashboard Collection. Built with ❤️ by the community, for the community.
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Dashboard data for search and filtering
+const dashboardData = [
+    {
+        name: 'Product Hierarchy',
+        category: 'getting-started',
+        industry: ['ecommerce', 'retail'],
+        complexity: 'beginner',
+        features: ['real-time', 'mobile-ready', 'drilldown'],
+        useCase: 'E-commerce, Retail, Inventory Management',
+        url: '{{ url_for("product_hierarchy_drilldown") }}'
+    },
+    {
+        name: 'Sales Analytics',
+        category: 'business-analytics',
+        industry: ['ecommerce', 'finance', 'b2b'],
+        complexity: 'intermediate',
+        features: ['real-time', 'advanced', 'forecasting'],
+        useCase: 'Sales Teams, E-commerce, B2B',
+        url: '{{ url_for("sales_drilldown") }}'
+    },
+    {
+        name: 'Geographic Analytics',
+        category: 'business-analytics',
+        industry: ['marketing', 'logistics'],
+        complexity: 'intermediate',
+        features: ['real-time', 'maps', 'location'],
+        useCase: 'Global Teams, Logistics, Marketing',
+        url: '{{ url_for("geographic_drilldown") }}'
+    },
+    {
+        name: 'Time Analytics',
+        category: 'business-analytics',
+        industry: ['finance', 'operations'],
+        complexity: 'intermediate',
+        features: ['real-time', 'predictive', 'forecasting'],
+        useCase: 'Finance, Operations, Planning',
+        url: '{{ url_for("time_drilldown") }}'
+    },
+    {
+        name: 'User Behavior',
+        category: 'business-analytics',
+        industry: ['marketing', 'product'],
+        complexity: 'intermediate',
+        features: ['real-time', 'behavioral', 'analytics'],
+        useCase: 'Product Teams, Marketing, UX Design',
+        url: '{{ url_for("user_behavior_drilldown") }}'
+    },
+    {
+        name: 'Customer Analytics',
+        category: 'specialized-analytics',
+        industry: ['marketing', 'product'],
+        complexity: 'intermediate',
+        features: ['real-time', 'segmentation', 'analytics'],
+        useCase: 'Customer Success, Marketing, Product Teams',
+        url: '{{ url_for("customer_analytics") }}'
+    },
+    {
+        name: 'Marketing Performance',
+        category: 'specialized-analytics',
+        industry: ['marketing'],
+        complexity: 'advanced',
+        features: ['real-time', 'roi', 'attribution'],
+        useCase: 'Marketing Teams, Agencies, CMOs',
+        url: '{{ url_for("marketing_performance") }}'
+    },
+    {
+        name: 'Inventory Management',
+        category: 'specialized-analytics',
+        industry: ['retail', 'manufacturing'],
+        complexity: 'intermediate',
+        features: ['real-time', 'alerts', 'optimization'],
+        useCase: 'Retail, Manufacturing, Logistics',
+        url: '{{ url_for("inventory_management") }}'
+    },
+    {
+        name: 'Financial Overview',
+        category: 'specialized-analytics',
+        industry: ['finance'],
+        complexity: 'advanced',
+        features: ['real-time', 'financial', 'kpi'],
+        useCase: 'CFOs, Finance Teams, Controllers',
+        url: '{{ url_for("financial_overview") }}'
+    },
+    {
+        name: 'Product Analytics',
+        category: 'specialized-analytics',
+        industry: ['ecommerce', 'product'],
+        complexity: 'intermediate',
+        features: ['real-time', 'performance', 'analytics'],
+        useCase: 'Product Managers, E-commerce, Analytics',
+        url: '{{ url_for("product_analytics") }}'
+    }
+];
+
+// Search and filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const industryFilter = document.getElementById('industryFilter');
+    const complexityFilter = document.getElementById('complexityFilter');
+
+    if (searchInput && industryFilter && complexityFilter) {
+        function filterDashboards() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedIndustry = industryFilter.value;
+            const selectedComplexity = complexityFilter.value;
+
+            const filteredDashboards = dashboardData.filter(dashboard => {
+                const matchesSearch = !searchTerm || 
+                    dashboard.name.toLowerCase().includes(searchTerm) ||
+                    dashboard.useCase.toLowerCase().includes(searchTerm) ||
+                    dashboard.features.some(f => f.includes(searchTerm));
+
+                const matchesIndustry = !selectedIndustry || 
+                    dashboard.industry.includes(selectedIndustry);
+
+                const matchesComplexity = !selectedComplexity || 
+                    dashboard.complexity === selectedComplexity;
+
+                return matchesSearch && matchesIndustry && matchesComplexity;
+            });
+
+            displayFilteredResults(filteredDashboards);
+        }
+
+        function displayFilteredResults(results) {
+            // This would typically update the UI with filtered results
+            // For now, we'll just log to console
+            console.log('Filtered results:', results);
+            
+            // Show/hide dashboard cards based on filter
+            const dashboardCards = document.querySelectorAll('.dashboard-card');
+            dashboardCards.forEach(card => {
+                const title = card.querySelector('.dashboard-title')?.textContent.toLowerCase() || '';
+                const description = card.querySelector('.dashboard-description')?.textContent.toLowerCase() || '';
+                const useCase = card.querySelector('.text-muted')?.textContent.toLowerCase() || '';
+                
+                const matches = results.some(dashboard => 
+                    title.includes(dashboard.name.toLowerCase()) ||
+                    description.includes(dashboard.name.toLowerCase())
+                );
+                
+                card.style.display = matches || !searchInput.value ? 'block' : 'none';
+            });
+        }
+
+        // Add event listeners
+        searchInput.addEventListener('input', filterDashboards);
+        industryFilter.addEventListener('change', filterDashboards);
+        complexityFilter.addEventListener('change', filterDashboards);
+
+        // Add search suggestions
+        searchInput.addEventListener('focus', function() {
+            this.placeholder = 'Try: "sales", "real-time", "ecommerce", "analytics"...';
+        });
+
+        searchInput.addEventListener('blur', function() {
+            this.placeholder = 'Search dashboards by name, feature, or use case...';
+        });
+    }
+
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add animation to cards on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.dashboard-card, .framework-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Design Tutorial - Bootstrap 5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            min-width: 280px;
+            max-width: 350px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .tutorial-header {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .tutorial-title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .tutorial-subtitle {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .tutorial-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        .demo-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 2rem;
+            color: #34495e;
+        }
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .highlight {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        .nav-tabs .nav-link {
+            color: #2c3e50;
+            font-weight: 500;
+            border: none;
+            background: rgba(52, 152, 219, 0.1);
+            margin-right: 0.5rem;
+            border-radius: 10px 10px 0 0;
+        }
+        .nav-tabs .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            background: white;
+            border-radius: 0 10px 10px 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        .demo-responsive {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .breakpoint-indicator {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .demo-grid-responsive {
+            border: 1px dashed #dee2e6;
+            margin-bottom: 1rem;
+        }
+        .demo-grid-responsive > [class*="col-"] {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            background-color: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                            <li><a class="dropdown-item" href="product-hierarchy-drilldown.html">📦 Product Hierarchy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📚 Tutorials
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">📊 Chart Tutorials</h6></li>
+                            <li><a class="dropdown-item" href="bar-column-charts.html">📊 Bar & Column Charts</a></li>
+                            <li><a class="dropdown-item" href="line-area-charts.html">📈 Line & Area Charts</a></li>
+                            <li><a class="dropdown-item" href="pie-donut-charts.html">🥧 Pie & Donut Charts</a></li>
+                            <li><a class="dropdown-item" href="scatter-bubble-charts.html">🫧 Scatter & Bubble Charts</a></li>
+                            <li><a class="dropdown-item" href="heatmap-treemap-charts.html">🔥 Heatmaps & Treemaps</a></li>
+                            <li><a class="dropdown-item" href="radar-polar-charts.html">🎯 Radar & Polar Charts</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">🎨 Bootstrap Components</h6></li>
+                            <li><a class="dropdown-item" href="layout-components.html">🏗️ Layout Components</a></li>
+                            <li><a class="dropdown-item" href="navigation-elements.html">🧭 Navigation Elements</a></li>
+                            <li><a class="dropdown-item" href="forms-inputs.html">📝 Forms & Inputs</a></li>
+                            <li><a class="dropdown-item" href="cards-modals.html">🎴 Cards & Modals</a></li>
+                            <li><a class="dropdown-item" href="tables-data-display.html">📊 Tables & Data Display</a></li>
+                            <li><a class="dropdown-item" href="responsive-design.html">📱 Responsive Design</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Tutorial Header -->
+        <div class="tutorial-header">
+            <h1 class="tutorial-title">📱 Responsive Design Tutorial</h1>
+            <p class="tutorial-subtitle">Master Bootstrap 5 responsive design principles and techniques</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>What You'll Learn:</h5>
+                    <ul class="feature-list">
+                        <li>Responsive breakpoints</li>
+                        <li>Mobile-first design approach</li>
+                        <li>Responsive grid system</li>
+                        <li>Responsive utilities</li>
+                        <li>Performance optimization</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Prerequisites:</h5>
+                    <ul class="feature-list">
+                        <li>Basic HTML knowledge</li>
+                        <li>CSS fundamentals</li>
+                        <li>Bootstrap 5 basics</li>
+                        <li>Media query concepts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🎯 Introduction to Responsive Design</h2>
+            <p>Responsive design is an approach that makes web pages render well on a variety of devices and window sizes. Bootstrap 5 provides a comprehensive responsive framework with mobile-first design principles.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>📱 Key Concepts</h5>
+                    <ul class="feature-list">
+                        <li>Fluid grids and layouts</li>
+                        <li>Flexible images and media</li>
+                        <li>CSS media queries</li>
+                        <li>Mobile-first approach</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🎯 Design Goals</h5>
+                    <ul class="feature-list">
+                        <li>Optimal viewing experience</li>
+                        <li>Minimal resizing and scrolling</li>
+                        <li>Consistent user experience</li>
+                        <li>Performance optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap Breakpoints -->
+        <div class="tutorial-section">
+            <h2 class="section-title">📏 Bootstrap Breakpoints</h2>
+            
+            <ul class="nav nav-tabs" id="breakpointTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="breakpoint-preview-tab" data-bs-toggle="tab" data-bs-target="#breakpoint-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="breakpoint-code-tab" data-bs-toggle="tab" data-bs-target="#breakpoint-code" type="button" role="tab">Code</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="breakpoint-explanation-tab" data-bs-toggle="tab" data-bs-target="#breakpoint-explanation" type="button" role="tab">Explanation</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="breakpointTabContent">
+                <div class="tab-pane fade show active" id="breakpoint-preview" role="tabpanel">
+                    <div class="demo-container">
+                        <h5>Breakpoint Overview</h5>
+                        <div class="breakpoint-indicator">
+                            <div class="row text-center">
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                    <strong>xs</strong><br>&lt;576px
+                                </div>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                    <strong>sm</strong><br>≥576px
+                                </div>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                    <strong>md</strong><br>≥768px
+                                </div>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                    <strong>lg</strong><br>≥992px
+                                </div>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                    <strong>xl</strong><br>≥1200px
+                                </div>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                    <strong>xxl</strong><br>≥1400px
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="mt-4">Responsive Grid Example</h5>
+                        <div class="demo-grid-responsive">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                        Responsive Column
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                        Responsive Column
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                        Responsive Column
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                        Responsive Column
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="breakpoint-code" role="tabpanel">
+                    <h5>Breakpoint Classes:</h5>
+                    <div class="code-block">
+&lt;!-- Responsive Grid --&gt;
+&lt;div class="row"&gt;
+  &lt;div class="col-12 col-sm-6 col-md-4 col-lg-3"&gt;
+    Responsive Column
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Responsive Display --&gt;
+&lt;div class="d-none d-md-block"&gt;
+  Hidden on mobile, visible on tablet and up
+&lt;/div&gt;
+
+&lt;!-- Responsive Text --&gt;
+&lt;h1 class="display-4 d-none d-md-block"&gt;
+  Large heading on desktop
+&lt;/h1&gt;
+&lt;h1 class="h3 d-md-none"&gt;
+  Smaller heading on mobile
+&lt;/h1&gt;
+
+&lt;!-- Responsive Flex --&gt;
+&lt;div class="d-flex flex-column flex-md-row"&gt;
+  &lt;div&gt;Column on mobile, row on desktop&lt;/div&gt;
+&lt;/div&gt;
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="breakpoint-explanation" role="tabpanel">
+                    <h5>Bootstrap 5 Breakpoints:</h5>
+                    <ul class="feature-list">
+                        <li><span class="highlight">xs</span> - Extra small (0px and up) - Default</li>
+                        <li><span class="highlight">sm</span> - Small (576px and up) - Landscape phones</li>
+                        <li><span class="highlight">md</span> - Medium (768px and up) - Tablets</li>
+                        <li><span class="highlight">lg</span> - Large (992px and up) - Desktops</li>
+                        <li><span class="highlight">xl</span> - Extra large (1200px and up) - Large desktops</li>
+                        <li><span class="highlight">xxl</span> - Extra extra large (1400px and up) - Extra large desktops</li>
+                    </ul>
+                    
+                    <h5>Responsive Class Naming:</h5>
+                    <ul class="feature-list">
+                        <li><span class="highlight">property-breakpoint-value</span> - Format for responsive classes</li>
+                        <li><span class="highlight">col-md-6</span> - 6 columns on medium screens and up</li>
+                        <li><span class="highlight">d-lg-none</span> - Hide on large screens and up</li>
+                        <li><span class="highlight">text-sm-center</span> - Center text on small screens and up</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Responsive Utilities -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🛠️ Responsive Utilities</h2>
+            
+            <div class="demo-container">
+                <h5>Responsive Display Classes</h5>
+                <div class="demo-responsive">
+                    <div class="d-none d-sm-block d-md-none">
+                        <strong>Visible only on small screens</strong>
+                    </div>
+                    <div class="d-none d-md-block d-lg-none">
+                        <strong>Visible only on medium screens</strong>
+                    </div>
+                    <div class="d-none d-lg-block d-xl-none">
+                        <strong>Visible only on large screens</strong>
+                    </div>
+                    <div class="d-none d-xl-block">
+                        <strong>Visible only on extra large screens</strong>
+                    </div>
+                </div>
+                
+                <h5 class="mt-4">Responsive Flexbox</h5>
+                <div class="demo-responsive">
+                    <div class="d-flex flex-column flex-md-row">
+                        <div class="p-2 bg-light me-md-2 mb-2 mb-md-0">Item 1</div>
+                        <div class="p-2 bg-light me-md-2 mb-2 mb-md-0">Item 2</div>
+                        <div class="p-2 bg-light">Item 3</div>
+                    </div>
+                </div>
+                
+                <h5 class="mt-4">Responsive Text Alignment</h5>
+                <div class="demo-responsive">
+                    <div class="text-center text-md-start text-lg-center">
+                        <p>This text is centered on mobile, left-aligned on tablet, and centered again on large screens.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile-First Design -->
+        <div class="tutorial-section">
+            <h2 class="section-title">📱 Mobile-First Design Principles</h2>
+            
+            <div class="demo-container">
+                <h5>Progressive Enhancement Example</h5>
+                <div class="demo-responsive">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Mobile-First Card</h5>
+                            <p class="card-text">This card starts with a simple mobile layout and progressively enhances for larger screens.</p>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button class="btn btn-primary">Primary Action</button>
+                                <button class="btn btn-outline-secondary">Secondary Action</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h5 class="mt-4">Responsive Navigation</h5>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light demo-responsive">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">Brand</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Features</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Pricing</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Performance Optimization -->
+        <div class="tutorial-section">
+            <h2 class="section-title">⚡ Performance Optimization</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🖼️ Image Optimization</h5>
+                    <ul class="feature-list">
+                        <li>Use appropriate image sizes</li>
+                        <li>Implement lazy loading</li>
+                        <li>Use modern image formats</li>
+                        <li>Consider responsive images with srcset</li>
+                        <li>Optimize image compression</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🚀 Loading Performance</h5>
+                    <ul class="feature-list">
+                        <li>Minimize CSS and JavaScript</li>
+                        <li>Use critical CSS for above-the-fold content</li>
+                        <li>Implement resource hints</li>
+                        <li>Optimize font loading</li>
+                        <li>Use CDN for static assets</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="demo-container mt-4">
+                <h5>Responsive Image Example</h5>
+                <div class="demo-responsive">
+                    <img src="https://via.placeholder.com/800x400" 
+                         class="img-fluid" 
+                         alt="Responsive image"
+                         loading="lazy">
+                </div>
+            </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="tutorial-section">
+            <h2 class="section-title">✅ Best Practices</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>📱 Design Principles</h5>
+                    <ul class="feature-list">
+                        <li>Start with mobile-first approach</li>
+                        <li>Design for touch interactions</li>
+                        <li>Use appropriate font sizes</li>
+                        <li>Ensure adequate tap targets</li>
+                        <li>Test on real devices</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🔧 Technical Considerations</h5>
+                    <ul class="feature-list>
+                        <li>Use semantic HTML5 elements</li>
+                        <li>Implement proper viewport meta tag</li>
+                        <li>Optimize for performance</li>
+                        <li>Ensure accessibility</li>
+                        <li>Test cross-browser compatibility</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🔗 Related Tutorials</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📊 Tables & Data Display</h5>
+                            <p class="card-text">Learn to create responsive table layouts</p>
+                            <a href="tables-data-display.html" class="btn btn-primary">Previous Tutorial →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📊 Chart Tutorials</h5>
+                            <p class="card-text">Explore responsive chart implementations</p>
+                            <a href="bar-column-charts.html" class="btn btn-primary">View Charts →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">🏠 Home</h5>
+                            <p class="card-text">Return to the main dashboard collection</p>
+                            <a href="index.html" class="btn btn-primary">Back to Home →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

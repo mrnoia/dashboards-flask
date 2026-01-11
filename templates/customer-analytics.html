@@ -1,0 +1,516 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Analytics Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .segment-card { cursor: pointer; transition: all 0.3s ease; }
+    .segment-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+    .back-btn:hover { background-color: #5a6268; }
+    .metric-card { transition: all 0.3s ease; }
+    .metric-card:hover { transform: translateY(-2px); }
+    .loyalty-indicator { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .churn-indicator { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+    .retention-indicator { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb Navigation -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" id="breadcrumb">
+                    <li class="breadcrumb-item active">Customer Overview</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card loyalty-indicator">
+                <h6 class="text-white">Total Customers</h6>
+                <h2 id="total-customers" class="text-white">0</h2>
+                <small class="text-white" id="customers-change">+0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card">
+                <h6 class="text-muted">Active Customers</h6>
+                <h2 id="active-customers">0</h2>
+                <small class="text-success" id="active-change">+0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card churn-indicator">
+                <h6 class="text-white">Churn Rate</h6>
+                <h2 id="churn-rate" class="text-white">0%</h2>
+                <small class="text-white" id="churn-change">-0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card retention-indicator">
+                <h6 class="text-white">Retention Rate</h6>
+                <h2 id="retention-rate" class="text-white">0%</h2>
+                <small class="text-white" id="retention-change">+0%</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Segments -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>🎯 Customer Segments</h5>
+                    <small class="text-muted">Click to drill down into segment details</small>
+                </div>
+                <div class="card-body">
+                    <div id="segments-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>📈 Customer Lifecycle</h5>
+                    <small class="text-muted">Customer journey over time</small>
+                </div>
+                <div class="card-body">
+                    <div id="lifecycle-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Details Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Customer Details</h5>
+                        <small class="text-muted" id="table-subtitle">Overview of all customer segments</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" onclick="exportData()">
+                        📊 Export Data
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Segment</th>
+                                    <th>Customers</th>
+                                    <th>Revenue</th>
+                                    <th>Avg. Order Value</th>
+                                    <th>Loyalty Score</th>
+                                    <th>Churn Risk</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Customer analytics hierarchical data
+    const customerData = {
+        overview: {
+            segments: [
+                {
+                    name: 'Premium',
+                    customers: 2500,
+                    revenue: 1250000,
+                    avgOrderValue: 500,
+                    loyaltyScore: 85,
+                    churnRisk: 5,
+                    details: {
+                        demographics: {
+                            age: '35-55',
+                            income: '100K+',
+                            location: 'Urban'
+                        },
+                        behavior: {
+                            frequency: 'Weekly',
+                            categories: ['Electronics', 'Fashion', 'Travel'],
+                            devices: ['Mobile', 'Desktop']
+                        },
+                        metrics: {
+                            lifetimeValue: 15000,
+                            acquisitionCost: 150,
+                            retentionRate: 92
+                        }
+                    }
+                },
+                {
+                    name: 'Regular',
+                    customers: 8500,
+                    revenue: 2125000,
+                    avgOrderValue: 250,
+                    loyaltyScore: 70,
+                    churnRisk: 15,
+                    details: {
+                        demographics: {
+                            age: '25-45',
+                            income: '50K-100K',
+                            location: 'Suburban'
+                        },
+                        behavior: {
+                            frequency: 'Monthly',
+                            categories: ['Home', 'Health', 'Sports'],
+                            devices: ['Mobile', 'Tablet']
+                        },
+                        metrics: {
+                            lifetimeValue: 7500,
+                            acquisitionCost: 75,
+                            retentionRate: 85
+                        }
+                    }
+                },
+                {
+                    name: 'Occasional',
+                    customers: 12000,
+                    revenue: 1800000,
+                    avgOrderValue: 150,
+                    loyaltyScore: 45,
+                    churnRisk: 35,
+                    details: {
+                        demographics: {
+                            age: '18-35',
+                            income: '30K-50K',
+                            location: 'Mixed'
+                        },
+                        behavior: {
+                            frequency: 'Quarterly',
+                            categories: ['Fashion', 'Food', 'Entertainment'],
+                            devices: ['Mobile']
+                        },
+                        metrics: {
+                            lifetimeValue: 3000,
+                            acquisitionCost: 30,
+                            retentionRate: 65
+                        }
+                    }
+                },
+                {
+                    name: 'New',
+                    customers: 3000,
+                    revenue: 300000,
+                    avgOrderValue: 100,
+                    loyaltyScore: 25,
+                    churnRisk: 45,
+                    details: {
+                        demographics: {
+                            age: '18-30',
+                            income: '25K-75K',
+                            location: 'Mixed'
+                        },
+                        behavior: {
+                            frequency: 'One-time',
+                            categories: ['Various'],
+                            devices: ['Mobile']
+                        },
+                        metrics: {
+                            lifetimeValue: 500,
+                            acquisitionCost: 25,
+                            retentionRate: 40
+                        }
+                    }
+                }
+            ]
+        }
+    };
+
+    let currentView = 'overview';
+    let currentSegment = null;
+    let segmentsChart, lifecycleChart;
+
+    // Initialize dashboard
+    function initDashboard() {
+        updateMetrics();
+        renderSegmentsChart();
+        renderLifecycleChart();
+        updateTable('overview');
+    }
+
+    // Update metrics
+    function updateMetrics() {
+        const segments = customerData.overview.segments;
+        const totalCustomers = segments.reduce((sum, seg) => sum + seg.customers, 0);
+        const activeCustomers = segments.filter(seg => seg.loyaltyScore > 50).reduce((sum, seg) => sum + seg.customers, 0);
+        const avgChurnRate = segments.reduce((sum, seg) => sum + seg.churnRisk, 0) / segments.length;
+        const avgRetentionRate = segments.reduce((sum, seg) => sum + seg.details.metrics.retentionRate, 0) / segments.length;
+
+        document.getElementById('total-customers').textContent = totalCustomers.toLocaleString();
+        document.getElementById('customers-change').textContent = '+12%';
+        
+        document.getElementById('active-customers').textContent = activeCustomers.toLocaleString();
+        document.getElementById('active-change').textContent = '+8%';
+        
+        document.getElementById('churn-rate').textContent = avgChurnRate.toFixed(1) + '%';
+        document.getElementById('churn-change').textContent = '-2.3%';
+        
+        document.getElementById('retention-rate').textContent = avgRetentionRate.toFixed(1) + '%';
+        document.getElementById('retention-change').textContent = '+3.1%';
+    }
+
+    // Render segments chart
+    function renderSegmentsChart() {
+        const segments = customerData.overview.segments;
+        
+        segmentsChart = new ApexCharts(document.querySelector("#segments-chart"), {
+            series: [{
+                name: 'Customers',
+                data: segments.map(seg => seg.customers)
+            }, {
+                name: 'Revenue ($K)',
+                data: segments.map(seg => seg.revenue / 1000)
+            }],
+            chart: {
+                type: 'bar',
+                height: 350,
+                toolbar: {
+                    show: false
+                },
+                events: {
+                    dataPointSelection: function(event, chartContext, config) {
+                        const segmentIndex = config.dataPointIndex;
+                        drillToSegment(segments[segmentIndex].name);
+                    }
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: segments.map(seg => seg.name)
+            },
+            yaxis: [
+                {
+                    title: {
+                        text: 'Customers'
+                    }
+                },
+                {
+                    opposite: true,
+                    title: {
+                        text: 'Revenue ($K)'
+                    }
+                }
+            ],
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function(value, { seriesIndex }) {
+                        if (seriesIndex === 0) {
+                            return value.toLocaleString() + ' customers';
+                        } else {
+                            return '$' + value + 'K';
+                        }
+                    }
+                }
+            }
+        });
+
+        segmentsChart.render();
+    }
+
+    // Render lifecycle chart
+    function renderLifecycleChart() {
+        lifecycleChart = new ApexCharts(document.querySelector("#lifecycle-chart"), {
+            series: [{
+                name: 'New Customers',
+                data: [1200, 1500, 1800, 2100, 2400, 2200, 2800, 3000]
+            }, {
+                name: 'Active Customers',
+                data: [8000, 8500, 9200, 9800, 10500, 11200, 11800, 12500]
+            }, {
+                name: 'Churned Customers',
+                data: [300, 280, 320, 290, 310, 295, 340, 325]
+            }],
+            chart: {
+                type: 'line',
+                height: 350,
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
+            },
+            tooltip: {
+                shared: true,
+                intersect: false
+            },
+            legend: {
+                position: 'top'
+            }
+        });
+
+        lifecycleChart.render();
+    }
+
+    // Drill down to segment
+    function drillToSegment(segmentName) {
+        currentView = 'segment';
+        currentSegment = customerData.overview.segments.find(seg => seg.name === segmentName);
+
+        // Update breadcrumb
+        document.getElementById('breadcrumb').innerHTML = `
+            <li class="breadcrumb-item"><a href="#" onclick="goBack()">Customer Overview</a></li>
+            <li class="breadcrumb-item active">${segmentName} Segment</li>
+        `;
+
+        // Update metrics
+        document.getElementById('total-customers').textContent = currentSegment.customers.toLocaleString();
+        document.getElementById('active-customers').textContent = Math.floor(currentSegment.customers * 0.8).toLocaleString();
+        document.getElementById('churn-rate').textContent = currentSegment.churnRisk + '%';
+        document.getElementById('retention-rate').textContent = currentSegment.details.metrics.retentionRate + '%';
+
+        // Update charts
+        renderSegmentDetailsChart();
+        updateTable('segment');
+    }
+
+    // Render segment details chart
+    function renderSegmentDetailsChart() {
+        const details = currentSegment.details;
+        
+        segmentsChart.updateOptions({
+            series: [{
+                name: 'Demographics',
+                data: [100, 100, 100]
+            }, {
+                name: 'Behavior Score',
+                data: [85, 70, 60]
+            }],
+            xaxis: {
+                categories: ['Age Score', 'Income Score', 'Location Score']
+            },
+            chart: {
+                events: {
+                    dataPointSelection: null
+                }
+            }
+        });
+    }
+
+    // Update table
+    function updateTable(view) {
+        const tableBody = document.getElementById('table-body');
+        const tableSubtitle = document.getElementById('table-subtitle');
+
+        if (view === 'overview') {
+            tableSubtitle.textContent = 'Overview of all customer segments';
+            tableBody.innerHTML = customerData.overview.segments.map(segment => `
+                <tr class="segment-card" onclick="drillToSegment('${segment.name}')">
+                    <td>
+                        <strong>${segment.name}</strong>
+                        <br><small class="text-muted">Click for details</small>
+                    </td>
+                    <td>${segment.customers.toLocaleString()}</td>
+                    <td>$${segment.revenue.toLocaleString()}</td>
+                    <td>$${segment.avgOrderValue}</td>
+                    <td>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success" style="width: ${segment.loyaltyScore}%">
+                                ${segment.loyaltyScore}%
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge ${segment.churnRisk < 20 ? 'bg-success' : segment.churnRisk < 35 ? 'bg-warning' : 'bg-danger'}">
+                            ${segment.churnRisk}% Risk
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (view === 'segment') {
+            tableSubtitle.textContent = `Detailed analysis of ${currentSegment.name} segment`;
+            tableBody.innerHTML = `
+                <tr>
+                    <td><strong>Age Group</strong></td>
+                    <td>${currentSegment.details.demographics.age}</td>
+                    <td><strong>Income Range</strong></td>
+                    <td>${currentSegment.details.demographics.income}</td>
+                    <td><strong>Location</strong></td>
+                    <td>${currentSegment.details.demographics.location}</td>
+                </tr>
+                <tr>
+                    <td><strong>Purchase Frequency</strong></td>
+                    <td>${currentSegment.details.behavior.frequency}</td>
+                    <td><strong>Top Categories</strong></td>
+                    <td colspan="2">${currentSegment.details.behavior.categories.join(', ')}</td>
+                    <td><strong>Devices</strong></td>
+                    <td>${currentSegment.details.behavior.devices.join(', ')}</td>
+                </tr>
+                <tr>
+                    <td><strong>Lifetime Value</strong></td>
+                    <td>$${currentSegment.details.metrics.lifetimeValue.toLocaleString()}</td>
+                    <td><strong>Acquisition Cost</strong></td>
+                    <td>$${currentSegment.details.metrics.acquisitionCost}</td>
+                    <td><strong>Retention Rate</strong></td>
+                    <td>${currentSegment.details.metrics.retentionRate}%</td>
+                </tr>
+            `;
+        }
+    }
+
+    // Go back to overview
+    function goBack() {
+        currentView = 'overview';
+        currentSegment = null;
+
+        // Update breadcrumb
+        document.getElementById('breadcrumb').innerHTML = '<li class="breadcrumb-item active">Customer Overview</li>';
+
+        // Update metrics
+        updateMetrics();
+
+        // Update charts
+        renderSegmentsChart();
+        updateTable('overview');
+    }
+
+    // Export data function
+    function exportData() {
+        alert('Export functionality would download current customer analytics data as CSV/Excel');
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+{% endblock %}

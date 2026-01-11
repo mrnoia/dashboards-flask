@@ -1,0 +1,555 @@
+{% extends "base.html" %}
+
+{% block title %}Time-Based Drilldown Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { 
+        font-family: 'Inter', sans-serif; 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding-top: 80px; /* Space for fixed navbar */
+    }
+    .card { border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .breadcrumb { background: none; padding: 0; }
+    .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: #6c757d; }
+    .time-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+    .time-btn { padding: 8px 16px; border: 1px solid #ddd; background: white; border-radius: 5px; cursor: pointer; transition: all 0.3s; }
+    .time-btn.active { background-color: #3498db; color: white; border-color: #3498db; }
+    .time-btn:hover:not(.active) { background-color: #f8f9fa; }
+    .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+    .back-btn:hover { background-color: #5a6268; }
+    .metric-card { transition: all 0.3s ease; }
+    .metric-card:hover { transform: translateY(-2px); }
+    .peak-indicator { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+    .off-peak-indicator { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb Navigation -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" id="breadcrumb">
+                    <li class="breadcrumb-item active">Monthly View</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Time Period Selector -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="time-selector">
+                <button class="time-btn" onclick="changeView('yearly')">Yearly</button>
+                <button class="time-btn active" onclick="changeView('monthly')">Monthly</button>
+                <button class="time-btn" onclick="changeView('daily')">Daily</button>
+                <button class="time-btn" onclick="changeView('hourly')">Hourly</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card">
+                <h6 class="text-muted">Total Revenue</h6>
+                <h2 id="total-revenue">$0</h2>
+                <small class="text-success" id="revenue-change">+0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card">
+                <h6 class="text-muted">Peak Hour</h6>
+                <h2 id="peak-hour">-</h2>
+                <small class="text-muted" id="peak-revenue">$0</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card peak-indicator">
+                <h6 class="text-white">Peak Day</h6>
+                <h2 id="peak-day" class="text-white">-</h2>
+                <small class="text-white" id="peak-day-revenue">$0</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center metric-card off-peak-indicator">
+                <h6 class="text-white">Avg Daily</h6>
+                <h2 id="avg-daily" class="text-white">$0</h2>
+                <small class="text-white" id="avg-change">+0%</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chart Area -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0" id="chart-title">Revenue Trends - Monthly</h5>
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary me-2" onclick="exportData()">
+                            📊 Export
+                        </button>
+                        <button class="back-btn" id="back-btn" style="display: none;" onclick="goBack()">
+                            ← Back
+                        </button>
+                    </div>
+                </div>
+                <div id="main-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Analysis Grid -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Day of Week Analysis</h5>
+                <div id="dow-chart"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Hourly Distribution</h5>
+                <div id="hourly-dist-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Time Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="card-title mb-4" id="table-title">Monthly Breakdown</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Time Period</th>
+                                <th>Revenue</th>
+                                <th>Transactions</th>
+                                <th>Avg Order</th>
+                                <th>vs Previous</th>
+                                <th>Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hierarchical time-based data
+    const timeData = {
+        yearly: [
+            { year: 2021, revenue: 2800000, transactions: 45000 },
+            { year: 2022, revenue: 3200000, transactions: 52000 },
+            { year: 2023, revenue: 3800000, transactions: 61000 },
+            { year: 2024, revenue: 4500000, transactions: 72000 }
+        ],
+        monthly: [
+            { month: 'Jan', revenue: 320000, transactions: 5200, days: generateDailyData('Jan') },
+            { month: 'Feb', revenue: 280000, transactions: 4800, days: generateDailyData('Feb') },
+            { month: 'Mar', revenue: 350000, transactions: 5800, days: generateDailyData('Mar') },
+            { month: 'Apr', revenue: 380000, transactions: 6200, days: generateDailyData('Apr') },
+            { month: 'May', revenue: 420000, transactions: 6800, days: generateDailyData('May') },
+            { month: 'Jun', revenue: 450000, transactions: 7200, days: generateDailyData('Jun') },
+            { month: 'Jul', revenue: 480000, transactions: 7800, days: generateDailyData('Jul') },
+            { month: 'Aug', revenue: 460000, transactions: 7500, days: generateDailyData('Aug') },
+            { month: 'Sep', revenue: 440000, transactions: 7100, days: generateDailyData('Sep') },
+            { month: 'Oct', revenue: 410000, transactions: 6800, days: generateDailyData('Oct') },
+            { month: 'Nov', revenue: 390000, transactions: 6400, days: generateDailyData('Nov') },
+            { month: 'Dec', revenue: 520000, transactions: 8500, days: generateDailyData('Dec') }
+        ],
+        daily: [],
+        hourly: []
+    };
+
+    let currentView = 'monthly';
+    let selectedMonth = null;
+    let selectedDay = null;
+    let mainChart = null;
+    let dowChart = null;
+    let hourlyDistChart = null;
+
+    // Generate daily data for a month
+    function generateDailyData(month) {
+        const daysInMonth = new Date(2024, new Date(month + ' 1, 2024').getMonth(), 0).getDate();
+        const dailyData = [];
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+            const baseRevenue = 10000 + Math.random() * 5000;
+            const weekendMultiplier = (day % 7 === 0 || day % 7 === 6) ? 1.3 : 1;
+            dailyData.push({
+                day: day,
+                revenue: Math.round(baseRevenue * weekendMultiplier),
+                transactions: Math.round(baseRevenue / 75),
+                hours: generateHourlyData(day)
+            });
+        }
+        return dailyData;
+    }
+
+    // Generate hourly data for a day
+    function generateHourlyData(day) {
+        const hourlyData = [];
+        for (let hour = 0; hour < 24; hour++) {
+            let multiplier = 1;
+            if (hour >= 9 && hour <= 11) multiplier = 2.5; // Morning peak
+            else if (hour >= 12 && hour <= 14) multiplier = 2.0; // Lunch
+            else if (hour >= 18 && hour <= 21) multiplier = 3.0; // Evening peak
+            else if (hour >= 0 && hour <= 6) multiplier = 0.2; // Night
+            
+            hourlyData.push({
+                hour: hour,
+                revenue: Math.round(500 * multiplier + Math.random() * 200),
+                transactions: Math.round(7 * multiplier + Math.random() * 3)
+            });
+        }
+        return hourlyData;
+    }
+
+    // Initialize dashboard
+    function initDashboard() {
+        updateMetrics();
+        renderMainChart('monthly');
+        renderDayOfWeekChart();
+        renderHourlyDistChart();
+        updateTable('monthly');
+    }
+
+    // Update metrics based on current view
+    function updateMetrics() {
+        const totalRevenue = timeData.monthly.reduce((sum, month) => sum + month.revenue, 0);
+        const totalTransactions = timeData.monthly.reduce((sum, month) => sum + month.transactions, 0);
+        
+        // Find peak hour from sample data
+        const sampleHourly = generateHourlyData(1);
+        const peakHourData = sampleHourly.reduce((max, hour) => 
+            hour.revenue > max.revenue ? hour : max, sampleHourly[0]);
+        
+        // Find peak day from sample data
+        const sampleDaily = generateDailyData('Jan');
+        const peakDayData = sampleDaily.reduce((max, day) => 
+            day.revenue > max.revenue ? day : max, sampleDaily[0]);
+
+        document.getElementById('total-revenue').innerText = `$${(totalRevenue / 1000000).toFixed(2)}M`;
+        document.getElementById('revenue-change').innerText = '+18% YoY';
+        document.getElementById('peak-hour').innerText = `${peakHourData.hour}:00`;
+        document.getElementById('peak-revenue').innerText = `$${peakHourData.revenue.toLocaleString()}`;
+        document.getElementById('peak-day').innerText = `Day ${peakDayData.day}`;
+        document.getElementById('peak-day-revenue').innerText = `$${peakDayData.revenue.toLocaleString()}`;
+        document.getElementById('avg-daily').innerText = `$${Math.round(totalRevenue / 365).toLocaleString()}`;
+        document.getElementById('avg-change').innerText = '+12%';
+    }
+
+    // Render main chart based on view
+    function renderMainChart(view, data = null) {
+        let categories, seriesData, chartType, chartTitle;
+
+        if (view === 'yearly') {
+            categories = timeData.yearly.map(y => y.year);
+            seriesData = timeData.yearly.map(y => y.revenue);
+            chartType = 'bar';
+            chartTitle = 'Revenue Trends - Yearly';
+        } else if (view === 'monthly') {
+            categories = timeData.monthly.map(m => m.month);
+            seriesData = timeData.monthly.map(m => m.revenue);
+            chartType = 'line';
+            chartTitle = 'Revenue Trends - Monthly';
+        } else if (view === 'daily' && data) {
+            categories = data.map(d => `Day ${d.day}`);
+            seriesData = data.map(d => d.revenue);
+            chartType = 'area';
+            chartTitle = `Daily Revenue - ${selectedMonth}`;
+        } else if (view === 'hourly' && data) {
+            categories = data.map(h => `${h.hour}:00`);
+            seriesData = data.map(h => h.revenue);
+            chartType = 'column';
+            chartTitle = `Hourly Revenue - ${selectedMonth} Day ${selectedDay}`;
+        }
+
+        const options = {
+            chart: {
+                type: chartType,
+                height: 350,
+                toolbar: { show: true },
+                zoom: { enabled: true },
+                events: {
+                    dataPointSelection: function(event, chartContext, config) {
+                        if (view === 'monthly') {
+                            drillToMonth(config.dataPointIndex);
+                        } else if (view === 'daily' && data) {
+                            drillToHour(config.dataPointIndex);
+                        }
+                    }
+                }
+            },
+            colors: ['#3498db'],
+            stroke: { curve: view === 'line' || view === 'area' ? 'smooth' : 'straight' },
+            series: [{
+                name: 'Revenue',
+                data: seriesData
+            }],
+            xaxis: {
+                categories: categories
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(value) {
+                        return '$' + (value / 1000).toFixed(0) + 'k';
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function(value) {
+                        return '$' + value.toLocaleString();
+                    }
+                }
+            },
+            dataLabels: { enabled: false }
+        };
+
+        if (mainChart) mainChart.destroy();
+        mainChart = new ApexCharts(document.querySelector("#main-chart"), options);
+        mainChart.render();
+
+        document.getElementById('chart-title').textContent = chartTitle;
+    }
+
+    // Render day of week chart
+    function renderDayOfWeekChart() {
+        const dowData = [
+            { day: 'Mon', revenue: 45000 },
+            { day: 'Tue', revenue: 48000 },
+            { day: 'Wed', revenue: 52000 },
+            { day: 'Thu', revenue: 58000 },
+            { day: 'Fri', revenue: 65000 },
+            { day: 'Sat', revenue: 72000 },
+            { day: 'Sun', revenue: 68000 }
+        ];
+
+        const options = {
+            chart: {
+                type: 'bar',
+                height: 250,
+                toolbar: { show: false }
+            },
+            colors: ['#2ecc71'],
+            series: [{
+                name: 'Revenue',
+                data: dowData.map(d => d.revenue)
+            }],
+            xaxis: {
+                categories: dowData.map(d => d.day)
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(value) {
+                        return '$' + (value / 1000).toFixed(0) + 'k';
+                    }
+                }
+            }
+        };
+
+        if (dowChart) dowChart.destroy();
+        dowChart = new ApexCharts(document.querySelector("#dow-chart"), options);
+        dowChart.render();
+    }
+
+    // Render hourly distribution chart
+    function renderHourlyDistChart() {
+        const hourlyData = [];
+        for (let hour = 0; hour < 24; hour++) {
+            let multiplier = 1;
+            if (hour >= 9 && hour <= 11) multiplier = 2.5;
+            else if (hour >= 12 && hour <= 14) multiplier = 2.0;
+            else if (hour >= 18 && hour <= 21) multiplier = 3.0;
+            else if (hour >= 0 && hour <= 6) multiplier = 0.2;
+            
+            hourlyData.push({
+                hour: hour,
+                revenue: Math.round(500 * multiplier)
+            });
+        }
+
+        const options = {
+            chart: {
+                type: 'area',
+                height: 250,
+                toolbar: { show: false }
+            },
+            colors: ['#f39c12'],
+            stroke: { curve: 'smooth' },
+            series: [{
+                name: 'Revenue',
+                data: hourlyData.map(h => h.revenue)
+            }],
+            xaxis: {
+                categories: hourlyData.map(h => h.hour + ':00')
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(value) {
+                        return '$' + value;
+                    }
+                }
+            }
+        };
+
+        if (hourlyDistChart) hourlyDistChart.destroy();
+        hourlyDistChart = new ApexCharts(document.querySelector("#hourly-dist-chart"), options);
+        hourlyDistChart.render();
+    }
+
+    // Update table based on view
+    function updateTable(view, data = null) {
+        const tableBody = document.getElementById('table-body');
+        const tableTitle = document.getElementById('table-title');
+        let tableData;
+
+        if (view === 'monthly') {
+            tableTitle.textContent = 'Monthly Breakdown';
+            tableData = timeData.monthly;
+        } else if (view === 'daily' && data) {
+            tableTitle.textContent = `Daily Breakdown - ${selectedMonth}`;
+            tableData = data;
+        } else if (view === 'hourly' && data) {
+            tableTitle.textContent = `Hourly Breakdown - ${selectedMonth} Day ${selectedDay}`;
+            tableData = data;
+        }
+
+        tableBody.innerHTML = tableData.map((item, index) => {
+            const prevPeriod = index > 0 ? tableData[index - 1] : item;
+            const change = ((item.revenue - prevPeriod.revenue) / prevPeriod.revenue * 100).toFixed(1);
+            const trend = change > 0 ? '📈' : change < 0 ? '📉' : '➡️';
+            const trendColor = change > 0 ? 'success' : change < 0 ? 'danger' : 'secondary';
+
+            return `
+                <tr class="${view === 'monthly' ? 'time-btn' : ''}" 
+                    onclick="${view === 'monthly' ? `drillToMonth(${index})` : ''}"
+                    style="${view === 'monthly' ? 'cursor: pointer;' : ''}">
+                    <td>
+                        ${view === 'monthly' ? item.month : view === 'daily' ? `Day ${item.day}` : `${item.hour}:00`}
+                        ${view === 'monthly' ? '<span class="text-muted ms-2">›</span>' : ''}
+                    </td>
+                    <td>$${item.revenue.toLocaleString()}</td>
+                    <td>${item.transactions.toLocaleString()}</td>
+                    <td>$${Math.round(item.revenue / item.transactions).toLocaleString()}</td>
+                    <td><span class="badge bg-${trendColor}">${change > 0 ? '+' : ''}${change}%</span></td>
+                    <td>${trend}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // Change time view
+    function changeView(view) {
+        currentView = view;
+        
+        // Update button states
+        document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Update breadcrumb
+        const viewNames = {
+            'yearly': 'Yearly View',
+            'monthly': 'Monthly View',
+            'daily': 'Daily View',
+            'hourly': 'Hourly View'
+        };
+        document.getElementById('breadcrumb').innerHTML = `<li class="breadcrumb-item active">${viewNames[view]}</li>`;
+
+        // Hide back button for top-level views
+        document.getElementById('back-btn').style.display = 'none';
+
+        // Render appropriate chart and table
+        if (view === 'yearly' || view === 'monthly') {
+            renderMainChart(view);
+            updateTable(view);
+        }
+    }
+
+    // Drill down to month
+    function drillToMonth(monthIndex) {
+        const month = timeData.monthly[monthIndex];
+        selectedMonth = month.month;
+        currentView = 'daily';
+
+        // Update breadcrumb
+        document.getElementById('breadcrumb').innerHTML = `
+            <li class="breadcrumb-item"><a href="#" onclick="changeView('monthly')">Monthly View</a></li>
+            <li class="breadcrumb-item active">${month.month}</li>
+        `;
+
+        // Show back button
+        document.getElementById('back-btn').style.display = 'block';
+
+        // Render daily view
+        renderMainChart('daily', month.days);
+        updateTable('daily', month.days);
+    }
+
+    // Drill down to hour
+    function drillToHour(hourIndex) {
+        const dayData = timeData.monthly.find(m => m.month === selectedMonth).days;
+        const hourData = dayData[hourIndex].hours;
+        selectedDay = dayData[hourIndex].day;
+        currentView = 'hourly';
+
+        // Update breadcrumb
+        document.getElementById('breadcrumb').innerHTML = `
+            <li class="breadcrumb-item"><a href="#" onclick="changeView('monthly')">Monthly View</a></li>
+            <li class="breadcrumb-item"><a href="#" onclick="goBackToDaily()">${selectedMonth}</a></li>
+            <li class="breadcrumb-item active">Day ${selectedDay}</li>
+        `;
+
+        // Render hourly view
+        renderMainChart('hourly', hourData);
+        updateTable('hourly', hourData);
+    }
+
+    // Go back to daily view
+    function goBackToDaily() {
+        const month = timeData.monthly.find(m => m.month === selectedMonth);
+        currentView = 'daily';
+        selectedDay = null;
+
+        // Update breadcrumb
+        document.getElementById('breadcrumb').innerHTML = `
+            <li class="breadcrumb-item"><a href="#" onclick="changeView('monthly')">Monthly View</a></li>
+            <li class="breadcrumb-item active">${selectedMonth}</li>
+        `;
+
+        // Render daily view
+        renderMainChart('daily', month.days);
+        updateTable('daily', month.days);
+    }
+
+    // Go back function
+    function goBack() {
+        if (currentView === 'daily') {
+            changeView('monthly');
+        } else if (currentView === 'hourly') {
+            goBackToDaily();
+        }
+    }
+
+    // Export data function
+    function exportData() {
+        alert('Export functionality would download current view as CSV/Excel');
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+{% endblock %}

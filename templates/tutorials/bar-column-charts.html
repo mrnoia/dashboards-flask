@@ -1,0 +1,658 @@
+{% extends "base.html" %}
+
+{% block title %}Bar & Column Charts Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">📊 Bar & Column Charts Tutorial</h1>
+        <p class="tutorial-subtitle">Master horizontal and vertical bar charts with ApexCharts and Bootstrap 5</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Basic bar chart configuration</li>
+                    <li>Column chart variations</li>
+                    <li>Stacked and grouped bars</li>
+                    <li>Custom styling and animations</li>
+                    <li>Responsive design integration</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>JavaScript fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>Understanding of data visualization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                📊 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tutorial Content -->
+    <div class="tutorial-content">
+        <div class="tab-content" id="tutorialTabContent">
+            <!-- Preview Tab -->
+            <div class="tab-pane fade show active" id="preview" role="tabpanel">
+                <h3>Interactive Examples</h3>
+                
+                <!-- Basic Column Chart -->
+                <div class="chart-container">
+                    <h4>Basic Column Chart</h4>
+                    <div id="columnChart"></div>
+                </div>
+
+                <!-- Basic Bar Chart -->
+                <div class="chart-container">
+                    <h4>Basic Bar Chart</h4>
+                    <div id="barChart"></div>
+                </div>
+
+                <!-- Stacked Column Chart -->
+                <div class="chart-container">
+                    <h4>Stacked Column Chart</h4>
+                    <div id="stackedChart"></div>
+                </div>
+
+                <!-- Grouped Bar Chart -->
+                <div class="chart-container">
+                    <h4>Grouped Bar Chart</h4>
+                    <div id="groupedChart"></div>
+                </div>
+            </div>
+
+            <!-- Code Tab -->
+            <div class="tab-pane fade" id="code" role="tabpanel">
+                <h3>Complete Code Example</h3>
+                
+                <div class="code-block">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Bar & Column Charts&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/apexcharts"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container mt-5"&gt;
+        &lt;h2&gt;Bar & Column Charts&lt;/h2&gt;
+        
+        &lt;!-- Basic Column Chart --&gt;
+        &lt;div class="row mb-4"&gt;
+            &lt;div class="col-12"&gt;
+                &lt;h4&gt;Basic Column Chart&lt;/h4&gt;
+                &lt;div id="columnChart"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;!-- Basic Bar Chart --&gt;
+        &lt;div class="row mb-4"&gt;
+            &lt;div class="col-12"&gt;
+                &lt;h4&gt;Basic Bar Chart&lt;/h4&gt;
+                &lt;div id="barChart"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // Basic Column Chart
+        const columnOptions = {
+            series: [{
+                name: 'Sales',
+                data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+            },
+            yaxis: {
+                title: {
+                    text: 'Sales (thousands)'
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return "$ " + val + " thousands"
+                    }
+                }
+            }
+        };
+
+        const columnChart = new ApexCharts(document.querySelector("#columnChart"), columnOptions);
+        columnChart.render();
+
+        // Basic Bar Chart
+        const barOptions = {
+            series: [{
+                name: 'Revenue',
+                data: [44, 55, 41, 17, 15]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+            }
+        };
+
+        const barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
+        barChart.render();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+            </div>
+
+            <!-- Explanation Tab -->
+            <div class="tab-pane fade" id="explanation" role="tabpanel">
+                <h3>Step-by-Step Explanation</h3>
+                
+                <div class="explanation-section">
+                    <h4>1. Setting Up the Environment</h4>
+                    <p>First, include the necessary libraries in your HTML file:</p>
+                    <div class="code-block">
+<pre><code>&lt;!-- Bootstrap 5 CSS --&gt;
+&lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+
+&lt;!-- ApexCharts --&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/apexcharts"&gt;&lt;/script&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>2. Creating Chart Containers</h4>
+                    <p>Create HTML elements where your charts will be rendered:</p>
+                    <div class="code-block">
+<pre><code>&lt;div id="columnChart"&gt;&lt;/div&gt;
+&lt;div id="barChart"&gt;&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>3. Configuring Column Charts</h4>
+                    <p>Column charts are vertical bar charts. Here's the basic configuration:</p>
+                    <div class="code-block">
+<pre><code>const columnOptions = {
+    series: [{
+        name: 'Sales',
+        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    }],
+    chart: {
+        type: 'bar',  // 'bar' creates column charts by default
+        height: 350
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,  // false = column chart, true = bar chart
+            columnWidth: '55%',
+            endingShape: 'rounded'
+        }
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+    }
+};</code></pre>
+                    </div>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>4. Configuring Bar Charts</h4>
+                    <p>Bar charts are horizontal bar charts. Set `horizontal: true` in plotOptions:</p>
+                    <div class="code-block">
+<pre><code>const barOptions = {
+    series: [{
+        name: 'Revenue',
+        data: [44, 55, 41, 17, 15]
+    }],
+    chart: {
+        type: 'bar',
+        height: 350
+    },
+    plotOptions: {
+        bar: {
+            horizontal: true,  // true = horizontal bar chart
+            borderRadius: 4
+        }
+    },
+    xaxis: {
+        categories: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+    }
+};</code></pre>
+                    </div>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>5. Rendering Charts</h4>
+                    <p>Create and render the chart instances:</p>
+                    <div class="code-block">
+<pre><code>const columnChart = new ApexCharts(document.querySelector("#columnChart"), columnOptions);
+columnChart.render();
+
+const barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
+barChart.render();</code></pre>
+                    </div>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>6. Customization Options</h4>
+                    <p>Key customization options for bar/column charts:</p>
+                    <ul>
+                        <li><strong>Colors:</strong> Use the `colors` array to set custom colors</li>
+                        <li><strong>Width:</strong> Adjust `columnWidth` for bar thickness</li>
+                        <li><strong>Border Radius:</strong> Use `borderRadius` for rounded corners</li>
+                        <li><strong>Data Labels:</strong> Enable with `dataLabels: { enabled: true }`</li>
+                        <li><strong>Grid:</strong> Customize with `grid: { show: true/false }`</li>
+                        <li><strong>Legend:</strong> Configure with `legend: { show: true/false }`</li>
+                    </ul>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>7. Stacked Charts</h4>
+                    <p>For stacked bar/column charts, add multiple series:</p>
+                    <div class="code-block">
+<pre><code>const stackedOptions = {
+    series: [
+        {
+            name: 'Product A',
+            data: [44, 55, 41, 67, 22]
+        },
+        {
+            name: 'Product B',
+            data: [13, 23, 20, 8, 13]
+        }
+    ],
+    chart: {
+        type: 'bar',
+        height: 350,
+        stacked: true  // Enable stacking
+    },
+    plotOptions: {
+        bar: {
+            horizontal: true
+        }
+    }
+};</code></pre>
+                    </div>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>8. Responsive Design</h4>
+                    <p>ApexCharts automatically handles responsive design, but you can customize breakpoints:</p>
+                    <div class="code-block">
+<pre><code>chart: {
+    type: 'bar',
+    height: 350,
+    responsive: [{
+        breakpoint: 768,
+        options: {
+            chart: {
+                height: 250
+            },
+            plotOptions: {
+                bar: {
+                    columnWidth: '80%'
+                }
+            }
+        }
+    }]
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+// Basic Column Chart
+const columnOptions = {
+    series: [{
+        name: 'Sales',
+        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    }],
+    chart: {
+        type: 'bar',
+        height: 350
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            endingShape: 'rounded'
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+    },
+    yaxis: {
+        title: {
+            text: 'Sales (thousands)'
+        }
+    },
+    fill: {
+        opacity: 1
+    },
+    tooltip: {
+        y: {
+            formatter: function (val) {
+                return "$ " + val + " thousands"
+            }
+        }
+    }
+};
+
+const columnChart = new ApexCharts(document.querySelector("#columnChart"), columnOptions);
+columnChart.render();
+
+// Basic Bar Chart
+const barOptions = {
+    series: [{
+        name: 'Revenue',
+        data: [44, 55, 41, 17, 15]
+    }],
+    chart: {
+        type: 'bar',
+        height: 350
+    },
+    plotOptions: {
+        bar: {
+            borderRadius: 4,
+            horizontal: true,
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    xaxis: {
+        categories: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+    }
+};
+
+const barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
+barChart.render();
+
+// Stacked Column Chart
+const stackedOptions = {
+    series: [
+        {
+            name: 'Product A',
+            data: [44, 55, 41, 67, 22]
+        },
+        {
+            name: 'Product B',
+            data: [13, 23, 20, 8, 13]
+        }
+    ],
+    chart: {
+        type: 'bar',
+        height: 350,
+        stacked: true
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,
+        }
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May']
+    },
+    legend: {
+        position: 'top',
+    },
+    fill: {
+        opacity: 1
+    }
+};
+
+const stackedChart = new ApexCharts(document.querySelector("#stackedChart"), stackedOptions);
+stackedChart.render();
+
+// Grouped Bar Chart
+const groupedOptions = {
+    series: [
+        {
+            name: 'Q1',
+            data: [44, 55, 41, 67, 22]
+        },
+        {
+            name: 'Q2',
+            data: [13, 23, 20, 8, 13]
+        }
+    ],
+    chart: {
+        type: 'bar',
+        height: 350
+    },
+    plotOptions: {
+        bar: {
+            horizontal: true,
+            dataLabels: {
+                position: 'top',
+            }
+        }
+    },
+    dataLabels: {
+        enabled: true,
+        offsetX: -6,
+        style: {
+            fontSize: '12px',
+            colors: ['#fff']
+        }
+    },
+    stroke: {
+        show: true,
+        width: 1,
+        colors: ['#fff']
+    },
+    xaxis: {
+        categories: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+    }
+};
+
+const groupedChart = new ApexCharts(document.querySelector("#groupedChart"), groupedOptions);
+groupedChart.render();
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.tutorial-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.tutorial-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.tutorial-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.tutorial-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.feature-list li {
+    padding: 0.25rem 0;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.feature-list li:before {
+    content: "✓";
+    color: #2ecc71;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.tutorial-tabs {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.tutorial-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+}
+
+.tutorial-tabs .nav-link.active {
+    color: #495057;
+    background: white;
+    border-bottom: 3px solid #3498db;
+}
+
+.tutorial-content {
+    padding: 2rem;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.chart-container h4 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.code-block {
+    background: #2c3e50;
+    color: #ecf0f1;
+    border-radius: 10px;
+    padding: 1.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.explanation-section {
+    margin-bottom: 2rem;
+}
+
+.explanation-section h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.explanation-section p {
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.explanation-section ul {
+    color: #7f8c8d;
+    line-height: 1.6;
+}
+
+.explanation-section strong {
+    color: #2c3e50;
+}
+
+@media (max-width: 768px) {
+    .tutorial-title {
+        font-size: 2rem;
+    }
+    
+    .tutorial-content {
+        padding: 1rem;
+    }
+    
+    .chart-container {
+        padding: 1rem;
+    }
+}
+</style>
+{% endblock %}

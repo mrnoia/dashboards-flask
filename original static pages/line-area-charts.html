@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line & Area Charts Tutorial - ApexCharts & Bootstrap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            min-width: 280px;
+            max-width: 350px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .tutorial-header {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .tutorial-title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .tutorial-subtitle {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .tutorial-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 2rem;
+            color: #34495e;
+        }
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .highlight {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        .nav-tabs .nav-link {
+            color: #2c3e50;
+            font-weight: 500;
+            border: none;
+            background: rgba(52, 152, 219, 0.1);
+            margin-right: 0.5rem;
+            border-radius: 10px 10px 0 0;
+        }
+        .nav-tabs .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            background: white;
+            border-radius: 0 10px 10px 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                            <li><a class="dropdown-item" href="product-hierarchy-drilldown.html">📦 Product Hierarchy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📚 Tutorials
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">📊 Chart Tutorials</h6></li>
+                            <li><a class="dropdown-item" href="bar-column-charts.html">📊 Bar & Column Charts</a></li>
+                            <li><a class="dropdown-item" href="line-area-charts.html">📈 Line & Area Charts</a></li>
+                            <li><a class="dropdown-item" href="pie-donut-charts.html">🥧 Pie & Donut Charts</a></li>
+                            <li><a class="dropdown-item" href="scatter-bubble-charts.html">🫧 Scatter & Bubble Charts</a></li>
+                            <li><a class="dropdown-item" href="heatmap-treemap-charts.html">🔥 Heatmaps & Treemaps</a></li>
+                            <li><a class="dropdown-item" href="radar-polar-charts.html">🎯 Radar & Polar Charts</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">🎨 Bootstrap Components</h6></li>
+                            <li><a class="dropdown-item" href="layout-components.html">🏗️ Layout Components</a></li>
+                            <li><a class="dropdown-item" href="navigation-elements.html">🧭 Navigation Elements</a></li>
+                            <li><a class="dropdown-item" href="forms-inputs.html">📝 Forms & Inputs</a></li>
+                            <li><a class="dropdown-item" href="cards-modals.html">🎴 Cards & Modals</a></li>
+                            <li><a class="dropdown-item" href="tables-data-display.html">📊 Tables & Data Display</a></li>
+                            <li><a class="dropdown-item" href="responsive-design.html">📱 Responsive Design</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Tutorial Header -->
+        <div class="tutorial-header">
+            <h1 class="tutorial-title">📈 Line & Area Charts Tutorial</h1>
+            <p class="tutorial-subtitle">Master time series and trend visualization with ApexCharts and Bootstrap 5</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>What You'll Learn:</h5>
+                    <ul class="feature-list">
+                        <li>Basic line chart configuration</li>
+                        <li>Area chart variations</li>
+                        <li>Time series data handling</li>
+                        <li>Multiple series management</li>
+                        <li>Advanced styling options</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Prerequisites:</h5>
+                    <ul class="feature-list">
+                        <li>Basic HTML knowledge</li>
+                        <li>JavaScript fundamentals</li>
+                        <li>Bootstrap 5 basics</li>
+                        <li>ApexCharts installation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🎯 Introduction to Line & Area Charts</h2>
+            <p>Line and area charts are perfect for visualizing trends over time, showing continuous data, and displaying relationships between variables. They're essential for time series analysis and trend monitoring.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>📈 Line Charts</h5>
+                    <ul class="feature-list">
+                        <li>Best for time series data</li>
+                        <li>Clear trend visualization</li>
+                        <li>Multiple series support</li>
+                        <li>Precise value reading</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>📊 Area Charts</h5>
+                    <ul class="feature-list">
+                        <li>Emphasizes volume/quantity</li>
+                        <li>Visual impact for trends</li>
+                        <li>Stacked area support</li>
+                        <li>Gradient fills possible</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basic Line Chart -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🔧 Basic Line Chart Implementation</h2>
+            
+            <ul class="nav nav-tabs" id="lineTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="line-preview-tab" data-bs-toggle="tab" data-bs-target="#line-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="line-code-tab" data-bs-toggle="tab" data-bs-target="#line-code" type="button" role="tab">Code</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="line-explanation-tab" data-bs-toggle="tab" data-bs-target="#line-explanation" type="button" role="tab">Explanation</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="lineTabContent">
+                <div class="tab-pane fade show active" id="line-preview" role="tabpanel">
+                    <div class="chart-container">
+                        <div id="basic-line-chart"></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="line-code" role="tabpanel">
+                    <h5>HTML Structure:</h5>
+                    <div class="code-block">
+&lt;div class="container"&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-md-12"&gt;
+            &lt;div class="card"&gt;
+                &lt;div class="card-header"&gt;
+                    &lt;h5&gt;Monthly Revenue Trend&lt;/h5&gt;
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+                    &lt;div id="basic-line-chart"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+                    </div>
+                    
+                    <h5>JavaScript Implementation:</h5>
+                    <div class="code-block">
+// Basic Line Chart Configuration
+const options = {
+    series: [{
+        name: 'Revenue',
+        data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+    }],
+    chart: {
+        height: 350,
+        type: 'line',
+        zoom: {
+            enabled: false
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        curve: 'straight'
+    },
+    title: {
+        text: 'Product Trends by Month',
+        align: 'left'
+    },
+    grid: {
+        row: {
+            colors: ['#f3f3f3', 'transparent'],
+            opacity: 0.5
+        },
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                     'Jul', 'Aug', 'Sep'],
+    },
+    colors: ['#3498db']
+};
+
+const chart = new ApexCharts(document.querySelector("#basic-line-chart"), options);
+chart.render();
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="line-explanation" role="tabpanel">
+                    <h5>Key Configuration Options:</h5>
+                    <ul class="feature-list">
+                        <li><span class="highlight">type: 'line'</span> - Sets the chart type to line</li>
+                        <li><span class="highlight">stroke: { curve: 'straight' }</span> - Line style (straight, smooth, stepline)</li>
+                        <li><span class="highlight">zoom: { enabled: false }</span> - Disable zoom functionality</li>
+                        <li><span class="highlight">dataLabels: { enabled: false }</span> - Hide value labels on points</li>
+                        <li><span class="highlight">grid</span> - Background grid configuration</li>
+                        <li><span class="highlight">colors</span> - Line color configuration</li>
+                    </ul>
+                    
+                    <h5>Bootstrap Integration:</h5>
+                    <p>The line chart is wrapped in a Bootstrap card component for consistent styling and responsive layout. The card structure provides proper spacing and visual hierarchy.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Area Chart -->
+        <div class="tutorial-section">
+            <h2 class="section-title">📊 Area Chart with Gradient Fill</h2>
+            
+            <ul class="nav nav-tabs" id="areaTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="area-preview-tab" data-bs-toggle="tab" data-bs-target="#area-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="area-code-tab" data-bs-toggle="tab" data-bs-target="#area-code" type="button" role="tab">Code</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="areaTabContent">
+                <div class="tab-pane fade show active" id="area-preview" role="tabpanel">
+                    <div class="chart-container">
+                        <div id="area-chart"></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="area-code" role="tabpanel">
+                    <h5>Area Chart with Gradient:</h5>
+                    <div class="code-block">
+// Area Chart with Gradient Fill
+const areaOptions = {
+    series: [{
+        name: 'Sales',
+        data: [31, 40, 28, 51, 42, 109, 100]
+    }, {
+        name: 'Revenue',
+        data: [11, 32, 45, 32, 34, 52, 41]
+    }],
+    chart: {
+        height: 350,
+        type: 'area',
+        toolbar: {
+            show: false
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        curve: 'smooth'
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+    },
+    tooltip: {
+        x: {
+            format: 'dd/MM/yy'
+        },
+    },
+    fill: {
+        type: 'gradient',
+        gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.9,
+            stops: [0, 90, 100]
+        }
+    },
+    colors: ['#3498db', '#2ecc71']
+};
+
+const areaChart = new ApexCharts(document.querySelector("#area-chart"), areaOptions);
+areaChart.render();
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multi-Series Line Chart -->
+        <div class="tutorial-section">
+            <h2 class="section-title">📈 Multi-Series Line Chart</h2>
+            
+            <ul class="nav nav-tabs" id="multiTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="multi-preview-tab" data-bs-toggle="tab" data-bs-target="#multi-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="multi-code-tab" data-bs-toggle="tab" data-bs-target="#multi-code" type="button" role="tab">Code</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="multiTabContent">
+                <div class="tab-pane fade show active" id="multi-preview" role="tabpanel">
+                    <div class="chart-container">
+                        <div id="multi-line-chart"></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="multi-code" role="tabpanel">
+                    <h5>Multi-Series Line Chart:</h5>
+                    <div class="code-block">
+// Multi-Series Line Chart
+const multiOptions = {
+    series: [{
+        name: 'High - 2013',
+        data: [28, 29, 33, 36, 32, 32, 33]
+    }, {
+        name: 'Low - 2013',
+        data: [12, 11, 14, 18, 17, 13, 13]
+    }],
+    chart: {
+        height: 350,
+        type: 'line',
+        dropShadow: {
+            enabled: true,
+            color: '#000',
+            top: 18,
+            left: 7,
+            blur: 10,
+            opacity: 0.2
+        },
+        toolbar: {
+            show: false
+        }
+    },
+    predictions: {
+        show: true,
+        upperBound: {
+            borderColor: '#00E396',
+            borderDash: [5, 5],
+        },
+        lowerBound: {
+            borderColor: '#00E396',
+            borderDash: [5, 5],
+        },
+    },
+    plotOptions: {
+        line: {
+            isSlopeChart: true,
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        curve: 'straight',
+        width: 3
+    },
+    title: {
+        text: 'Line Chart - Predictions for 2019',
+        align: 'left'
+    },
+    grid: {
+        row: {
+            colors: ['#f3f3f3', 'transparent'],
+            opacity: 0.5
+        },
+    },
+    markers: {
+        size: 5,
+        hover: {
+            size: 9
+        }
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        title: {
+            text: 'Month'
+        }
+    },
+    yaxis: {
+        title: {
+            text: 'Temperature'
+        },
+        min: 5,
+        max: 40
+    },
+    legend: {
+        position: 'top',
+        horizontalAlign: 'right',
+        floating: true,
+        offsetY: -25,
+        offsetX: -5
+    },
+    colors: ['#3498db', '#e74c3c']
+};
+
+const multiChart = new ApexCharts(document.querySelector("#multi-line-chart"), multiOptions);
+multiChart.render();
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Features -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🚀 Advanced Features & Customization</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🎨 Custom Styling</h5>
+                    <ul class="feature-list">
+                        <li>Gradient fills and patterns</li>
+                        <li>Custom markers and points</li>
+                        <li>Animated transitions</li>
+                        <li>Interactive tooltips</li>
+                        <li>Dynamic data updates</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>📱 Responsive Design</h5>
+                    <ul class="feature-list">
+                        <li>Mobile-optimized layouts</li>
+                        <li>Touch-friendly interactions</li>
+                        <li>Adaptive axis labels</li>
+                        <li>Flexible container sizing</li>
+                        <li>Bootstrap grid integration</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div id="advanced-chart"></div>
+            </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="tutorial-section">
+            <h2 class="section-title">✅ Best Practices</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>📊 Data Visualization</h5>
+                    <ul class="feature-list">
+                        <li>Use appropriate time intervals</li>
+                        <li>Clear axis labeling</li>
+                        <li>Consistent color schemes</li>
+                        <li>Handle missing data gracefully</li>
+                        <li>Provide context for trends</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🎨 Design Principles</h5>
+                    <ul class="feature-list">
+                        <li>Maintain aspect ratios</li>
+                        <li>Use whitespace effectively</li>
+                        <li>Ensure accessibility</li>
+                        <li>Test on multiple devices</li>
+                        <li>Provide data annotations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🔗 Related Tutorials</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📊 Bar & Column Charts</h5>
+                            <p class="card-text">Learn to create categorical comparisons</p>
+                            <a href="bar-column-charts.html" class="btn btn-primary">Previous Tutorial →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">🥧 Pie & Donut Charts</h5>
+                            <p class="card-text">Master proportional data visualization</p>
+                            <a href="pie-donut-charts.html" class="btn btn-primary">Next Tutorial →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📊 Complete Guide</h5>
+                            <p class="card-text">Back to comprehensive ApexCharts guide</p>
+                            <a href="apexcharts-complete.html" class="btn btn-primary">View Guide →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <script>
+        // Basic Line Chart
+        const lineOptions = {
+            series: [{
+                name: 'Revenue',
+                data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+            }],
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'straight'
+            },
+            title: {
+                text: 'Product Trends by Month',
+                align: 'left'
+            },
+            grid: {
+                row: {
+                    colors: ['#f3f3f3', 'transparent'],
+                    opacity: 0.5
+                },
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                             'Jul', 'Aug', 'Sep'],
+            },
+            colors: ['#3498db']
+        };
+
+        const lineChart = new ApexCharts(document.querySelector("#basic-line-chart"), lineOptions);
+        lineChart.render();
+
+        // Area Chart
+        const areaOptions = {
+            series: [{
+                name: 'Sales',
+                data: [31, 40, 28, 51, 42, 109, 100]
+            }, {
+                name: 'Revenue',
+                data: [11, 32, 45, 32, 34, 52, 41]
+            }],
+            chart: {
+                height: 350,
+                type: 'area',
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            },
+            tooltip: {
+                x: {
+                    format: 'dd/MM/yy'
+                },
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.9,
+                    stops: [0, 90, 100]
+                }
+            },
+            colors: ['#3498db', '#2ecc71']
+        };
+
+        const areaChart = new ApexCharts(document.querySelector("#area-chart"), areaOptions);
+        areaChart.render();
+
+        // Multi-Series Line Chart
+        const multiOptions = {
+            series: [{
+                name: 'High - 2013',
+                data: [28, 29, 33, 36, 32, 32, 33]
+            }, {
+                name: 'Low - 2013',
+                data: [12, 11, 14, 18, 17, 13, 13]
+            }],
+            chart: {
+                height: 350,
+                type: 'line',
+                dropShadow: {
+                    enabled: true,
+                    color: '#000',
+                    top: 18,
+                    left: 7,
+                    blur: 10,
+                    opacity: 0.2
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'straight',
+                width: 3
+            },
+            title: {
+                text: 'Multi-Series Temperature Data',
+                align: 'left'
+            },
+            grid: {
+                row: {
+                    colors: ['#f3f3f3', 'transparent'],
+                    opacity: 0.5
+                },
+            },
+            markers: {
+                size: 5,
+                hover: {
+                    size: 9
+                }
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                title: {
+                    text: 'Month'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Temperature'
+                },
+                min: 5,
+                max: 40
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                floating: true,
+                offsetY: -25,
+                offsetX: -5
+            },
+            colors: ['#3498db', '#e74c3c']
+        };
+
+        const multiChart = new ApexCharts(document.querySelector("#multi-line-chart"), multiOptions);
+        multiChart.render();
+
+        // Advanced Chart
+        const advancedOptions = {
+            series: [{
+                name: 'Revenue',
+                data: [{
+                    x: new Date('2023-01-01').getTime(),
+                    y: 150
+                }, {
+                    x: new Date('2023-02-01').getTime(),
+                    y: 180
+                }, {
+                    x: new Date('2023-03-01').getTime(),
+                    y: 195
+                }, {
+                    x: new Date('2023-04-01').getTime(),
+                    y: 170
+                }, {
+                    x: new Date('2023-05-01').getTime(),
+                    y: 210
+                }, {
+                    x: new Date('2023-06-01').getTime(),
+                    y: 245
+                }, {
+                    x: new Date('2023-07-01').getTime(),
+                    y: 280
+                }]
+            }, {
+                name: 'Profit',
+                data: [{
+                    x: new Date('2023-01-01').getTime(),
+                    y: 80
+                }, {
+                    x: new Date('2023-02-01').getTime(),
+                    y: 95
+                }, {
+                    x: new Date('2023-03-01').getTime(),
+                    y: 110
+                }, {
+                    x: new Date('2023-04-01').getTime(),
+                    y: 90
+                }, {
+                    x: new Date('2023-05-01').getTime(),
+                    y: 125
+                }, {
+                    x: new Date('2023-06-01').getTime(),
+                    y: 145
+                }, {
+                    x: new Date('2023-07-01').getTime(),
+                    y: 165
+                }]
+            }],
+            chart: {
+                type: 'area',
+                height: 350,
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: true,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        reset: true
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            xaxis: {
+                type: 'datetime',
+                labels: {
+                    format: 'MMM yyyy'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Amount ($)'
+                }
+            },
+            tooltip: {
+                x: {
+                    format: 'dd MMM yyyy'
+                },
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.3,
+                    stops: [0, 90, 100]
+                }
+            },
+            colors: ['#3498db', '#2ecc71']
+        };
+
+        const advancedChart = new ApexCharts(document.querySelector("#advanced-chart"), advancedOptions);
+        advancedChart.render();
+    </script>
+</body>
+</html>

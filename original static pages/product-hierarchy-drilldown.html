@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Hierarchy Drilldown Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        /* Navigation Styles */
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .card { border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .breadcrumb { background: none; padding: 0; }
+        .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: rgba(255, 255, 255, 0.7); }
+        .breadcrumb-item { color: rgba(255, 255, 255, 0.9); }
+        .breadcrumb-item a { color: rgba(255, 255, 255, 0.9); text-decoration: none; }
+        .breadcrumb-item a:hover { color: white; text-decoration: underline; }
+        .breadcrumb-item.active { color: white; font-weight: 600; }
+        .drilldown-card { cursor: pointer; transition: all 0.3s ease; }
+        .drilldown-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+        .back-btn:hover { background-color: #5a6268; }
+        .metric-card { transition: all 0.3s ease; }
+        .metric-card:hover { transform: translateY(-2px); }
+        .products-indicator { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; }
+        .sales-indicator { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
+        .rating-indicator { background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); color: white; }
+        .stock-indicator { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; }
+        .progress-custom { height: 6px; border-radius: 3px; }
+        .product-image { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+        .product-name { font-weight: 600; color: #2c3e50; }
+        .product-price { font-size: 1.1rem; font-weight: 600; color: #27ae60; }
+        .product-rating { color: #f39c12; }
+        .stock-badge { padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
+        .stock-good { background: #27ae60; color: white; }
+        .stock-low { background: #f39c12; color: white; }
+        .stock-critical { background: #e74c3c; color: white; }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                📊 Dashboard Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="index.html">📈 Basic Dashboard</a></li>
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                            <li><a class="dropdown-item" href="product-hierarchy-drilldown.html">📦 Product Hierarchy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="apexcharts-complete.html">📊 Apex Charts & Bootstrap</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" id="breadcrumb">
+                        <li class="breadcrumb-item active">All Categories</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card products-indicator">
+                    <h6 class="text-white">Total Products</h6>
+                    <h2 id="total-products" class="text-white">0</h2>
+                    <small class="text-white" id="products-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card">
+                    <h6 class="text-muted">Total Sales</h6>
+                    <h2 id="total-sales">$0</h2>
+                    <small class="text-success" id="sales-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card rating-indicator">
+                    <h6 class="text-white">Avg Rating</h6>
+                    <h2 id="avg-rating" class="text-white">0</h2>
+                    <small class="text-white" id="rating-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card stock-indicator">
+                    <h6 class="text-white">Low Stock</h6>
+                    <h2 id="low-stock" class="text-white">0</h2>
+                    <small class="text-white" id="stock-change">Alert</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Categories -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>📦 Product Categories</h5>
+                        <small class="text-muted">Click on any category to drill down to subcategories</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="categories-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Details Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>Product Details</h5>
+                            <small class="text-muted" id="table-subtitle">Overview of all product categories</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" onclick="exportData()">
+                                📊 Export Data
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="addNewProduct()">
+                                ➕ Add Product
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Products</th>
+                                        <th>Sales</th>
+                                        <th>Revenue</th>
+                                        <th>Avg Rating</th>
+                                        <th>Stock Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        // Product hierarchy data structure
+        const productHierarchyData = {
+            overview: {
+                categories: [
+                    {
+                        name: 'Electronics',
+                        products: 156,
+                        sales: 12500,
+                        revenue: 2500000,
+                        avgRating: 4.2,
+                        stockStatus: 'Good',
+                        details: {
+                            subcategories: [
+                                {
+                                    name: 'Computers',
+                                    products: [
+                                        { id: 'laptop-pro-16', name: 'MacBook Pro 16"', price: 2499, rating: 4.8, sales: 1200, stock: 45, image: 'laptop-pro-16.jpg', description: '16-inch MacBook Pro with M3 Pro chip' },
+                                        { id: 'macbook-air-m2', name: 'MacBook Air M2', price: 999, rating: 4.6, sales: 2100, stock: 120, image: 'macbook-air-m2.jpg', description: '13-inch MacBook Air with M2 chip' },
+                                        { id: 'imac-24', name: 'iMac 24"', price: 1299, rating: 4.7, sales: 800, stock: 35, image: 'imac-24.jpg', description: '24-inch iMac with Retina 5K display' }
+                                    ],
+                                    totalProducts: 3,
+                                    totalSales: 4100,
+                                    totalRevenue: 4747,
+                                    avgRating: 4.7
+                                },
+                                {
+                                    name: 'Smartphones',
+                                    products: [
+                                        { id: 'iphone-15-pro', name: 'iPhone 15 Pro', price: 999, rating: 4.6, sales: 5800, stock: 120, image: 'iphone-15-pro.jpg', description: '6.7-inch iPhone 15 Pro' },
+                                        { id: 'iphone-14', name: 'iPhone 14', price: 799, rating: 4.4, sales: 8900, stock: 250, image: 'iphone-14.jpg', description: '6.1-inch iPhone 14' },
+                                        { id: 'iphone-se', name: 'iPhone SE', price: 429, rating: 4.2, sales: 3200, stock: 180, image: 'iphone-se.jpg', description: '4.7-inch iPhone SE' }
+                                    ],
+                                    totalProducts: 4,
+                                    totalSales: 17900,
+                                    totalRevenue: 2227,
+                                    avgRating: 4.4
+                                },
+                                {
+                                    name: 'Tablets',
+                                    products: [
+                                        { id: 'ipad-pro-12', name: 'iPad Pro 12.9"', price: 1099, rating: 4.5, sales: 350, stock: 68, image: 'ipad-pro-12-9.jpg', description: '12.9-inch iPad Pro' },
+                                        { id: 'ipad-air', name: 'iPad Air', price: 599, rating: 4.3, sales: 800, stock: 132, image: 'ipad-air.jpg', description: '10.9-inch iPad Air' },
+                                        { id: 'ipad-mini', name: 'iPad Mini', price: 499, rating: 4.1, sales: 450, stock: 95, image: 'ipad-mini.jpg', description: '8.3-inch iPad Mini' }
+                                    ],
+                                    totalProducts: 3,
+                                    totalSales: 1600,
+                                    totalRevenue: 2197,
+                                    avgRating: 4.3
+                                },
+                                {
+                                    name: 'Accessories',
+                                    products: [
+                                        { id: 'airpods-pro', name: 'AirPods Pro', price: 249, rating: 4.4, sales: 1200, stock: 200, image: 'airpods-pro.jpg', description: 'AirPods Pro with noise cancellation' },
+                                        { id: 'magic-mouse', name: 'Magic Mouse', price: 99, rating: 4.3, sales: 2800, stock: 150, image: 'magic-mouse.jpg', description: 'Magic Mouse' },
+                                        { id: 'keyboard', name: 'Magic Keyboard', price: 149, rating: 4.6, sales: 450, stock: 180, image: 'keyboard.jpg', description: 'Magic Keyboard' }
+                                    ],
+                                    totalProducts: 3,
+                                    totalSales: 4730,
+                                    totalRevenue: 497,
+                                    avgRating: 4.4
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        };
+
+        let currentView = 'overview';
+        let currentCategory = null;
+        let currentSubcategory = null;
+        let currentProduct = null;
+        let categoriesChart;
+
+        // Initialize dashboard
+        function initDashboard() {
+            updateMetrics();
+            renderCategoriesChart();
+            updateTable('overview');
+        }
+
+        // Update metrics
+        function updateMetrics() {
+            const categories = productHierarchyData.overview.categories;
+            const totalProducts = categories.reduce((sum, cat) => sum + cat.products, 0);
+            const totalSales = categories.reduce((sum, cat) => sum + cat.sales, 0);
+            const totalRevenue = categories.reduce((sum, cat) => sum + cat.revenue, 0);
+            const avgRating = categories.reduce((sum, cat) => sum + cat.avgRating, 0) / categories.length;
+            const lowStockCategories = categories.filter(cat => cat.stockStatus === 'Low').length;
+
+            document.getElementById('total-products').textContent = totalProducts.toLocaleString();
+            document.getElementById('products-change').textContent = '+12%';
+            
+            document.getElementById('total-sales').textContent = totalSales.toLocaleString();
+            document.getElementById('sales-change').textContent = '+18%';
+            
+            document.getElementById('avg-rating').textContent = avgRating.toFixed(1);
+            document.getElementById('rating-change').textContent = '+0.2';
+            
+            document.getElementById('low-stock').textContent = lowStockCategories;
+            document.getElementById('stock-change').textContent = 'Alert';
+        }
+
+        // Render categories chart
+        function renderCategoriesChart() {
+            const categories = productHierarchyData.overview.categories;
+            
+            categoriesChart = new ApexCharts(document.querySelector("#categories-chart"), {
+                series: [{
+                    name: 'Products',
+                    data: categories.map(cat => cat.products)
+                }, {
+                    name: 'Sales',
+                    data: categories.map(cat => cat.sales)
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    toolbar: {
+                        show: false
+                    },
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            const categoryIndex = config.dataPointIndex;
+                            drillToCategory(categories[categoryIndex].name);
+                        }
+                    }
+                },
+                colors: ['#3498db', '#2ecc71'],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: categories.map(cat => cat.name)
+                },
+                yaxis: [
+                    {
+                        title: {
+                            text: 'Products'
+                        }
+                    },
+                    {
+                        opposite: true,
+                        title: {
+                            text: 'Sales'
+                        }
+                    }
+                ],
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(value, { seriesIndex }) {
+                            if (seriesIndex === 0) {
+                                return value.toLocaleString() + ' products';
+                            } else {
+                                return value.toLocaleString() + ' sales';
+                            }
+                        }
+                    }
+                }
+            });
+
+            categoriesChart.render();
+        }
+
+        // Drill down to category
+        function drillToCategory(categoryName) {
+            currentView = 'category';
+            currentCategory = productHierarchyData.overview.categories.find(cat => cat.name === categoryName);
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = `
+                <li class="breadcrumb-item"><a href="#" onclick="goBack()">All Categories</a></li>
+                <li class="breadcrumb-item active">${categoryName}</li>
+            `;
+
+            // Update metrics
+            document.getElementById('total-products').textContent = currentCategory.products.toLocaleString();
+            document.getElementById('total-sales').textContent = currentCategory.sales.toLocaleString();
+            document.getElementById('avg-rating').textContent = currentCategory.avgRating.toFixed(1);
+            document.getElementById('low-stock').textContent = currentCategory.stockStatus === 'Low' ? 'Yes' : 'No';
+
+            // Update charts
+            renderCategoryDetailsChart();
+            updateTable('category');
+        }
+
+        // Render category details chart
+        function renderCategoryDetailsChart() {
+            const subcategories = currentCategory.details.subcategories;
+            
+            categoriesChart.updateOptions({
+                series: [{
+                    name: 'Products',
+                    data: subcategories.map(sub => sub.products.length)
+                }, {
+                    name: 'Sales',
+                    data: subcategories.map(sub => sub.totalSales)
+                }],
+                xaxis: {
+                    categories: subcategories.map(sub => sub.name)
+                },
+                chart: {
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            const subcategoryIndex = config.dataPointIndex;
+                            drillToSubcategory(subcategories[subcategoryIndex].name);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Drill down to subcategory
+        function drillToSubcategory(subcategoryName) {
+            currentView = 'subcategory';
+            currentSubcategory = currentCategory.details.subcategories.find(sub => sub.name === subcategoryName);
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = `
+                <li class="breadcrumb-item"><a href="#" onclick="goBack()">All Categories</a></li>
+                <li class="breadcrumb-item"><a href="#" onclick="goToCategory('${currentCategory.name}')">${currentCategory.name}</a></li>
+                <li class="breadcrumb-item active">${subcategoryName}</li>
+            `;
+
+            // Update metrics
+            document.getElementById('total-products').textContent = currentSubcategory.products.length.toLocaleString();
+            document.getElementById('total-sales').textContent = currentSubcategory.totalSales.toLocaleString();
+            document.getElementById('avg-rating').textContent = currentSubcategory.avgRating.toFixed(1);
+            document.getElementById('low-stock').textContent = 'N/A';
+
+            // Update charts
+            renderSubcategoryDetailsChart();
+            updateTable('subcategory');
+        }
+
+        // Render subcategory details chart
+        function renderSubcategoryDetailsChart() {
+            const products = currentSubcategory.products;
+            
+            categoriesChart.updateOptions({
+                series: [{
+                    name: 'Products',
+                    data: products.map(prod => prod.sales)
+                }],
+                xaxis: {
+                    categories: products.map(prod => prod.name.substring(0, 15) + (prod.name.length > 15 ? '...' : ''))
+                },
+                chart: {
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            const productIndex = config.dataPointIndex;
+                            drillToProduct(products[productIndex].id);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Drill down to product
+        function drillToProduct(productId) {
+            currentView = 'product';
+            currentProduct = currentSubcategory.products.find(prod => prod.id === productId);
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = `
+                <li class="breadcrumb-item"><a href="#" onclick="goBack()">All Categories</a></li>
+                <li class="breadcrumb-item"><a href="#" onclick="goToCategory('${currentCategory.name}')">${currentCategory.name}</a></li>
+                <li class="breadcrumb-item"><a href="#" onclick="goToSubcategory('${currentSubcategory.name}')">${currentSubcategory.name}</a></li>
+                <li class="breadcrumb-item active">${currentProduct.name}</li>
+            `;
+
+            // Update metrics
+            document.getElementById('total-products').textContent = '1';
+            document.getElementById('total-sales').textContent = currentProduct.sales.toLocaleString();
+            document.getElementById('avg-rating').textContent = currentProduct.rating.toFixed(1);
+            document.getElementById('low-stock').textContent = currentProduct.stock > 10 ? 'No' : 'Yes';
+
+            // Update charts
+            renderProductDetailsChart();
+            updateTable('product');
+        }
+
+        // Render product details chart
+        function renderProductDetailsChart() {
+            // Show a simple bar chart with just the current product
+            categoriesChart.updateOptions({
+                series: [{
+                    name: 'Sales',
+                    data: [currentProduct.sales]
+                }],
+                xaxis: {
+                    categories: [currentProduct.name]
+                },
+                chart: {
+                    events: {
+                        dataPointSelection: null
+                    }
+                }
+            });
+        }
+
+        // Update table
+        function updateTable(view) {
+            const tableBody = document.getElementById('table-body');
+            const tableSubtitle = document.getElementById('table-subtitle');
+
+            if (view === 'overview') {
+                tableSubtitle.textContent = 'Overview of all product categories';
+                tableBody.innerHTML = productHierarchyData.overview.categories.map(category => `
+                    <tr class="drilldown-card" onclick="drillToCategory('${category.name}')">
+                        <td>
+                            <strong>${category.name}</strong>
+                            <br><small class="text-muted">Click for details</small>
+                        </td>
+                        <td>${category.products.toLocaleString()}</td>
+                        <td>${category.sales.toLocaleString()}</td>
+                        <td>$${(category.revenue / 1000).toFixed(0)}K</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">⭐</span>
+                                <span>${category.avgRating.toFixed(1)}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${category.stockStatus === 'Good' ? 'bg-success' : category.stockStatus === 'Low' ? 'bg-warning' : 'bg-danger'}">
+                                ${category.stockStatus}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); manageCategory('${category.name}')">
+                                ⚙️ Manage
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else if (view === 'category') {
+                tableSubtitle.textContent = `Subcategories in ${currentCategory.name}`;
+                let subcategoryRows = currentCategory.details.subcategories.map(subcategory => `
+                    <tr>
+                        <td><strong>${subcategory.name}</strong></td>
+                        <td>${subcategory.products.length}</td>
+                        <td>${subcategory.totalSales.toLocaleString()}</td>
+                        <td>$${(subcategory.totalRevenue / 1000).toFixed(0)}K</td>
+                        <td>⭐ ${subcategory.avgRating.toFixed(1)}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1 me-2 progress-custom">
+                                    <div class="progress-bar ${subcategory.totalRevenue > 500 ? 'bg-success' : 'bg-warning'}" 
+                                         style="width: ${(subcategory.totalRevenue / 1000) * 100}%"></div>
+                                </div>
+                                <span class="text-muted">${(subcategory.totalRevenue / 1000).toFixed(0)}K</span>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-success" onclick="event.stopPropagation(); restockSubcategory('${subcategory.name}')">
+                                🔄 Restock
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                tableBody.innerHTML = `
+                    <tr>
+                        <th colspan="7" class="table-info">Subcategories</th>
+                    </tr>
+                    ${subcategoryRows}
+                `;
+            } else if (view === 'subcategory') {
+                tableSubtitle.textContent = `Products in ${currentSubcategory.name}`;
+                let productRows = currentSubcategory.products.map(product => `
+                    <tr>
+                        <td>
+                            <img src="${product.image}" alt="${product.name}" class="product-image me-2">
+                            <div>
+                                <strong>${product.name}</strong>
+                                <br><small>${product.description}</small>
+                            </div>
+                        </td>
+                        <td>${product.sales.toLocaleString()}</td>
+                        <td>$${product.price}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">⭐</span>
+                                <span>${product.rating.toFixed(1)}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="stock-badge ${product.stock > 50 ? 'stock-good' : product.stock > 20 ? 'stock-low' : 'stock-critical'}">
+                                Stock: ${product.stock}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); viewProduct('${product.id}')">
+                                👁️ View
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                tableBody.innerHTML = `
+                    <tr>
+                        <th colspan="7" class="table-info">Products</th>
+                    </tr>
+                    ${productRows}
+                `;
+            } else if (view === 'product') {
+                tableSubtitle.textContent = `Product Details: ${currentProduct.name}`;
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <img src="${currentProduct.image}" alt="${currentProduct.name}" class="product-image me-2">
+                            <div>
+                                <strong>${currentProduct.name}</strong>
+                                <br><small>${currentProduct.description}</small>
+                            </div>
+                        </td>
+                        <td colspan="6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Price:</strong> $${currentProduct.price}</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Sales:</strong> ${currentProduct.sales.toLocaleString()}</strong>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Rating:</strong> ⭐ ${currentProduct.rating}/5</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Stock:</strong> ${currentProduct.stock} units</strong>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Go back functions
+        function goBack() {
+            if (currentView === 'product') {
+                drillToSubcategory(currentSubcategory.name);
+            } else if (currentView === 'subcategory') {
+                drillToCategory(currentCategory.name);
+            } else if (currentView === 'category') {
+                goToOverview();
+            }
+        }
+
+        function goToOverview() {
+            currentView = 'overview';
+            currentCategory = null;
+            currentSubcategory = null;
+            currentProduct = null;
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = '<li class="breadcrumb-item active">All Categories</li>';
+
+            // Update metrics
+            updateMetrics();
+
+            // Destroy existing chart and create new one
+            if (categoriesChart) {
+                categoriesChart.destroy();
+            }
+            renderCategoriesChart();
+            updateTable('overview');
+        }
+
+        function goToCategory(categoryName) {
+            drillToCategory(categoryName);
+        }
+
+        function goToSubcategory(subcategoryName) {
+            drillToSubcategory(subcategoryName);
+        }
+
+        // Management functions
+        function manageCategory(categoryName) {
+            alert(`Manage category functionality would open configuration for ${categoryName}`);
+        }
+
+        function restockSubcategory(subcategoryName) {
+            alert(`Restock functionality would create order for ${subcategoryName}`);
+        }
+
+        function viewProduct(productId) {
+            alert(`View product functionality would show details for ${productId}`);
+        }
+
+        // Export data function
+        function exportData() {
+            alert('Export functionality would download current product hierarchy data as CSV/Excel');
+        }
+
+        // Add new product
+        function addNewProduct() {
+            alert('Add new product functionality would open a modal to add new products');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

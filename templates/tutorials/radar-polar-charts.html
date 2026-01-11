@@ -1,0 +1,610 @@
+{% extends "base.html" %}
+
+{% block title %}Radar & Polar Charts Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">🎯 Radar & Polar Charts Tutorial</h1>
+        <p class="tutorial-subtitle">Master radar and polar charts with ApexCharts and Bootstrap 5</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Basic radar chart configuration</li>
+                    <li>Polar area chart variations</li>
+                    <li>Multi-series radar charts</li>
+                    <li>Spider web styling</li>
+                    <li>Comparative analysis</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>JavaScript fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>Understanding of data visualization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                🎯 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Basic Radar Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="basicRadarChart"></div>
+                    </div>
+                </div>
+
+                <h3>Polar Area Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="polarAreaChart"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Multi-Series Radar</h3>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="multiSeriesRadar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Filled Radar Chart</h3>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="filledRadarChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Radar with Markers</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="radarMarkersChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>Basic Radar Chart</h3>
+                <pre><code>// Basic Radar Chart Configuration
+const options = {
+  series: [{
+    name: 'Series 1',
+    data: [80, 50, 30, 40, 100, 20]
+  }],
+  chart: {
+    height: 350,
+    type: 'radar',
+  },
+  xaxis: {
+    categories: ['January', 'February', 'March', 'April', 'May', 'June']
+  },
+  yaxis: {
+    labels: {
+      show: true,
+      formatter: function(val) {
+        return val + '%'
+      }
+    }
+  },
+  title: {
+    text: 'Basic Radar Chart',
+    align: 'center'
+  }
+};
+
+const chart = new ApexCharts(document.querySelector("#basicRadarChart"), options);
+chart.render();</code></pre>
+
+                <h3>Polar Area Chart</h3>
+                <pre><code>// Polar Area Chart Configuration
+const options = {
+  series: [14, 23, 21, 17, 15, 10, 12, 17, 21],
+  chart: {
+    type: 'polarArea',
+    height: 350
+  },
+  labels: ['Category A', 'Category B', 'Category C', 'Category D', 'Category E', 'Category F', 'Category G', 'Category H', 'Category I'],
+  fill: {
+    opacity: 0.8
+  },
+  stroke: {
+    width: 0,
+    colors: undefined
+  },
+  yaxis: {
+    show: false
+  },
+  legend: {
+    position: 'bottom'
+  },
+  title: {
+    text: 'Polar Area Chart',
+    align: 'center'
+  }
+};
+
+const chart = new ApexCharts(document.querySelector("#polarAreaChart"), options);
+chart.render();</code></pre>
+
+                <h3>Multi-Series Radar Chart</h3>
+                <pre><code>// Multi-Series Radar Chart
+const options = {
+  series: [{
+    name: 'Product A',
+    data: [44, 55, 41, 67, 22, 43]
+  }, {
+    name: 'Product B',
+    data: [13, 23, 20, 8, 13, 27]
+  }, {
+    name: 'Product C',
+    data: [11, 17, 15, 15, 21, 14]
+  }],
+  chart: {
+    height: 350,
+    type: 'radar',
+    dropShadow: {
+      enabled: true,
+      blur: 1,
+      left: 1,
+      top: 1
+    }
+  },
+  stroke: {
+    width: 2
+  },
+  fill: {
+    opacity: 0.1
+  },
+  markers: {
+    size: 0
+  },
+  xaxis: {
+    categories: ['Quality', 'Price', 'Design', 'Features', 'Support', 'Delivery']
+  },
+  yaxis: {
+    show: false
+  },
+  title: {
+    text: 'Product Comparison',
+    align: 'center'
+  },
+  legend: {
+    position: 'top'
+  }
+};</code></pre>
+
+                <h3>Filled Radar Chart</h3>
+                <pre><code>// Filled Radar Chart Configuration
+const options = {
+  series: [{
+    name: 'Performance',
+    data: [85, 92, 78, 88, 95, 82]
+  }],
+  chart: {
+    height: 350,
+    type: 'radar',
+  },
+  plotOptions: {
+    radar: {
+      fill: {
+        opacity: 0.5,
+        colors: ['#008FFB']
+      }
+    }
+  },
+  stroke: {
+    width: 2,
+    colors: ['#008FFB']
+  },
+  fill: {
+    opacity: 0.5
+  },
+  markers: {
+    size: 4,
+    colors: ['#008FFB'],
+    strokeColors: '#fff',
+    strokeWidth: 2
+  },
+  xaxis: {
+    categories: ['Speed', 'Reliability', 'Comfort', 'Safety', 'Efficiency', 'Design']
+  },
+  yaxis: {
+    show: true,
+    labels: {
+      show: true,
+      formatter: function(val) {
+        return val
+      }
+    }
+  },
+  title: {
+    text: 'Performance Metrics',
+    align: 'center'
+  }
+};</code></pre>
+
+                <h3>Radar with Markers</h3>
+                <pre><code>// Radar Chart with Markers
+const options = {
+  series: [{
+    name: 'Current',
+    data: [23, 11, 22, 27, 13, 22]
+  }, {
+    name: 'Previous',
+    data: [17, 7, 15, 21, 11, 19]
+  }],
+  chart: {
+    height: 350,
+    type: 'radar',
+  },
+  stroke: {
+    width: 2
+  },
+  fill: {
+    opacity: 0.1
+  },
+  markers: {
+    size: 6,
+    hover: {
+      size: 8
+    }
+  },
+  xaxis: {
+    categories: ['Sales', 'Marketing', 'Development', 'Support', 'HR', 'Management']
+  },
+  yaxis: {
+    show: true,
+    labels: {
+      show: true,
+      formatter: function(val) {
+        return val + 'k'
+      }
+    }
+  },
+  title: {
+    text: 'Department Performance',
+    align: 'center'
+  },
+  legend: {
+    position: 'top'
+  }
+};</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Radar & Polar Charts Overview</h3>
+                <p>Radar and polar charts are ideal for comparing multiple quantitative variables and showing relationships between data points.</p>
+                
+                <h4>Radar Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Compare multiple variables across categories</li>
+                    <li><strong>Format</strong>: Web-like chart with radiating axes</li>
+                    <li><strong>Best for</strong>: Performance analysis, skill assessment</li>
+                    <li><strong>Data type</strong>: Multi-dimensional data</li>
+                </ul>
+
+                <h4>Polar Area Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Show circular data with varying radii</li>
+                    <li><strong>Format</strong>: Circular sectors with different sizes</li>
+                    <li><strong>Best for</strong>: Cyclical data, categorical comparison</li>
+                    <li><strong>Data type</strong>: Single-dimensional categorical data</li>
+                </ul>
+
+                <h3>Chart Configuration Options</h3>
+                
+                <h4>Basic Settings</h4>
+                <ul>
+                    <li><strong>chart.type</strong>: 'radar' or 'polarArea'</li>
+                    <li><strong>chart.height</strong>: Chart height in pixels</li>
+                    <li><strong>chart.dropShadow</strong>: Shadow effects</li>
+                    <li><strong>chart.toolbar</strong>: Toolbar options</li>
+                </ul>
+
+                <h4>Data Configuration</h4>
+                <ul>
+                    <li><strong>series.data</strong>: Array of data values</li>
+                    <li><strong>series.name</strong>: Series name for legend</li>
+                    <li><strong>Multi-series</strong>: Multiple data series</li>
+                    <li><strong>labels</strong>: Category labels (polar charts)</li>
+                </ul>
+
+                <h4>Axis Configuration</h4>
+                <ul>
+                    <li><strong>xaxis.categories</strong>: Category labels</li>
+                    <li><strong>yaxis.show</strong>: Show/hide y-axis</li>
+                    <li><strong>yaxis.labels</strong>: Y-axis formatting</li>
+                    <li><strong>yaxis.title</strong>: Y-axis title</li>
+                </ul>
+
+                <h4>Styling Options</h4>
+                <ul>
+                    <li><strong>stroke</strong>: Line styling</li>
+                    <li><strong>fill</strong>: Fill color and opacity</li>
+                    <li><strong>markers</strong>: Data point markers</li>
+                    <li><strong>colors</strong>: Series color palette</li>
+                </ul>
+
+                <h3>Data Visualization Best Practices</h3>
+                
+                <h4>When to Use Radar Charts</h4>
+                <ul>
+                    <li>Comparing multiple products or services</li>
+                    <li>Performance assessment across metrics</li>
+                    <li>Skill evaluation and analysis</li>
+                    <li>Multi-dimensional data comparison</li>
+                </ul>
+
+                <h4>When to Use Polar Area Charts</h4>
+                <ul>
+                    <li>Showing cyclical patterns</li>
+                    <li>Comparing categorical data</li>
+                    <li>Displaying part-to-whole relationships</li>
+                    <li>Visualizing seasonal data</li>
+                </ul>
+
+                <h4>Design Guidelines</h4>
+                <ul>
+                    <li>Limit to 6-8 variables for readability</li>
+                    <li>Use consistent scales across axes</li>
+                    <li>Choose appropriate colors for series</li>
+                    <li>Include clear labels and legends</li>
+                    <li>Avoid overlapping data when possible</li>
+                </ul>
+
+                <h3>Advanced Features</h3>
+                
+                <h4>Interactive Features</h4>
+                <ul>
+                    <li><strong>Hover effects</strong>: Highlight on hover</li>
+                    <li><strong>Click actions</strong>: Series selection</li>
+                    <li><strong>Tooltips</strong>: Detailed information</li>
+                    <li><strong>Legend interaction</strong>: Toggle series</li>
+                </ul>
+
+                <h4>Fill Options</h4>
+                <ul>
+                    <li><strong>Solid fills</strong>: Uniform color fills</li>
+                    <li><strong>Gradient fills</strong>: Gradient color effects</li>
+                    <li><strong>Opacity control</strong>: Transparency levels</li>
+                    <li><strong>Pattern fills</strong>: Pattern-based fills</li>
+                </ul>
+
+                <h4>Marker Customization</h4>
+                <ul>
+                    <li><strong>Size variation</strong>: Different marker sizes</li>
+                    <li><strong>Shape options</strong>: Circle, square, triangle</li>
+                    <li><strong>Border styling</strong>: Marker borders</li>
+                    <li><strong>Hover effects</strong>: Interactive markers</li>
+                </ul>
+
+                <h3>Common Use Cases</h3>
+                <ul>
+                    <li><strong>Product comparison</strong>: Feature comparison</li>
+                    <li><strong>Employee evaluation</strong>: Performance metrics</li>
+                    <li><strong>Market analysis</strong>: Competitive analysis</li>
+                    <li><strong>Skill assessment</strong>: Competency mapping</li>
+                    <li><strong>Quality control</strong>: Multi-factor analysis</li>
+                </ul>
+
+                <h3>Data Analysis</h3>
+                <ul>
+                    <li><strong>Pattern identification</strong>: Recognize patterns</li>
+                    <li><strong>Gap analysis</strong>: Identify performance gaps</li>
+                    <li><strong>Strengths/weaknesses</strong>: Visual assessment</li>
+                    <li><strong>Trend analysis</strong>: Over time comparisons</li>
+                </ul>
+
+                <h3>Performance Considerations</h3>
+                <ul>
+                    <li>Limit number of data points</li>
+                    <li>Optimize for mobile devices</li>
+                    <li>Consider animation performance</li>
+                    <li>Test with various data sizes</li>
+                </ul>
+
+                <h3>Accessibility</h3>
+                <ul>
+                    <li>Provide text alternatives</li>
+                    <li>Ensure color contrast</li>
+                    <li>Include descriptive labels</li>
+                    <li>Consider colorblind-friendly palettes</li>
+                    <li>Test with screen readers</li>
+                </ul>
+
+                <h3>Statistical Applications</h3>
+                <ul>
+                    <li><strong>Correlation analysis</strong>: Variable relationships</li>
+                    <li><strong>Cluster analysis</strong>: Group similar items</li>
+                    <li><strong>Principal component analysis</strong>: Data reduction</li>
+                    <li><strong>Multi-criteria decision making</strong>: Weighted analysis</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Charts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Basic Radar Chart
+    const basicRadarOptions = {
+        series: [{
+            name: 'Series 1',
+            data: [80, 50, 30, 40, 100, 20]
+        }],
+        chart: { height: 350, type: 'radar' },
+        xaxis: {
+            categories: ['January', 'February', 'March', 'April', 'May', 'June']
+        },
+        yaxis: {
+            labels: {
+                show: true,
+                formatter: function(val) { return val + '%' }
+            }
+        },
+        title: { text: 'Basic Radar Chart', align: 'center' }
+    };
+    const basicRadarChart = new ApexCharts(document.querySelector("#basicRadarChart"), basicRadarOptions);
+    basicRadarChart.render();
+
+    // Polar Area Chart
+    const polarAreaOptions = {
+        series: [14, 23, 21, 17, 15, 10, 12, 17, 21],
+        chart: { type: 'polarArea', height: 350 },
+        labels: ['Category A', 'Category B', 'Category C', 'Category D', 'Category E', 'Category F', 'Category G', 'Category H', 'Category I'],
+        fill: { opacity: 0.8 },
+        stroke: { width: 0 },
+        yaxis: { show: false },
+        legend: { position: 'bottom' },
+        title: { text: 'Polar Area Chart', align: 'center' }
+    };
+    const polarAreaChart = new ApexCharts(document.querySelector("#polarAreaChart"), polarAreaOptions);
+    polarAreaChart.render();
+
+    // Multi-Series Radar Chart
+    const multiSeriesOptions = {
+        series: [{
+            name: 'Product A',
+            data: [44, 55, 41, 67, 22, 43]
+        }, {
+            name: 'Product B',
+            data: [13, 23, 20, 8, 13, 27]
+        }, {
+            name: 'Product C',
+            data: [11, 17, 15, 15, 21, 14]
+        }],
+        chart: {
+            height: 350,
+            type: 'radar',
+            dropShadow: {
+                enabled: true,
+                blur: 1,
+                left: 1,
+                top: 1
+            }
+        },
+        stroke: { width: 2 },
+        fill: { opacity: 0.1 },
+        markers: { size: 0 },
+        xaxis: {
+            categories: ['Quality', 'Price', 'Design', 'Features', 'Support', 'Delivery']
+        },
+        yaxis: { show: false },
+        title: { text: 'Product Comparison', align: 'center' },
+        legend: { position: 'top' }
+    };
+    const multiSeriesChart = new ApexCharts(document.querySelector("#multiSeriesRadar"), multiSeriesOptions);
+    multiSeriesChart.render();
+
+    // Filled Radar Chart
+    const filledRadarOptions = {
+        series: [{
+            name: 'Performance',
+            data: [85, 92, 78, 88, 95, 82]
+        }],
+        chart: { height: 350, type: 'radar' },
+        plotOptions: {
+            radar: {
+                fill: {
+                    opacity: 0.5,
+                    colors: ['#008FFB']
+                }
+            }
+        },
+        stroke: { width: 2, colors: ['#008FFB'] },
+        fill: { opacity: 0.5 },
+        markers: {
+            size: 4,
+            colors: ['#008FFB'],
+            strokeColors: '#fff',
+            strokeWidth: 2
+        },
+        xaxis: {
+            categories: ['Speed', 'Reliability', 'Comfort', 'Safety', 'Efficiency', 'Design']
+        },
+        yaxis: {
+            show: true,
+            labels: {
+                show: true,
+                formatter: function(val) { return val }
+            }
+        },
+        title: { text: 'Performance Metrics', align: 'center' }
+    };
+    const filledRadarChart = new ApexCharts(document.querySelector("#filledRadarChart"), filledRadarOptions);
+    filledRadarChart.render();
+
+    // Radar with Markers
+    const radarMarkersOptions = {
+        series: [{
+            name: 'Current',
+            data: [23, 11, 22, 27, 13, 22]
+        }, {
+            name: 'Previous',
+            data: [17, 7, 15, 21, 11, 19]
+        }],
+        chart: { height: 350, type: 'radar' },
+        stroke: { width: 2 },
+        fill: { opacity: 0.1 },
+        markers: {
+            size: 6,
+            hover: { size: 8 }
+        },
+        xaxis: {
+            categories: ['Sales', 'Marketing', 'Development', 'Support', 'HR', 'Management']
+        },
+        yaxis: {
+            show: true,
+            labels: {
+                show: true,
+                formatter: function(val) { return val + 'k' }
+            }
+        },
+        title: { text: 'Department Performance', align: 'center' },
+        legend: { position: 'top' }
+    };
+    const radarMarkersChart = new ApexCharts(document.querySelector("#radarMarkersChart"), radarMarkersOptions);
+    radarMarkersChart.render();
+});
+</script>
+{% endblock %}

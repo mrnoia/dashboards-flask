@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+
+{% block title %}Layout Components Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">🏗️ Layout Components Tutorial</h1>
+        <p class="tutorial-subtitle">Master Bootstrap 5 layout system and responsive design components</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Container and container-fluid</li>
+                    <li>Grid system fundamentals</li>
+                    <li>Responsive breakpoints</li>
+                    <li>Flexbox utilities</li>
+                    <li>Layout best practices</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>CSS fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>Responsive design concepts</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                🏗️ Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Container Examples</h3>
+                
+                <div class="container mb-4 p-3 bg-light border">
+                    <h5>Fixed Container</h5>
+                    <p>This container has fixed widths at different breakpoints. It's centered on the page with responsive margins.</p>
+                </div>
+                
+                <div class="container-fluid mb-4 p-3 bg-dark text-white">
+                    <h5>Fluid Container</h5>
+                    <p>This container spans the full width of the viewport at all breakpoints.</p>
+                </div>
+
+                <h3 class="mt-5">Grid System Examples</h3>
+                
+                <div class="container mb-4">
+                    <h5>Equal Width Columns</h5>
+                    <div class="row">
+                        <div class="col border bg-light p-3">Column 1</div>
+                        <div class="col border bg-light p-3">Column 2</div>
+                        <div class="col border bg-light p-3">Column 3</div>
+                    </div>
+                </div>
+
+                <div class="container mb-4">
+                    <h5>Responsive Columns</h5>
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-4 border bg-light p-3">1/3 on large, 1/2 on medium, full on small</div>
+                        <div class="col-12 col-md-6 col-lg-4 border bg-light p-3">1/3 on large, 1/2 on medium, full on small</div>
+                        <div class="col-12 col-md-12 col-lg-4 border bg-light p-3">1/3 on large, full on medium and small</div>
+                    </div>
+                </div>
+
+                <div class="container mb-4">
+                    <h5>Column Offsets</h5>
+                    <div class="row">
+                        <div class="col-md-4 offset-md-4 border bg-light p-3">Centered column (offset 4)</div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-3 offset-md-3 border bg-light p-3">Offset 3</div>
+                        <div class="col-md-3 offset-md-3 border bg-light p-3">Offset 3</div>
+                    </div>
+                </div>
+
+                <h3 class="mt-5">Flexbox Utilities</h3>
+                
+                <div class="container mb-4">
+                    <h5>Flex Direction</h5>
+                    <div class="d-flex justify-content-between border bg-light p-3 mb-2">
+                        <div>Item 1</div>
+                        <div>Item 2</div>
+                        <div>Item 3</div>
+                    </div>
+                    <div class="d-flex flex-column border bg-light p-3">
+                        <div>Column Item 1</div>
+                        <div>Column Item 2</div>
+                        <div>Column Item 3</div>
+                    </div>
+                </div>
+
+                <div class="container mb-4">
+                    <h5>Alignment</h5>
+                    <div class="d-flex align-items-start border bg-light p-3 mb-2" style="height: 100px;">
+                        <div class="p-2 bg-primary text-white">Start</div>
+                        <div class="p-2 bg-secondary text-white">Middle content</div>
+                        <div class="p-2 bg-primary text-white">Start</div>
+                    </div>
+                    <div class="d-flex align-items-center border bg-light p-3 mb-2" style="height: 100px;">
+                        <div class="p-2 bg-success text-white">Center</div>
+                        <div class="p-2 bg-secondary text-white">Middle content</div>
+                        <div class="p-2 bg-success text-white">Center</div>
+                    </div>
+                    <div class="d-flex align-items-end border bg-light p-3" style="height: 100px;">
+                        <div class="p-2 bg-danger text-white">End</div>
+                        <div class="p-2 bg-secondary text-white">Middle content</div>
+                        <div class="p-2 bg-danger text-white">End</div>
+                    </div>
+                </div>
+
+                <h3 class="mt-5">Layout Components</h3>
+                
+                <div class="container mb-4">
+                    <h5>Jumbotron/Hero Section</h5>
+                    <div class="p-5 mb-4 bg-light rounded-3">
+                        <div class="container-fluid py-5">
+                            <h1 class="display-5 fw-bold">Hero Section</h1>
+                            <p class="col-md-8 fs-4">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content.</p>
+                            <button class="btn btn-primary btn-lg" type="button">Example button</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container mb-4">
+                    <h5>Card Layout</h5>
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card 1</h5>
+                                    <p class="card-text">This is a card in a responsive grid layout that maintains equal height.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card 2</h5>
+                                    <p class="card-text">Cards automatically adjust to equal height in the same row.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card 3</h5>
+                                    <p class="card-text">Perfect for creating consistent layouts with varying content lengths.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>Container Classes</h3>
+                <pre><code>&lt;!-- Fixed width container --&gt;
+&lt;div class="container"&gt;
+  &lt;!-- Content here --&gt;
+&lt;/div&gt;
+
+&lt;!-- Full width container --&gt;
+&lt;div class="container-fluid"&gt;
+  &lt;!-- Content here --&gt;
+&lt;/div&gt;
+
+&lt;!-- Responsive containers --&gt;
+&lt;div class="container-sm"&gt;100% wide until small breakpoint&lt;/div&gt;
+&lt;div class="container-md"&gt;100% wide until medium breakpoint&lt;/div&gt;
+&lt;div class="container-lg"&gt;100% wide until large breakpoint&lt;/div&gt;
+&lt;div class="container-xl"&gt;100% wide until extra large breakpoint&lt;/div&gt;</code></pre>
+
+                <h3>Grid System</h3>
+                <pre><code>&lt;!-- Basic grid --&gt;
+&lt;div class="container"&gt;
+  &lt;div class="row"&gt;
+    &lt;div class="col"&gt;Column&lt;/div&gt;
+    &lt;div class="col"&gt;Column&lt;/div&gt;
+    &lt;div class="col"&gt;Column&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Responsive grid --&gt;
+&lt;div class="row"&gt;
+  &lt;div class="col-12 col-md-6 col-lg-4"&gt;
+    Responsive column
+  &lt;/div&gt;
+  &lt;div class="col-12 col-md-6 col-lg-4"&gt;
+    Responsive column
+  &lt;/div&gt;
+  &lt;div class="col-12 col-md-12 col-lg-4"&gt;
+    Responsive column
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Column offsets --&gt;
+&lt;div class="row"&gt;
+  &lt;div class="col-md-4 offset-md-4"&gt;
+    Centered column
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+                <h3>Flexbox Utilities</h3>
+                <pre><code>&lt;!-- Flex container --&gt;
+&lt;div class="d-flex"&gt;
+  &lt;div&gt;Flex item&lt;/div&gt;
+  &lt;div&gt;Flex item&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Direction --&gt;
+&lt;div class="d-flex flex-row"&gt;&lt;/div&gt;
+&lt;div class="d-flex flex-column"&gt;&lt;/div&gt;
+&lt;div class="d-flex flex-row-reverse"&gt;&lt;/div&gt;
+
+&lt;!-- Justify content --&gt;
+&lt;div class="d-flex justify-content-start"&gt;&lt;/div&gt;
+&lt;div class="d-flex justify-content-end"&gt;&lt;/div&gt;
+&lt;div class="d-flex justify-content-center"&gt;&lt;/div&gt;
+&lt;div class="d-flex justify-content-between"&gt;&lt;/div&gt;
+&lt;div class="d-flex justify-content-around"&gt;&lt;/div&gt;
+
+&lt;!-- Align items --&gt;
+&lt;div class="d-flex align-items-start"&gt;&lt;/div&gt;
+&lt;div class="d-flex align-items-end"&gt;&lt;/div&gt;
+&lt;div class="d-flex align-items-center"&gt;&lt;/div&gt;
+&lt;div class="d-flex align-items-baseline"&gt;&lt;/div&gt;
+&lt;div class="d-flex align-items-stretch"&gt;&lt;/div&gt;</code></pre>
+
+                <h3>Card Grid Layout</h3>
+                <pre><code>&lt;!-- Equal height cards --&gt;
+&lt;div class="row row-cols-1 row-cols-md-3 g-4"&gt;
+  &lt;div class="col"&gt;
+    &lt;div class="card h-100"&gt;
+      &lt;!-- Card content --&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="col"&gt;
+    &lt;div class="card h-100"&gt;
+      &lt;!-- Card content --&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Bootstrap Layout System</h3>
+                <p>Bootstrap provides a flexible, mobile-first grid system with responsive breakpoints and utilities.</p>
+                
+                <h4>Containers</h4>
+                <ul>
+                    <li><strong>.container</strong>: Fixed-width container that changes at breakpoints</li>
+                    <li><strong>.container-fluid</strong>: Full-width container spanning entire viewport</li>
+                    <li><strong>.container-{breakpoint}</strong>: 100% wide until specified breakpoint</li>
+                    <li>Containers provide padding and center content horizontally</li>
+                </ul>
+
+                <h4>Grid System</h4>
+                <ul>
+                    <li><strong>12-column system</strong>: Divide content into up to 12 columns</li>
+                    <li><strong>.row</strong>: Horizontal group of columns</li>
+                    <li><strong>.col</strong>: Equal-width columns</li>
+                    <li><strong>.col-{breakpoint}-{number}</strong>: Specific column widths at breakpoints</li>
+                    <li><strong>Gutters</strong>: Space between columns (controlled by .g-* classes)</li>
+                </ul>
+
+                <h4>Breakpoints</h4>
+                <ul>
+                    <li><strong>xs</strong>: 0px and up (no prefix needed)</li>
+                    <li><strong>sm</strong>: 576px and up</li>
+                    <li><strong>md</strong>: 768px and up</li>
+                    <li><strong>lg</strong>: 992px and up</li>
+                    <li><strong>xl</strong>: 1200px and up</li>
+                    <li><strong>xxl</strong>: 1400px and up</li>
+                </ul>
+
+                <h4>Grid Options</h4>
+                <ul>
+                    <li><strong>Auto-layout columns</strong>: Equal width without specifying numbers</li>
+                    <li><strong>Column wrapping</strong>: Columns automatically wrap to new lines</li>
+                    <li><strong>Column breaks</strong>: Force columns to new lines with .w-100</li>
+                    <li><strong>Ordering</strong>: Change column order with .order-* classes</li>
+                    <li><strong>Offsetting</strong>: Push columns with .offset-* classes</li>
+                </ul>
+
+                <h3>Flexbox Utilities</h3>
+                
+                <h4>Display Utilities</h4>
+                <ul>
+                    <li><strong>.d-flex</strong>: Create flex container</li>
+                    <li><strong>.d-inline-flex</strong>: Create inline flex container</li>
+                    <li><strong>Responsive</strong>: .d-{breakpoint}-flex for responsive behavior</li>
+                </ul>
+
+                <h4>Direction</h4>
+                <ul>
+                    <li><strong>.flex-row</strong>: Left to right (default)</li>
+                    <li><strong>.flex-row-reverse</strong>: Right to left</li>
+                    <li><strong>.flex-column</strong>: Top to bottom</li>
+                    <li><strong>.flex-column-reverse</strong>: Bottom to top</li>
+                </ul>
+
+                <h4>Justify Content</h4>
+                <ul>
+                    <li><strong>.justify-content-start</strong>: Items at start (default)</li>
+                    <li><strong>.justify-content-end</strong>: Items at end</li>
+                    <li><strong>.justify-content-center</strong>: Items centered</li>
+                    <li><strong>.justify-content-between</strong>: Space between items</li>
+                    <li><strong>.justify-content-around</strong>: Space around items</li>
+                </ul>
+
+                <h4>Align Items</h4>
+                <ul>
+                    <li><strong>.align-items-start</strong>: Align to start</li>
+                    <li><strong>.align-items-end</strong>: Align to end</li>
+                    <li><strong>.align-items-center</strong>: Align to center</li>
+                    <li><strong>.align-items-baseline</strong>: Align to baseline</li>
+                    <li><strong>.align-items-stretch</strong>: Stretch to fill (default)</li>
+                </ul>
+
+                <h3>Best Practices</h3>
+                <ul>
+                    <li>Always use containers for proper spacing and centering</li>
+                    <li>Design mobile-first (start with small screens)</li>
+                    <li>Use semantic HTML5 elements within layouts</li>
+                    <li>Test layouts at all breakpoints</li>
+                    <li>Use flexbox utilities for component-level layouts</li>
+                    <li>Combine grid and flexbox for complex layouts</li>
+                    <li>Consider accessibility when creating layouts</li>
+                </ul>
+
+                <h3>Common Patterns</h3>
+                <ul>
+                    <li><strong>Hero sections</strong>: Full-width featured content areas</li>
+                    <li><strong>Card grids</strong>: Responsive card layouts with equal heights</li>
+                    <li><strong>Sidebar layouts</strong>: Main content with side navigation</li>
+                    <li><strong>Masonry grids</strong>: Pinterest-style layouts</li>
+                    <li><strong>Nested grids</strong>: Complex multi-level layouts</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

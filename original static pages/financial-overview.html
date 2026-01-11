@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Overview Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        /* Navigation Styles */
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .card { border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .breadcrumb { background: none; padding: 0; }
+        .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: #6c757d; }
+        .account-card { cursor: pointer; transition: all 0.3s ease; }
+        .account-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+        .back-btn:hover { background-color: #5a6268; }
+        .metric-card { transition: all 0.3s ease; }
+        .metric-card:hover { transform: translateY(-2px); }
+        .revenue-indicator { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; }
+        .profit-indicator { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
+        .expense-indicator { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; }
+        .growth-indicator { background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); color: white; }
+        .trend-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .progress-custom { height: 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                📊 Dashboard Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="index.html">📈 Basic Dashboard</a></li>
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="apexcharts-complete.html">📊 Apex Charts & Bootstrap</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" id="breadcrumb">
+                        <li class="breadcrumb-item active">Financial Overview</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card revenue-indicator">
+                    <h6 class="text-white">Total Revenue</h6>
+                    <h2 id="total-revenue" class="text-white">$0</h2>
+                    <small class="text-white" id="revenue-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card profit-indicator">
+                    <h6 class="text-white">Net Profit</h6>
+                    <h2 id="net-profit" class="text-white">$0</h2>
+                    <small class="text-white" id="profit-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card expense-indicator">
+                    <h6 class="text-white">Total Expenses</h6>
+                    <h2 id="total-expenses" class="text-white">$0</h2>
+                    <small class="text-white" id="expense-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card growth-indicator">
+                    <h6 class="text-white">Growth Rate</h6>
+                    <h2 id="growth-rate" class="text-white">0%</h2>
+                    <small class="text-white" id="growth-change">+0%</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Accounts -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>💹 Financial Accounts</h5>
+                        <small class="text-muted">Click on any account to drill down</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="accounts-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Trends -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>📈 Financial Trends</h5>
+                        <small class="text-muted">Revenue and profit over time</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="trends-chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>💰 Cash Flow</h5>
+                        <small class="text-muted">Monthly cash flow analysis</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="cashflow-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Details Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>Financial Details</h5>
+                            <small class="text-muted" id="table-subtitle">Overview of all financial accounts</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" onclick="exportData()">
+                                📊 Export Data
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="generateReport()">
+                                📄 Generate Report
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Account</th>
+                                        <th>Type</th>
+                                        <th>Balance</th>
+                                        <th>Change</th>
+                                        <th>Growth</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        // Financial overview hierarchical data
+        const financialData = {
+            overview: {
+                accounts: [
+                    {
+                        name: 'Operating Revenue',
+                        type: 'Revenue',
+                        balance: 8500000,
+                        change: 12.5,
+                        growth: 15.2,
+                        status: 'Excellent',
+                        details: {
+                            subAccounts: [
+                                { name: 'Product Sales', amount: 6500000, growth: 18.5 },
+                                { name: 'Service Revenue', amount: 1500000, growth: 8.2 },
+                                { name: 'Subscription Revenue', amount: 500000, growth: 22.1 }
+                            ],
+                            monthlyData: [
+                                { month: 'Jan', amount: 650000, target: 600000 },
+                                { month: 'Feb', amount: 680000, target: 620000 },
+                                { month: 'Mar', amount: 720000, target: 650000 },
+                                { month: 'Apr', amount: 690000, target: 680000 },
+                                { month: 'May', amount: 750000, target: 700000 },
+                                { month: 'Jun', amount: 780000, target: 720000 }
+                            ],
+                            trends: {
+                                forecast: 9200000,
+                                variance: 8.5,
+                                confidence: 92
+                            }
+                        }
+                    },
+                    {
+                        name: 'Operating Expenses',
+                        type: 'Expense',
+                        balance: 5200000,
+                        change: 8.3,
+                        growth: -5.2,
+                        status: 'Good',
+                        details: {
+                            subAccounts: [
+                                { name: 'Salaries', amount: 2800000, growth: -2.1 },
+                                { name: 'Marketing', amount: 1200000, growth: 12.5 },
+                                { name: 'Operations', amount: 800000, growth: -8.3 },
+                                { name: 'R&D', amount: 400000, growth: 15.2 }
+                            ],
+                            monthlyData: [
+                                { month: 'Jan', amount: 420000, budget: 430000 },
+                                { month: 'Feb', amount: 435000, budget: 440000 },
+                                { month: 'Mar', amount: 440000, budget: 450000 },
+                                { month: 'Apr', amount: 430000, budget: 445000 },
+                                { month: 'May', amount: 445000, budget: 460000 },
+                                { month: 'Jun', amount: 450000, budget: 470000 }
+                            ],
+                            trends: {
+                                forecast: 5400000,
+                                variance: -3.8,
+                                confidence: 88
+                            }
+                        }
+                    },
+                    {
+                        name: 'Cash & Equivalents',
+                        type: 'Asset',
+                        balance: 3200000,
+                        change: 5.8,
+                        growth: 8.9,
+                        status: 'Good',
+                        details: {
+                            subAccounts: [
+                                { name: 'Cash in Bank', amount: 1800000, growth: 6.2 },
+                                { name: 'Marketable Securities', amount: 900000, growth: 12.5 },
+                                { name: 'Cash Equivalents', amount: 500000, growth: 4.8 }
+                            ],
+                            monthlyData: [
+                                { month: 'Jan', amount: 2800000, target: 2700000 },
+                                { month: 'Feb', amount: 2900000, target: 2800000 },
+                                { month: 'Mar', amount: 3000000, target: 2900000 },
+                                { month: 'Apr', amount: 3100000, target: 3000000 },
+                                { month: 'May', amount: 3150000, target: 3100000 },
+                                { month: 'Jun', amount: 3200000, target: 3200000 }
+                            ],
+                            trends: {
+                                forecast: 3500000,
+                                variance: 9.4,
+                                confidence: 95
+                            }
+                        }
+                    },
+                    {
+                        name: 'Accounts Receivable',
+                        type: 'Asset',
+                        balance: 1800000,
+                        change: -2.3,
+                        growth: -1.5,
+                        status: 'Warning',
+                        details: {
+                            subAccounts: [
+                                { name: 'Current Receivables', amount: 1200000, growth: -3.2 },
+                                { name: 'Overdue Receivables', amount: 450000, growth: 8.5 },
+                                { name: 'Doubtful Accounts', amount: 150000, growth: 12.1 }
+                            ],
+                            monthlyData: [
+                                { month: 'Jan', amount: 1750000, target: 1700000 },
+                                { month: 'Feb', amount: 1780000, target: 1720000 },
+                                { month: 'Mar', amount: 1820000, target: 1750000 },
+                                { month: 'Apr', amount: 1790000, target: 1780000 },
+                                { month: 'May', amount: 1810000, target: 1800000 },
+                                { month: 'Jun', amount: 1800000, target: 1820000 }
+                            ],
+                            trends: {
+                                forecast: 1750000,
+                                variance: -2.8,
+                                confidence: 78
+                            }
+                        }
+                    },
+                    {
+                        name: 'Long-term Debt',
+                        type: 'Liability',
+                        balance: 2400000,
+                        change: -8.5,
+                        growth: -12.3,
+                        status: 'Excellent',
+                        details: {
+                            subAccounts: [
+                                { name: 'Bank Loans', amount: 1500000, growth: -15.2 },
+                                { name: 'Bonds Payable', amount: 700000, growth: -8.5 },
+                                { name: 'Other Debt', amount: 200000, growth: -5.1 }
+                            ],
+                            monthlyData: [
+                                { month: 'Jan', amount: 2600000, target: 2500000 },
+                                { month: 'Feb', amount: 2550000, target: 2450000 },
+                                { month: 'Mar', amount: 2500000, target: 2400000 },
+                                { month: 'Apr', amount: 2450000, target: 2350000 },
+                                { month: 'May', amount: 2420000, target: 2300000 },
+                                { month: 'Jun', amount: 2400000, target: 2250000 }
+                            ],
+                            trends: {
+                                forecast: 2200000,
+                                variance: -8.3,
+                                confidence: 91
+                            }
+                        }
+                    }
+                ]
+            }
+        };
+
+        let currentView = 'overview';
+        let currentAccount = null;
+        let accountsChart, trendsChart, cashflowChart;
+
+        // Initialize dashboard
+        function initDashboard() {
+            updateMetrics();
+            renderAccountsChart();
+            renderTrendsChart();
+            renderCashflowChart();
+            updateTable('overview');
+        }
+
+        // Update metrics
+        function updateMetrics() {
+            const accounts = financialData.overview.accounts;
+            const totalRevenue = accounts.filter(acc => acc.type === 'Revenue').reduce((sum, acc) => sum + acc.balance, 0);
+            const totalExpenses = accounts.filter(acc => acc.type === 'Expense').reduce((sum, acc) => sum + acc.balance, 0);
+            const netProfit = totalRevenue - totalExpenses;
+            const avgGrowth = accounts.reduce((sum, acc) => sum + acc.growth, 0) / accounts.length;
+
+            document.getElementById('total-revenue').textContent = '$' + (totalRevenue / 1000000).toFixed(1) + 'M';
+            document.getElementById('revenue-change').textContent = '+12.5%';
+            
+            document.getElementById('net-profit').textContent = '$' + (netProfit / 1000000).toFixed(1) + 'M';
+            document.getElementById('profit-change').textContent = '+18.2%';
+            
+            document.getElementById('total-expenses').textContent = '$' + (totalExpenses / 1000000).toFixed(1) + 'M';
+            document.getElementById('expense-change').textContent = '+8.3%';
+            
+            document.getElementById('growth-rate').textContent = avgGrowth.toFixed(1) + '%';
+            document.getElementById('growth-change').textContent = '+2.1%';
+        }
+
+        // Render accounts chart
+        function renderAccountsChart() {
+            const accounts = financialData.overview.accounts;
+            
+            accountsChart = new ApexCharts(document.querySelector("#accounts-chart"), {
+                series: [{
+                    name: 'Balance ($M)',
+                    data: accounts.map(acc => acc.balance / 1000000)
+                }, {
+                    name: 'Growth %',
+                    data: accounts.map(acc => acc.growth)
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    toolbar: {
+                        show: false
+                    },
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            const accountIndex = config.dataPointIndex;
+                            drillToAccount(accounts[accountIndex].name);
+                        }
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '60%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: accounts.map(acc => acc.name.length > 20 ? acc.name.substring(0, 20) + '...' : acc.name)
+                },
+                yaxis: [
+                    {
+                        title: {
+                            text: 'Balance ($M)'
+                        }
+                    },
+                    {
+                        opposite: true,
+                        title: {
+                            text: 'Growth %'
+                        }
+                    }
+                ],
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(value, { seriesIndex }) {
+                            if (seriesIndex === 0) {
+                                return '$' + value + 'M';
+                            } else {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            });
+
+            accountsChart.render();
+        }
+
+        // Render trends chart
+        function renderTrendsChart() {
+            trendsChart = new ApexCharts(document.querySelector("#trends-chart"), {
+                series: [{
+                    name: 'Revenue',
+                    data: [6.5, 6.8, 7.2, 6.9, 7.5, 7.8, 8.2, 8.5]
+                }, {
+                    name: 'Profit',
+                    data: [1.8, 2.1, 2.4, 2.2, 2.6, 2.8, 3.1, 3.3]
+                }, {
+                    name: 'Expenses',
+                    data: [4.7, 4.7, 4.8, 4.7, 4.9, 5.0, 5.1, 5.2]
+                }],
+                chart: {
+                    type: 'line',
+                    height: 350,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false,
+                    y: {
+                        formatter: function(value) {
+                            return '$' + value + 'M';
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            });
+
+            trendsChart.render();
+        }
+
+        // Render cashflow chart
+        function renderCashflowChart() {
+            cashflowChart = new ApexCharts(document.querySelector("#cashflow-chart"), {
+                series: [{
+                    name: 'Cash In',
+                    data: [2800000, 2900000, 3000000, 3100000, 3150000, 3200000]
+                }, {
+                    name: 'Cash Out',
+                    data: [2400000, 2450000, 2500000, 2550000, 2600000, 2650000]
+                }],
+                chart: {
+                    type: 'area',
+                    height: 350,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false,
+                    y: {
+                        formatter: function(value) {
+                            return '$' + (value / 1000000).toFixed(1) + 'M';
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            });
+
+            cashflowChart.render();
+        }
+
+        // Drill down to account
+        function drillToAccount(accountName) {
+            currentView = 'account';
+            currentAccount = financialData.overview.accounts.find(acc => acc.name === accountName);
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = `
+                <li class="breadcrumb-item"><a href="#" onclick="goBack()">Financial Overview</a></li>
+                <li class="breadcrumb-item active">${accountName}</li>
+            `;
+
+            // Update metrics
+            document.getElementById('total-revenue').textContent = '$' + (currentAccount.balance / 1000000).toFixed(1) + 'M';
+            document.getElementById('revenue-change').textContent = currentAccount.change + '%';
+            
+            const netProfit = currentAccount.type === 'Revenue' ? currentAccount.balance * 0.85 : 
+                            currentAccount.type === 'Expense' ? -currentAccount.balance * 0.15 : currentAccount.balance;
+            document.getElementById('net-profit').textContent = '$' + (netProfit / 1000000).toFixed(1) + 'M';
+            document.getElementById('profit-change').textContent = currentAccount.growth + '%';
+            
+            document.getElementById('total-expenses').textContent = '$' + (currentAccount.balance / 1000000).toFixed(1) + 'M';
+            document.getElementById('expense-change').textContent = currentAccount.change + '%';
+            
+            document.getElementById('growth-rate').textContent = currentAccount.growth + '%';
+            document.getElementById('growth-change').textContent = currentAccount.growth > 0 ? '+' + currentAccount.growth + '%' : currentAccount.growth + '%';
+
+            // Update charts
+            renderAccountDetailsChart();
+            updateTable('account');
+        }
+
+        // Render account details chart
+        function renderAccountDetailsChart() {
+            const monthlyData = currentAccount.details.monthlyData;
+            
+            accountsChart.updateOptions({
+                series: [{
+                    name: 'Actual',
+                    data: monthlyData.map(data => data.amount / 1000000)
+                }, {
+                    name: currentAccount.type === 'Revenue' ? 'Target' : 'Budget',
+                    data: monthlyData.map(data => (data.target || data.budget) / 1000000)
+                }],
+                xaxis: {
+                    categories: monthlyData.map(data => data.month)
+                },
+                chart: {
+                    events: {
+                        dataPointSelection: null
+                    }
+                }
+            });
+        }
+
+        // Update table
+        function updateTable(view) {
+            const tableBody = document.getElementById('table-body');
+            const tableSubtitle = document.getElementById('table-subtitle');
+
+            if (view === 'overview') {
+                tableSubtitle.textContent = 'Overview of all financial accounts';
+                tableBody.innerHTML = financialData.overview.accounts.map(account => `
+                    <tr class="account-card" onclick="drillToAccount('${account.name}')">
+                        <td>
+                            <strong>${account.name}</strong>
+                            <br><small class="text-muted">Click for details</small>
+                        </td>
+                        <td>
+                            <span class="trend-badge ${getAccountTypeColor(account.type)}">
+                                ${account.type}
+                            </span>
+                        </td>
+                        <td>$${(account.balance / 1000000).toFixed(1)}M</td>
+                        <td>
+                            <span class="trend-badge ${account.change > 0 ? 'bg-success' : 'bg-danger'}">
+                                ${account.change > 0 ? '+' : ''}${account.change}%
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1 me-2 progress-custom">
+                                    <div class="progress-bar ${account.growth > 0 ? 'bg-success' : 'bg-danger'}" 
+                                         style="width: ${Math.abs(account.growth) * 5}%"></div>
+                                </div>
+                                <span class="text-muted">${account.growth > 0 ? '+' : ''}${account.growth}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="trend-badge ${getStatusColor(account.status)}">
+                                ${account.status}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); manageAccount('${account.name}')">
+                                ⚙️ Manage
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else if (view === 'account') {
+                tableSubtitle.textContent = `Detailed analysis of ${currentAccount.name}`;
+                tableBody.innerHTML = `
+                    <tr>
+                        <td><strong>Account Type</strong></td>
+                        <td colspan="6">
+                            <span class="trend-badge ${getAccountTypeColor(currentAccount.type)}">
+                                ${currentAccount.type}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Current Balance</strong></td>
+                        <td>$${(currentAccount.balance / 1000000).toFixed(1)}M</td>
+                        <td><strong>Monthly Change</strong></td>
+                        <td>${currentAccount.change > 0 ? '+' : ''}${currentAccount.change}%</td>
+                        <td><strong>Growth Rate</strong></td>
+                        <td colspan="2">${currentAccount.growth > 0 ? '+' : ''}${currentAccount.growth}%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Forecast</strong></td>
+                        <td>$${(currentAccount.details.trends.forecast / 1000000).toFixed(1)}M</td>
+                        <td><strong>Variance</strong></td>
+                        <td>${currentAccount.details.trends.variance > 0 ? '+' : ''}${currentAccount.details.trends.variance}%</td>
+                        <td><strong>Confidence</strong></td>
+                        <td colspan="2">${currentAccount.details.trends.confidence}%</td>
+                    </tr>
+                    <tr>
+                        <th colspan="7" class="table-info">Sub-Accounts</th>
+                    </tr>
+                    ${currentAccount.details.subAccounts.map(subAccount => `
+                        <tr>
+                            <td><strong>${subAccount.name}</strong></td>
+                            <td>$${(subAccount.amount / 1000000).toFixed(1)}M</td>
+                            <td colspan="5">
+                                <span class="trend-badge ${subAccount.growth > 0 ? 'bg-success' : 'bg-danger'}">
+                                    ${subAccount.growth > 0 ? '+' : ''}${subAccount.growth}%
+                                </span>
+                            </td>
+                        </tr>
+                    `).join('')}
+                `;
+            }
+        }
+
+        // Get account type color
+        function getAccountTypeColor(type) {
+            const colors = {
+                'Revenue': 'bg-success',
+                'Expense': 'bg-danger',
+                'Asset': 'bg-primary',
+                'Liability': 'bg-warning'
+            };
+            return colors[type] || 'bg-secondary';
+        }
+
+        // Get status color
+        function getStatusColor(status) {
+            const colors = {
+                'Excellent': 'bg-success',
+                'Good': 'bg-info',
+                'Warning': 'bg-warning',
+                'Critical': 'bg-danger'
+            };
+            return colors[status] || 'bg-secondary';
+        }
+
+        // Go back to overview
+        function goBack() {
+            currentView = 'overview';
+            currentAccount = null;
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = '<li class="breadcrumb-item active">Financial Overview</li>';
+
+            // Update metrics
+            updateMetrics();
+
+            // Update charts
+            renderAccountsChart();
+            updateTable('overview');
+        }
+
+        // Export data function
+        function exportData() {
+            alert('Export functionality would download current financial data as CSV/Excel');
+        }
+
+        // Generate report
+        function generateReport() {
+            alert('Generate report functionality would create a comprehensive financial report PDF');
+        }
+
+        // Manage account
+        function manageAccount(accountName) {
+            alert(`Manage account functionality would open configuration for ${accountName}`);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

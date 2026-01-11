@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Elements Tutorial - Bootstrap 5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            min-width: 280px;
+            max-width: 350px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .tutorial-header {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .tutorial-title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .tutorial-subtitle {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .tutorial-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        .demo-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 2rem;
+            color: #34495e;
+        }
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .highlight {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        .nav-tabs .nav-link {
+            color: #2c3e50;
+            font-weight: 500;
+            border: none;
+            background: rgba(52, 152, 219, 0.1);
+            margin-right: 0.5rem;
+            border-radius: 10px 10px 0 0;
+        }
+        .nav-tabs .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            background: white;
+            border-radius: 0 10px 10px 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        .demo-navbar {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        .demo-breadcrumb {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        .demo-pagination {
+            background: rgba(155, 89, 182, 0.1);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                            <li><a class="dropdown-item" href="product-hierarchy-drilldown.html">📦 Product Hierarchy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📚 Tutorials
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">📊 Chart Tutorials</h6></li>
+                            <li><a class="dropdown-item" href="bar-column-charts.html">📊 Bar & Column Charts</a></li>
+                            <li><a class="dropdown-item" href="line-area-charts.html">📈 Line & Area Charts</a></li>
+                            <li><a class="dropdown-item" href="pie-donut-charts.html">🥧 Pie & Donut Charts</a></li>
+                            <li><a class="dropdown-item" href="scatter-bubble-charts.html">🫧 Scatter & Bubble Charts</a></li>
+                            <li><a class="dropdown-item" href="heatmap-treemap-charts.html">🔥 Heatmaps & Treemaps</a></li>
+                            <li><a class="dropdown-item" href="radar-polar-charts.html">🎯 Radar & Polar Charts</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">🎨 Bootstrap Components</h6></li>
+                            <li><a class="dropdown-item" href="layout-components.html">🏗️ Layout Components</a></li>
+                            <li><a class="dropdown-item" href="navigation-elements.html">🧭 Navigation Elements</a></li>
+                            <li><a class="dropdown-item" href="forms-inputs.html">📝 Forms & Inputs</a></li>
+                            <li><a class="dropdown-item" href="cards-modals.html">🎴 Cards & Modals</a></li>
+                            <li><a class="dropdown-item" href="tables-data-display.html">📊 Tables & Data Display</a></li>
+                            <li><a class="dropdown-item" href="responsive-design.html">📱 Responsive Design</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Tutorial Header -->
+        <div class="tutorial-header">
+            <h1 class="tutorial-title">🧭 Navigation Elements Tutorial</h1>
+            <p class="tutorial-subtitle">Master Bootstrap 5 navigation components for intuitive user interfaces</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>What You'll Learn:</h5>
+                    <ul class="feature-list">
+                        <li>Navbar components and variations</li>
+                        <li>Breadcrumb navigation</li>
+                        <li>Pagination controls</li>
+                        <li>Dropdown menus</li>
+                        <li>Responsive navigation patterns</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Prerequisites:</h5>
+                    <ul class="feature-list">
+                        <li>Basic HTML knowledge</li>
+                        <li>CSS fundamentals</li>
+                        <li>Bootstrap 5 basics</li>
+                        <li>JavaScript basics for interactions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🎯 Introduction to Navigation Elements</h2>
+            <p>Navigation elements are crucial for user experience, providing clear pathways through your application. Bootstrap offers a comprehensive set of navigation components that are responsive, accessible, and customizable.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🧭 Navigation Types</h5>
+                    <ul class="feature-list">
+                        <li>Primary navigation (navbar)</li>
+                        <li>Secondary navigation (tabs, pills)</li>
+                        <li>Hierarchical navigation (breadcrumbs)</li>
+                        <li>Content navigation (pagination)</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>📱 Responsive Features</h5>
+                    <ul class="feature-list">
+                        <li>Mobile-friendly collapsible menus</li>
+                        <li>Touch-optimized interactions</li>
+                        <li>Adaptive layouts</li>
+                        <li>Accessibility support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navbar Components -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🏷️ Navbar Components</h2>
+            
+            <ul class="nav nav-tabs" id="navbarTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="navbar-preview-tab" data-bs-toggle="tab" data-bs-target="#navbar-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="navbar-code-tab" data-bs-toggle="tab" data-bs-target="#navbar-code" type="button" role="tab">Code</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="navbar-explanation-tab" data-bs-toggle="tab" data-bs-target="#navbar-explanation" type="button" role="tab">Explanation</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="navbarTabContent">
+                <div class="tab-pane fade show active" id="navbar-preview" role="tabpanel">
+                    <div class="demo-container">
+                        <h5>Basic Navbar</h5>
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light demo-navbar">
+                            <div class="container-fluid">
+                                <a class="navbar-brand" href="#">Brand</a>
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav1">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                                <div class="collapse navbar-collapse" id="navbarNav1">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Features</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Pricing</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">About</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                        
+                        <h5 class="mt-4">Navbar with Dropdown</h5>
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light demo-navbar">
+                            <div class="container-fluid">
+                                <a class="navbar-brand" href="#">Brand</a>
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                                <div class="collapse navbar-collapse" id="navbarNav2">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#">Home</a>
+                                        </li>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                                Services
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Web Design</a></li>
+                                                <li><a class="dropdown-item" href="#">Development</a></li>
+                                                <li><a class="dropdown-item" href="#">Consulting</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Contact</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="navbar-code" role="tabpanel">
+                    <h5>Basic Navbar:</h5>
+                    <div class="code-block">
+&lt;nav class="navbar navbar-expand-lg navbar-light bg-light"&gt;
+  &lt;div class="container-fluid"&gt;
+    &lt;a class="navbar-brand" href="#"&gt;Brand&lt;/a&gt;
+    &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav"&gt;
+      &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div class="collapse navbar-collapse" id="navbarNav"&gt;
+      &lt;ul class="navbar-nav"&gt;
+        &lt;li class="nav-item"&gt;
+          &lt;a class="nav-link active" href="#"&gt;Home&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="nav-item"&gt;
+          &lt;a class="nav-link" href="#"&gt;Features&lt;/a&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;
+                    </div>
+                    
+                    <h5>Navbar with Dropdown:</h5>
+                    <div class="code-block">
+&lt;li class="nav-item dropdown"&gt;
+  &lt;a class="nav-link dropdown-toggle" href="#" role="button" 
+     data-bs-toggle="dropdown"&gt;
+    Services
+  &lt;/a&gt;
+  &lt;ul class="dropdown-menu"&gt;
+    &lt;li&gt;&lt;a class="dropdown-item" href="#"&gt;Web Design&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="dropdown-item" href="#"&gt;Development&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="dropdown-item" href="#"&gt;Consulting&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/li&gt;
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="navbar-explanation" role="tabpanel">
+                    <h5>Key Navbar Classes:</h5>
+                    <ul class="feature-list">
+                        <li><span class="highlight">navbar</span> - Base navbar class</li>
+                        <li><span class="highlight">navbar-expand-lg</span> - Responsive breakpoint</li>
+                        <li><span class="highlight">navbar-light bg-light</span> - Color scheme</li>
+                        <li><span class="highlight">navbar-brand</span> - Brand/logo area</li>
+                        <li><span class="highlight">navbar-toggler</span> - Mobile toggle button</li>
+                        <li><span class="highlight">collapse navbar-collapse</span> - Collapsible content</li>
+                    </ul>
+                    
+                    <h5>Responsive Breakpoints:</h5>
+                    <ul class="feature-list">
+                        <li><span class="highlight">navbar-expand-sm</span> - Collapse below 576px</li>
+                        <li><span class="highlight">navbar-expand-md</span> - Collapse below 768px</li>
+                        <li><span class="highlight">navbar-expand-lg</span> - Collapse below 992px</li>
+                        <li><span class="highlight">navbar-expand-xl</span> - Collapse below 1200px</li>
+                        <li><span class="highlight">navbar-expand-xxl</span> - Collapse below 1400px</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breadcrumb Navigation -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🍞 Breadcrumb Navigation</h2>
+            
+            <ul class="nav nav-tabs" id="breadcrumbTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="breadcrumb-preview-tab" data-bs-toggle="tab" data-bs-target="#breadcrumb-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="breadcrumb-code-tab" data-bs-toggle="tab" data-bs-target="#breadcrumb-code" type="button" role="tab">Code</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="breadcrumbTabContent">
+                <div class="tab-pane fade show active" id="breadcrumb-preview" role="tabpanel">
+                    <div class="demo-container">
+                        <h5>Basic Breadcrumb</h5>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb demo-breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item"><a href="#">Library</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Data</li>
+                            </ol>
+                        </nav>
+                        
+                        <h5 class="mt-4">Breadcrumb with Icons</h5>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb demo-breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">🏠 Home</a></li>
+                                <li class="breadcrumb-item"><a href="#">📊 Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="#">📈 Analytics</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">📋 Reports</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="breadcrumb-code" role="tabpanel">
+                    <h5>Breadcrumb Navigation:</h5>
+                    <div class="code-block">
+&lt;nav aria-label="breadcrumb"&gt;
+  &lt;ol class="breadcrumb"&gt;
+    &lt;li class="breadcrumb-item"&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="breadcrumb-item"&gt;&lt;a href="#"&gt;Library&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="breadcrumb-item active" aria-current="page"&gt;Data&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;
+
+&lt;!-- With Icons --&gt;
+&lt;nav aria-label="breadcrumb"&gt;
+  &lt;ol class="breadcrumb"&gt;
+    &lt;li class="breadcrumb-item"&gt;&lt;a href="#"&gt;🏠 Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="breadcrumb-item"&gt;&lt;a href="#"&gt;📊 Dashboard&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="breadcrumb-item active" aria-current="page"&gt;📋 Reports&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="tutorial-section">
+            <h2 class="section-title">📄 Pagination Controls</h2>
+            
+            <ul class="nav nav-tabs" id="paginationTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pagination-preview-tab" data-bs-toggle="tab" data-bs-target="#pagination-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pagination-code-tab" data-bs-toggle="tab" data-bs-target="#pagination-code" type="button" role="tab">Code</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="paginationTabContent">
+                <div class="tab-pane fade show active" id="pagination-preview" role="tabpanel">
+                    <div class="demo-container">
+                        <h5>Basic Pagination</h5>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination demo-pagination">
+                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                        
+                        <h5 class="mt-4">Pagination with Icons</h5>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination demo-pagination">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        
+                        <h5 class="mt-4">Sized Pagination</h5>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-lg demo-pagination">
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pagination-code" role="tabpanel">
+                    <h5>Pagination Controls:</h5>
+                    <div class="code-block">
+&lt;nav aria-label="Page navigation"&gt;
+  &lt;ul class="pagination"&gt;
+    &lt;li class="page-item"&gt;&lt;a class="page-link" href="#"&gt;Previous&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="page-item"&gt;&lt;a class="page-link" href="#"&gt;1&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="page-item active"&gt;&lt;a class="page-link" href="#"&gt;2&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="page-item"&gt;&lt;a class="page-link" href="#"&gt;3&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="page-item"&gt;&lt;a class="page-link" href="#"&gt;Next&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+
+&lt;!-- With Icons --&gt;
+&lt;ul class="pagination"&gt;
+  &lt;li class="page-item"&gt;
+    &lt;a class="page-link" href="#" aria-label="Previous"&gt;
+      &lt;span aria-hidden="true"&gt;&amp;laquo;&lt;/span&gt;
+    &lt;/a&gt;
+  &lt;/li&gt;
+  &lt;!-- more items --&gt;
+&lt;/ul&gt;
+
+&lt;!-- Sized Pagination --&gt;
+&lt;ul class="pagination pagination-lg"&gt;&lt;/ul&gt;
+&lt;ul class="pagination pagination-sm"&gt;&lt;/ul&gt;
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Navigation Patterns -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🚀 Advanced Navigation Patterns</h2>
+            
+            <div class="demo-container">
+                <h5>Tabs Navigation</h5>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Messages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Settings</a>
+                    </li>
+                </ul>
+                
+                <h5 class="mt-4">Pills Navigation</h5>
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Messages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Settings</a>
+                    </li>
+                </ul>
+                
+                <h5 class="mt-4">Vertical Navigation</h5>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="nav flex-column nav-pills">
+                            <a class="nav-link active" href="#">Dashboard</a>
+                            <a class="nav-link" href="#">Analytics</a>
+                            <a class="nav-link" href="#">Reports</a>
+                            <a class="nav-link" href="#">Settings</a>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="demo-navbar">
+                            <h6>Content Area</h6>
+                            <p>Navigation content appears here based on selection.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="tutorial-section">
+            <h2 class="section-title">✅ Best Practices</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🧭 Navigation Design</h5>
+                    <ul class="feature-list">
+                        <li>Keep navigation simple and intuitive</li>
+                        <li>Use clear, descriptive labels</li>
+                        <li>Maintain consistent navigation patterns</li>
+                        <li>Provide visual feedback for active states</li>
+                        <li>Ensure accessibility with ARIA labels</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>📱 Mobile Considerations</h5>
+                    <ul class="feature-list">
+                        <li>Use hamburger menus for mobile</li>
+                        <li>Ensure touch-friendly targets</li>
+                        <li>Test on various screen sizes</li>
+                        <li>Consider thumb-friendly navigation</li>
+                        <li>Provide clear navigation hierarchy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🔗 Related Tutorials</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">🏗️ Layout Components</h5>
+                            <p class="card-text">Learn to create responsive layouts with Bootstrap</p>
+                            <a href="layout-components.html" class="btn btn-primary">Previous Tutorial →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📝 Forms & Inputs</h5>
+                            <p class="card-text">Master form components and input validation</p>
+                            <a href="forms-inputs.html" class="btn btn-primary">Next Tutorial →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">🏠 Home</h5>
+                            <p class="card-text">Return to the main dashboard collection</p>
+                            <a href="index.html" class="btn btn-primary">Back to Home →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

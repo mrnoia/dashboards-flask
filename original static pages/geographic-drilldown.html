@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geographic Drilldown Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px; /* Space for fixed navbar */
+        }
+        /* Navigation Styles */
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .card { border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .breadcrumb { background: none; padding: 0; }
+        .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: #6c757d; }
+        .region-card { cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .region-card:hover { border-color: #3498db; transform: translateY(-2px); }
+        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+        .back-btn:hover { background-color: #5a6268; }
+        .metric-highlight { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .map-container { min-height: 400px; background: #f8f9fa; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                📊 Dashboard Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="index.html">📈 Basic Dashboard</a></li>
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="apexcharts-complete.html">📊 Apex Charts & Bootstrap</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" id="breadcrumb">
+                        <li class="breadcrumb-item active">Global Overview</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-highlight">
+                    <h6 class="text-white">Global Revenue</h6>
+                    <h2 id="global-revenue">$0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <h6 class="text-muted">Top Region</h6>
+                    <h2 id="top-region">-</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <h6 class="text-muted">Active Countries</h6>
+                    <h2 id="active-countries">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <h6 class="text-muted">Growth Rate</h6>
+                    <h2 id="growth-rate">0%</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Region Cards -->
+        <div class="row mb-4" id="region-cards">
+            <div class="col-md-3 mb-3">
+                <div class="card p-3 region-card" onclick="drillToRegion('North America')">
+                    <h6 class="text-muted">North America</h6>
+                    <h4 id="na-revenue">$0</h4>
+                    <small class="text-success" id="na-growth">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card p-3 region-card" onclick="drillToRegion('Europe')">
+                    <h6 class="text-muted">Europe</h6>
+                    <h4 id="eu-revenue">$0</h4>
+                    <small class="text-success" id="eu-growth">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card p-3 region-card" onclick="drillToRegion('Asia Pacific')">
+                    <h6 class="text-muted">Asia Pacific</h6>
+                    <h4 id="apac-revenue">$0</h4>
+                    <small class="text-success" id="apac-growth">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card p-3 region-card" onclick="drillToRegion('Latin America')">
+                    <h6 class="text-muted">Latin America</h6>
+                    <h4 id="latam-revenue">$0</h4>
+                    <small class="text-success" id="latam-growth">+0%</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chart Area -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0" id="chart-title">Revenue by Region</h5>
+                        <button class="back-btn" id="back-btn" style="display: none;" onclick="goBack()">
+                            ← Back to Global
+                        </button>
+                    </div>
+                    <div id="main-chart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Country Details Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card p-4">
+                    <h5 class="card-title mb-4" id="table-title">Regional Performance</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Country/Region</th>
+                                    <th>Revenue</th>
+                                    <th>Users</th>
+                                    <th>Growth</th>
+                                    <th>Market Share</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        // Geographic hierarchical data
+        const geoData = {
+            regions: {
+                'North America': {
+                    revenue: 125000,
+                    users: 45000,
+                    growth: '+15%',
+                    countries: [
+                        { name: 'United States', revenue: 95000, users: 35000, growth: '+16%' },
+                        { name: 'Canada', revenue: 22000, users: 8000, growth: '+12%' },
+                        { name: 'Mexico', revenue: 8000, users: 2000, growth: '+8%' }
+                    ]
+                },
+                'Europe': {
+                    revenue: 98000,
+                    users: 38000,
+                    growth: '+12%',
+                    countries: [
+                        { name: 'United Kingdom', revenue: 35000, users: 12000, growth: '+14%' },
+                        { name: 'Germany', revenue: 28000, users: 10000, growth: '+11%' },
+                        { name: 'France', revenue: 20000, users: 8000, growth: '+10%' },
+                        { name: 'Spain', revenue: 15000, users: 8000, growth: '+9%' }
+                    ]
+                },
+                'Asia Pacific': {
+                    revenue: 145000,
+                    users: 62000,
+                    growth: '+22%',
+                    countries: [
+                        { name: 'China', revenue: 55000, users: 25000, growth: '+25%' },
+                        { name: 'Japan', revenue: 35000, users: 15000, growth: '+18%' },
+                        { name: 'India', revenue: 30000, users: 12000, growth: '+30%' },
+                        { name: 'Australia', revenue: 15000, users: 6000, growth: '+15%' },
+                        { name: 'Singapore', revenue: 10000, users: 4000, growth: '+20%' }
+                    ]
+                },
+                'Latin America': {
+                    revenue: 42000,
+                    users: 18000,
+                    growth: '+18%',
+                    countries: [
+                        { name: 'Brazil', revenue: 25000, users: 10000, growth: '+20%' },
+                        { name: 'Argentina', revenue: 8000, users: 4000, growth: '+15%' },
+                        { name: 'Chile', revenue: 6000, users: 2500, growth: '+12%' },
+                        { name: 'Colombia', revenue: 3000, users: 1500, growth: '+10%' }
+                    ]
+                }
+            }
+        };
+
+        let currentView = 'global';
+        let currentRegion = null;
+        let chart = null;
+
+        // Initialize dashboard
+        function initDashboard() {
+            updateGlobalMetrics();
+            updateRegionCards();
+            renderGlobalChart();
+            updateGlobalTable();
+        }
+
+        // Update global metrics
+        function updateGlobalMetrics() {
+            const totalRevenue = Object.values(geoData.regions).reduce((sum, region) => sum + region.revenue, 0);
+            const totalUsers = Object.values(geoData.regions).reduce((sum, region) => sum + region.users, 0);
+            const totalCountries = Object.values(geoData.regions).reduce((sum, region) => sum + region.countries.length, 0);
+            
+            const topRegion = Object.entries(geoData.regions).reduce((max, [name, data]) => 
+                data.revenue > max.revenue ? { name, revenue: data.revenue } : max, 
+                { name: '', revenue: 0 });
+
+            document.getElementById('global-revenue').innerText = `$${totalRevenue.toLocaleString()}`;
+            document.getElementById('top-region').innerText = topRegion.name;
+            document.getElementById('active-countries').innerText = totalCountries;
+            document.getElementById('growth-rate').innerText = '+17%';
+        }
+
+        // Update region cards
+        function updateRegionCards() {
+            Object.entries(geoData.regions).forEach(([regionName, data]) => {
+                const id = regionName.toLowerCase().replace(' ', '').replace('asia', 'apac').replace('latin', 'latam');
+                const revenueEl = document.getElementById(`${id}-revenue`);
+                const growthEl = document.getElementById(`${id}-growth`);
+                
+                if (revenueEl) revenueEl.innerText = `$${(data.revenue / 1000).toFixed(0)}k`;
+                if (growthEl) growthEl.innerText = data.growth;
+            });
+        }
+
+        // Render global chart
+        function renderGlobalChart() {
+            const regions = Object.keys(geoData.regions);
+            const revenues = Object.values(geoData.regions).map(r => r.revenue);
+
+            const options = {
+                chart: {
+                    type: 'donut',
+                    height: 350,
+                    toolbar: { show: true },
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            drillToRegion(regions[config.dataPointIndex]);
+                        }
+                    }
+                },
+                colors: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71'],
+                series: revenues,
+                labels: regions,
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%',
+                            labels: {
+                                show: true,
+                                total: {
+                                    show: true,
+                                    label: 'Total Revenue',
+                                    formatter: function() {
+                                        const total = revenues.reduce((a, b) => a + b, 0);
+                                        return '$' + (total / 1000).toFixed(0) + 'k';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            };
+
+            if (chart) chart.destroy();
+            chart = new ApexCharts(document.querySelector("#main-chart"), options);
+            chart.render();
+        }
+
+        // Render region chart
+        function renderRegionChart(regionName) {
+            const region = geoData.regions[regionName];
+            const countries = region.countries.map(c => c.name);
+            const revenues = region.countries.map(c => c.revenue);
+
+            const options = {
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    toolbar: { show: true }
+                },
+                colors: ['#3498db'],
+                series: [{
+                    name: 'Revenue',
+                    data: revenues
+                }],
+                xaxis: {
+                    categories: countries
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(value) {
+                            return '$' + (value / 1000).toFixed(0) + 'k';
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 5,
+                        dataLabels: {
+                            position: 'top',
+                        }
+                    }
+                }
+            };
+
+            if (chart) chart.destroy();
+            chart = new ApexCharts(document.querySelector("#main-chart"), options);
+            chart.render();
+        }
+
+        // Update global table
+        function updateGlobalTable() {
+            const tableBody = document.getElementById('table-body');
+            const tableTitle = document.getElementById('table-title');
+            
+            tableTitle.textContent = 'Regional Performance';
+            tableBody.innerHTML = Object.entries(geoData.regions).map(([regionName, data]) => {
+                const totalRevenue = Object.values(geoData.regions).reduce((sum, r) => sum + r.revenue, 0);
+                const marketShare = ((data.revenue / totalRevenue) * 100).toFixed(1);
+                
+                return `
+                    <tr class="region-card" onclick="drillToRegion('${regionName}')">
+                        <td>
+                            ${regionName}
+                            <span class="text-muted ms-2">›</span>
+                        </td>
+                        <td>$${data.revenue.toLocaleString()}</td>
+                        <td>${data.users.toLocaleString()}</td>
+                        <td><span class="badge bg-success">${data.growth}</span></td>
+                        <td>${marketShare}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Update region table
+        function updateRegionTable(regionName) {
+            const tableBody = document.getElementById('table-body');
+            const tableTitle = document.getElementById('table-title');
+            const region = geoData.regions[regionName];
+            
+            tableTitle.textContent = `Countries - ${regionName}`;
+            tableBody.innerHTML = region.countries.map(country => `
+                <tr>
+                    <td>${country.name}</td>
+                    <td>$${country.revenue.toLocaleString()}</td>
+                    <td>${country.users.toLocaleString()}</td>
+                    <td><span class="badge bg-success">${country.growth}</span></td>
+                    <td>${((country.revenue / region.revenue) * 100).toFixed(1)}%</td>
+                </tr>
+            `).join('');
+        }
+
+        // Drill down to region
+        function drillToRegion(regionName) {
+            currentView = 'region';
+            currentRegion = regionName;
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = `
+                <li class="breadcrumb-item"><a href="#" onclick="goBack()">Global Overview</a></li>
+                <li class="breadcrumb-item active">${regionName}</li>
+            `;
+
+            // Show back button
+            document.getElementById('back-btn').style.display = 'block';
+
+            // Hide region cards
+            document.getElementById('region-cards').style.display = 'none';
+
+            // Update chart title and render
+            document.getElementById('chart-title').textContent = `Revenue by Country - ${regionName}`;
+            renderRegionChart(regionName);
+
+            // Update table
+            updateRegionTable(regionName);
+        }
+
+        // Go back to global view
+        function goBack() {
+            currentView = 'global';
+            currentRegion = null;
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = '<li class="breadcrumb-item active">Global Overview</li>';
+
+            // Hide back button
+            document.getElementById('back-btn').style.display = 'none';
+
+            // Show region cards
+            document.getElementById('region-cards').style.display = 'flex';
+
+            // Update chart title and render
+            document.getElementById('chart-title').textContent = 'Revenue by Region';
+            renderGlobalChart();
+
+            // Update table
+            updateGlobalTable();
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Analytics Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        /* Navigation Styles */
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .card { border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .breadcrumb { background: none; padding: 0; }
+        .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: #6c757d; }
+        .category-card { cursor: pointer; transition: all 0.3s ease; }
+        .category-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+        .back-btn:hover { background-color: #5a6268; }
+        .metric-card { transition: all 0.3s ease; }
+        .metric-card:hover { transform: translateY(-2px); }
+        .sales-indicator { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; }
+        .performance-indicator { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
+        .inventory-indicator { background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); color: white; }
+        .rating-indicator { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; }
+        .progress-custom { height: 8px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                📊 Dashboard Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="index.html">📈 Basic Dashboard</a></li>
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="apexcharts-complete.html">📊 Apex Charts & Bootstrap</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" id="breadcrumb">
+                        <li class="breadcrumb-item active">Product Overview</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card sales-indicator">
+                    <h6 class="text-white">Total Products</h6>
+                    <h2 id="total-products" class="text-white">0</h2>
+                    <small class="text-white" id="products-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card">
+                    <h6 class="text-muted">Total Sales</h6>
+                    <h2 id="total-sales">$0</h2>
+                    <small class="text-success" id="sales-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card performance-indicator">
+                    <h6 class="text-white">Avg Rating</h6>
+                    <h2 id="avg-rating" class="text-white">0</h2>
+                    <small class="text-white" id="rating-change">+0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center metric-card inventory-indicator">
+                    <h6 class="text-white">Low Stock</h6>
+                    <h2 id="low-stock" class="text-white">0</h2>
+                    <small class="text-white" id="stock-change">Alert</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Categories -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>📦 Product Categories</h5>
+                        <small class="text-muted">Click on any category to drill down</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="categories-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Performance -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>📈 Performance Trends</h5>
+                        <small class="text-muted">Product performance over time</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="trends-chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>⭐ Rating Analysis</h5>
+                        <small class="text-muted">Product ratings distribution</small>
+                    </div>
+                    <div class="card-body">
+                        <div id="ratings-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Details Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>Product Details</h5>
+                            <small class="text-muted" id="table-subtitle">Overview of all product categories</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" onclick="exportData()">
+                                📊 Export Data
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="addNewProduct()">
+                                ➕ Add Product
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Products</th>
+                                        <th>Sales</th>
+                                        <th>Revenue</th>
+                                        <th>Avg Rating</th>
+                                        <th>Stock Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        // Product analytics hierarchical data
+        const productData = {
+            overview: {
+                categories: [
+                    {
+                        name: 'Electronics',
+                        products: 156,
+                        sales: 12500,
+                        revenue: 2500000,
+                        avgRating: 4.2,
+                        stockStatus: 'Good',
+                        details: {
+                            subcategories: [
+                                { name: 'Laptops', products: 45, sales: 3200, revenue: 1200000, avgRating: 4.5, stock: 85 },
+                                { name: 'Smartphones', products: 67, sales: 5800, revenue: 900000, avgRating: 4.3, stock: 72 },
+                                { name: 'Tablets', products: 44, sales: 3500, revenue: 400000, avgRating: 4.0, stock: 68 }
+                            ],
+                            topProducts: [
+                                { name: 'MacBook Pro', sales: 1200, revenue: 480000, rating: 4.8, stock: 45 },
+                                { name: 'iPhone 14', sales: 2100, revenue: 420000, rating: 4.6, stock: 120 },
+                                { name: 'iPad Air', sales: 800, revenue: 160000, rating: 4.4, stock: 65 }
+                            ],
+                            trends: [
+                                { month: 'Jan', sales: 980, revenue: 196000 },
+                                { month: 'Feb', sales: 1050, revenue: 210000 },
+                                { month: 'Mar', sales: 1120, revenue: 224000 },
+                                { month: 'Apr', sales: 1080, revenue: 216000 },
+                                { month: 'May', sales: 1150, revenue: 230000 },
+                                { month: 'Jun', sales: 1200, revenue: 240000 }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'Clothing',
+                        products: 234,
+                        sales: 18900,
+                        revenue: 1800000,
+                        avgRating: 3.8,
+                        stockStatus: 'Good',
+                        details: {
+                            subcategories: [
+                                { name: 'Men\'s Wear', products: 89, sales: 7200, revenue: 720000, avgRating: 3.9, stock: 78 },
+                                { name: 'Women\'s Wear', products: 98, sales: 8900, revenue: 840000, avgRating: 3.8, stock: 82 },
+                                { name: 'Accessories', products: 47, sales: 2800, revenue: 240000, avgRating: 3.7, stock: 71 }
+                            ],
+                            topProducts: [
+                                { name: 'Denim Jeans', sales: 1200, revenue: 72000, rating: 4.1, stock: 180 },
+                                { name: 'Cotton T-Shirt', sales: 2100, revenue: 42000, rating: 3.9, stock: 250 },
+                                { name: 'Leather Jacket', sales: 450, revenue: 67500, rating: 4.3, stock: 85 }
+                            ],
+                            trends: [
+                                { month: 'Jan', sales: 2800, revenue: 280000 },
+                                { month: 'Feb', sales: 2950, revenue: 295000 },
+                                { month: 'Mar', sales: 3100, revenue: 310000 },
+                                { month: 'Apr', sales: 3050, revenue: 305000 },
+                                { month: 'May', sales: 3200, revenue: 320000 },
+                                { month: 'Jun', sales: 3300, revenue: 330000 }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'Home & Garden',
+                        products: 98,
+                        sales: 6700,
+                        revenue: 1200000,
+                        avgRating: 4.1,
+                        stockStatus: 'Low',
+                        details: {
+                            subcategories: [
+                                { name: 'Furniture', products: 34, sales: 2100, revenue: 600000, avgRating: 4.3, stock: 45 },
+                                { name: 'Garden Tools', products: 42, sales: 2800, revenue: 360000, avgRating: 4.0, stock: 38 },
+                                { name: 'Home Decor', products: 22, sales: 1800, revenue: 240000, avgRating: 3.9, stock: 42 }
+                            ],
+                            topProducts: [
+                                { name: 'Office Chair', sales: 450, revenue: 67500, rating: 4.4, stock: 25 },
+                                { name: 'Garden Set', sales: 320, revenue: 48000, rating: 4.2, stock: 18 },
+                                { name: 'Wall Art', sales: 280, revenue: 28000, rating: 4.0, stock: 35 }
+                            ],
+                            trends: [
+                                { month: 'Jan', sales: 980, revenue: 180000 },
+                                { month: 'Feb', sales: 1050, revenue: 195000 },
+                                { month: 'Mar', sales: 1100, revenue: 200000 },
+                                { month: 'Apr', sales: 1150, revenue: 210000 },
+                                { month: 'May', sales: 1200, revenue: 220000 },
+                                { month: 'Jun', sales: 1250, revenue: 230000 }
+                            ]
+                        }
+                    },
+                    {
+                        name: 'Sports & Outdoors',
+                        products: 87,
+                        sales: 5400,
+                        revenue: 950000,
+                        avgRating: 4.3,
+                        stockStatus: 'Good',
+                        details: {
+                            subcategories: [
+                                { name: 'Fitness Equipment', products: 32, sales: 2100, revenue: 450000, avgRating: 4.4, stock: 68 },
+                                { name: 'Outdoor Gear', products: 35, sales: 2400, revenue: 380000, avgRating: 4.2, stock: 72 },
+                                { name: 'Sports Apparel', products: 20, sales: 900, revenue: 120000, avgRating: 4.1, stock: 65 }
+                            ],
+                            topProducts: [
+                                { name: 'Yoga Mat', sales: 680, revenue: 13600, rating: 4.5, stock: 120 },
+                                { name: 'Running Shoes', sales: 450, revenue: 67500, rating: 4.3, stock: 85 },
+                                { name: 'Tent', sales: 220, revenue: 44000, rating: 4.4, stock: 45 }
+                            ],
+                            trends: [
+                                { month: 'Jan', sales: 780, revenue: 140000 },
+                                { month: 'Feb', sales: 850, revenue: 155000 },
+                                { month: 'Mar', sales: 900, revenue: 165000 },
+                                { month: 'Apr', sales: 950, revenue: 175000 },
+                                { month: 'May', sales: 1000, revenue: 185000 },
+                                { month: 'Jun', sales: 1050, revenue: 195000 }
+                            ]
+                        }
+                    }
+                ]
+            }
+        };
+
+        let currentView = 'overview';
+        let currentCategory = null;
+        let categoriesChart, trendsChart, ratingsChart;
+
+        // Initialize dashboard
+        function initDashboard() {
+            updateMetrics();
+            renderCategoriesChart();
+            renderTrendsChart();
+            renderRatingsChart();
+            updateTable('overview');
+        }
+
+        // Update metrics
+        function updateMetrics() {
+            const categories = productData.overview.categories;
+            const totalProducts = categories.reduce((sum, cat) => sum + cat.products, 0);
+            const totalSales = categories.reduce((sum, cat) => sum + cat.sales, 0);
+            const totalRevenue = categories.reduce((sum, cat) => sum + cat.revenue, 0);
+            const avgRating = categories.reduce((sum, cat) => sum + cat.avgRating, 0) / categories.length;
+            const lowStockCategories = categories.filter(cat => cat.stockStatus === 'Low').length;
+
+            document.getElementById('total-products').textContent = totalProducts.toLocaleString();
+            document.getElementById('products-change').textContent = '+12%';
+            
+            document.getElementById('total-sales').textContent = totalSales.toLocaleString();
+            document.getElementById('sales-change').textContent = '+18%';
+            
+            document.getElementById('avg-rating').textContent = avgRating.toFixed(1);
+            document.getElementById('rating-change').textContent = '+0.2';
+            
+            document.getElementById('low-stock').textContent = lowStockCategories;
+            document.getElementById('stock-change').textContent = 'Alert';
+        }
+
+        // Render categories chart
+        function renderCategoriesChart() {
+            const categories = productData.overview.categories;
+            
+            categoriesChart = new ApexCharts(document.querySelector("#categories-chart"), {
+                series: [{
+                    name: 'Products',
+                    data: categories.map(cat => cat.products)
+                }, {
+                    name: 'Sales',
+                    data: categories.map(cat => cat.sales)
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    toolbar: {
+                        show: false
+                    },
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            const categoryIndex = config.dataPointIndex;
+                            drillToCategory(categories[categoryIndex].name);
+                        }
+                    }
+                },
+                colors: ['#3498db', '#2ecc71'],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: categories.map(cat => cat.name)
+                },
+                yaxis: [
+                    {
+                        title: {
+                            text: 'Products'
+                        }
+                    },
+                    {
+                        opposite: true,
+                        title: {
+                            text: 'Sales'
+                        }
+                    }
+                ],
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(value, { seriesIndex }) {
+                            if (seriesIndex === 0) {
+                                return value.toLocaleString() + ' products';
+                            } else {
+                                return value.toLocaleString() + ' sales';
+                            }
+                        }
+                    }
+                }
+            });
+
+            categoriesChart.render();
+        }
+
+        // Render trends chart
+        function renderTrendsChart() {
+            trendsChart = new ApexCharts(document.querySelector("#trends-chart"), {
+                series: [{
+                    name: 'Electronics',
+                    data: [980, 1050, 1120, 1080, 1150, 1200]
+                }, {
+                    name: 'Clothing',
+                    data: [2800, 2950, 3100, 3050, 3200, 3300]
+                }, {
+                    name: 'Home & Garden',
+                    data: [980, 1050, 1100, 1150, 1200, 1250]
+                }],
+                chart: {
+                    type: 'line',
+                    height: 350,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                colors: ['#3498db', '#2ecc71', '#f39c12'],
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false
+                },
+                legend: {
+                    position: 'top'
+                }
+            });
+
+            trendsChart.render();
+        }
+
+        // Render ratings chart
+        function renderRatingsChart() {
+            ratingsChart = new ApexCharts(document.querySelector("#ratings-chart"), {
+                series: [{
+                    name: '5 Stars',
+                    data: [45, 52, 48, 55, 50]
+                }, {
+                    name: '4 Stars',
+                    data: [35, 38, 32, 30, 35]
+                }, {
+                    name: '3 Stars',
+                    data: [15, 8, 15, 10, 12]
+                }, {
+                    name: '2 Stars',
+                    data: [3, 1, 4, 3, 2]
+                }, {
+                    name: '1 Star',
+                    data: [2, 1, 1, 2, 1]
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    stacked: true,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                colors: ['#27ae60', '#3498db', '#f39c12', '#e67e22', '#e74c3c'],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                xaxis: {
+                    categories: ['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Overall']
+                },
+                fill: {
+                    opacity: 1
+                },
+                legend: {
+                    position: 'top'
+                }
+            });
+
+            ratingsChart.render();
+        }
+
+        // Drill down to category
+        function drillToCategory(categoryName) {
+            currentView = 'category';
+            currentCategory = productData.overview.categories.find(cat => cat.name === categoryName);
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = `
+                <li class="breadcrumb-item"><a href="#" onclick="goBack()">Product Overview</a></li>
+                <li class="breadcrumb-item active">${categoryName}</li>
+            `;
+
+            // Update metrics
+            document.getElementById('total-products').textContent = currentCategory.products.toLocaleString();
+            document.getElementById('total-sales').textContent = currentCategory.sales.toLocaleString();
+            document.getElementById('avg-rating').textContent = currentCategory.avgRating.toFixed(1);
+            document.getElementById('low-stock').textContent = currentCategory.stockStatus === 'Low' ? 'Yes' : 'No';
+
+            // Update charts
+            renderCategoryDetailsChart();
+            updateTable('category');
+        }
+
+        // Render category details chart
+        function renderCategoryDetailsChart() {
+            const subcategories = currentCategory.details.subcategories;
+            
+            categoriesChart.updateOptions({
+                series: [{
+                    name: 'Products',
+                    data: subcategories.map(sub => sub.products)
+                }, {
+                    name: 'Sales',
+                    data: subcategories.map(sub => sub.sales)
+                }],
+                xaxis: {
+                    categories: subcategories.map(sub => sub.name)
+                },
+                chart: {
+                    events: {
+                        dataPointSelection: null
+                    }
+                }
+            });
+        }
+
+        // Update table
+        function updateTable(view) {
+            const tableBody = document.getElementById('table-body');
+            const tableSubtitle = document.getElementById('table-subtitle');
+
+            if (view === 'overview') {
+                tableSubtitle.textContent = 'Overview of all product categories';
+                tableBody.innerHTML = productData.overview.categories.map(category => `
+                    <tr class="category-card" onclick="drillToCategory('${category.name}')">
+                        <td>
+                            <strong>${category.name}</strong>
+                            <br><small class="text-muted">Click for details</small>
+                        </td>
+                        <td>${category.products.toLocaleString()}</td>
+                        <td>${category.sales.toLocaleString()}</td>
+                        <td>$${(category.revenue / 1000).toFixed(0)}K</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">⭐</span>
+                                <span>${category.avgRating.toFixed(1)}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${category.stockStatus === 'Good' ? 'bg-success' : 'bg-warning'}">
+                                ${category.stockStatus}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); manageCategory('${category.name}')">
+                                ⚙️ Manage
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else if (view === 'category') {
+                tableSubtitle.textContent = `Detailed analysis of ${currentCategory.name} category`;
+                tableBody.innerHTML = `
+                    <tr>
+                        <th colspan="7" class="table-info">Subcategories</th>
+                    </tr>
+                    ${currentCategory.details.subcategories.map(subcategory => `
+                        <tr>
+                            <td><strong>${subcategory.name}</strong></td>
+                            <td>${subcategory.products.toLocaleString()}</td>
+                            <td>${subcategory.sales.toLocaleString()}</td>
+                            <td>$${(subcategory.revenue / 1000).toFixed(0)}K</td>
+                            <td>⭐ ${subcategory.avgRating.toFixed(1)}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1 me-2 progress-custom">
+                                        <div class="progress-bar ${subcategory.stock > 70 ? 'bg-success' : subcategory.stock > 40 ? 'bg-warning' : 'bg-danger'}" 
+                                             style="width: ${subcategory.stock}%"></div>
+                                    </div>
+                                    <span class="text-muted">${subcategory.stock}%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-success" onclick="event.stopPropagation(); restockSubcategory('${subcategory.name}')">
+                                    🔄 Restock
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                    <tr>
+                        <th colspan="7" class="table-info mt-3">Top Products</th>
+                    </tr>
+                    ${currentCategory.details.topProducts.map(product => `
+                        <tr>
+                            <td><strong>${product.name}</strong></td>
+                            <td>-</td>
+                            <td>${product.sales.toLocaleString()}</td>
+                            <td>$${(product.revenue / 1000).toFixed(0)}K</td>
+                            <td>⭐ ${product.rating.toFixed(1)}</td>
+                            <td>
+                                <span class="badge ${product.stock > 50 ? 'bg-success' : 'bg-warning'}">
+                                    Stock: ${product.stock}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); viewProduct('${product.name}')">
+                                    👁️ View
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                `;
+            }
+        }
+
+        // Go back to overview
+        function goBack() {
+            currentView = 'overview';
+            currentCategory = null;
+
+            // Update breadcrumb
+            document.getElementById('breadcrumb').innerHTML = '<li class="breadcrumb-item active">Product Overview</li>';
+
+            // Update metrics
+            updateMetrics();
+
+            // Update charts
+            renderCategoriesChart();
+            updateTable('overview');
+        }
+
+        // Export data function
+        function exportData() {
+            alert('Export functionality would download current product analytics data as CSV/Excel');
+        }
+
+        // Add new product
+        function addNewProduct() {
+            alert('Add new product functionality would open a modal to add new products');
+        }
+
+        // Manage category
+        function manageCategory(categoryName) {
+            alert(`Manage category functionality would open configuration for ${categoryName}`);
+        }
+
+        // Restock subcategory
+        function restockSubcategory(subcategoryName) {
+            alert(`Restock functionality would create order for ${subcategoryName}`);
+        }
+
+        // View product
+        function viewProduct(productName) {
+            alert(`View product functionality would show details for ${productName}`);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

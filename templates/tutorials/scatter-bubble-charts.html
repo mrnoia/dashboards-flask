@@ -1,0 +1,613 @@
+{% extends "base.html" %}
+
+{% block title %}Scatter & Bubble Charts Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">🫧 Scatter & Bubble Charts Tutorial</h1>
+        <p class="tutorial-subtitle">Master scatter and bubble charts with ApexCharts and Bootstrap 5</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Basic scatter plot configuration</li>
+                    <li>Bubble chart variations</li>
+                    <li>Multi-series scatter charts</li>
+                    <li>Data point styling</li>
+                    <li>Correlation visualization</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>JavaScript fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>Understanding of data visualization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                🫧 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Basic Scatter Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="basicScatterChart"></div>
+                    </div>
+                </div>
+
+                <h3>Bubble Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="bubbleChart"></div>
+                    </div>
+                </div>
+
+                <h3>Multi-Series Scatter Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="multiSeriesScatterChart"></div>
+                    </div>
+                </div>
+
+                <h3>Datetime Scatter Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="datetimeScatterChart"></div>
+                    </div>
+                </div>
+
+                <h3>Scatter with Trendline</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="scatterTrendChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>Basic Scatter Chart</h3>
+                <pre><code>// Basic Scatter Chart Configuration
+const options = {
+  series: [{
+    name: "Sample A",
+    data: [
+      [16.4, 5.4], [21.7, 2], [25.4, 3], [29, 2.3], [33.6, 3.7],
+      [36.6, 3.9], [40.9, 3.5], [44.4, 4.1], [49.9, 3.2], [54.1, 2.8]
+    ]
+  }],
+  chart: {
+    height: 350,
+    type: 'scatter',
+    zoom: {
+      enabled: true,
+      type: 'xy'
+    }
+  },
+  xaxis: {
+    type: 'numeric',
+    title: {
+      text: 'X Axis'
+    }
+  },
+  yaxis: {
+    title: {
+      text: 'Y Axis'
+    }
+  },
+  title: {
+    text: 'Basic Scatter Chart',
+    align: 'center'
+  }
+};
+
+const chart = new ApexCharts(document.querySelector("#basicScatterChart"), options);
+chart.render();</code></pre>
+
+                <h3>Bubble Chart</h3>
+                <pre><code>// Bubble Chart Configuration
+const options = {
+  series: [{
+    name: 'Bubble 1',
+    data: [
+      [16.4, 5.4, 10], [21.7, 2, 15], [25.4, 3, 8], [29, 2.3, 12],
+      [33.6, 3.7, 6], [36.6, 3.9, 9], [40.9, 3.5, 11], [44.4, 4.1, 7]
+    ]
+  }],
+  chart: {
+    height: 350,
+    type: 'bubble',
+  },
+  dataLabels: {
+    enabled: false
+  },
+  fill: {
+    opacity: 0.8
+  },
+  xaxis: {
+    type: 'numeric',
+    title: {
+      text: 'X Value'
+    }
+  },
+  yaxis: {
+    title: {
+      text: 'Y Value'
+    }
+  },
+  title: {
+    text: 'Bubble Chart',
+    align: 'center'
+  }
+};</code></pre>
+
+                <h3>Multi-Series Scatter Chart</h3>
+                <pre><code>// Multi-Series Scatter Chart
+const options = {
+  series: [{
+    name: 'Series 1',
+    data: [
+      [1, 34], [3, 12], [5, 43], [7, 22], [9, 17], [11, 31], [13, 25], [15, 42]
+    ]
+  }, {
+    name: 'Series 2',
+    data: [
+      [2, 15], [4, 28], [6, 19], [8, 35], [10, 23], [12, 38], [14, 16], [16, 29]
+    ]
+  }, {
+    name: 'Series 3',
+    data: [
+      [1.5, 20], [3.5, 33], [5.5, 14], [7.5, 26], [9.5, 31], [11.5, 18], [13.5, 39], [15.5, 24]
+    ]
+  }],
+  chart: {
+    height: 350,
+    type: 'scatter',
+    zoom: { enabled: true, type: 'xy' }
+  },
+  colors: ['#008FFB', '#00E396', '#FEB019'],
+  xaxis: {
+    type: 'numeric',
+    title: { text: 'X Axis' }
+  },
+  yaxis: {
+    title: { text: 'Y Axis' }
+  },
+  title: {
+    text: 'Multi-Series Scatter Chart',
+    align: 'center'
+  },
+  legend: {
+    position: 'top'
+  }
+};</code></pre>
+
+                <h3>Datetime Scatter Chart</h3>
+                <pre><code>// Datetime Scatter Chart
+const options = {
+  series: [{
+    name: 'Product A',
+    data: [
+      [1327359600000, 30.95], [1327446000000, 31.34], [1327532400000, 31.18],
+      [1327618800000, 31.05], [1327705200000, 31.25], [1327791600000, 31.31]
+    ]
+  }],
+  chart: {
+    type: 'scatter',
+    height: 350,
+    zoom: { enabled: true, type: 'xy' }
+  },
+  dataLabels: { enabled: false },
+  xaxis: {
+    type: 'datetime',
+    title: { text: 'Date' }
+  },
+  yaxis: {
+    title: { text: 'Price' }
+  },
+  title: {
+    text: 'Datetime Scatter Chart',
+    align: 'center'
+  }
+};</code></pre>
+
+                <h3>Scatter with Trendline</h3>
+                <pre><code>// Scatter Chart with Trendline
+const options = {
+  series: [{
+    name: 'Data Points',
+    data: [
+      [2, 3], [4, 5], [6, 8], [8, 10], [10, 14], [12, 16], [14, 18], [16, 22]
+    ]
+  }],
+  chart: {
+    height: 350,
+    type: 'scatter',
+    dropShadow: {
+      enabled: true,
+      top: 3,
+      left: 2,
+      blur: 4,
+      opacity: 0.2
+    }
+  },
+  stroke: {
+    width: 0,
+    curve: 'straight'
+  },
+  fill: {
+    type: 'solid',
+    gradient: {
+      shade: 'light',
+      type: "vertical",
+      shadeIntensity: 0.25,
+      gradientToColors: undefined,
+      inverseColors: false,
+      opacityFrom: 0.85,
+      opacityTo: 0.85,
+      stops: [0, 90, 100]
+    }
+  },
+  markers: {
+    size: 6,
+    colors: ['#008FFB'],
+    strokeColors: '#fff',
+    strokeWidth: 2,
+    strokeOpacity: 0.9,
+    fillOpacity: 1,
+    shape: "circle"
+  },
+  xaxis: {
+    type: 'numeric',
+    title: { text: 'X Variable' }
+  },
+  yaxis: {
+    title: { text: 'Y Variable' }
+  },
+  title: {
+    text: 'Scatter with Trend Analysis',
+    align: 'center'
+  }
+};</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Scatter & Bubble Charts Overview</h3>
+                <p>Scatter and bubble charts are perfect for showing relationships between variables and data distribution.</p>
+                
+                <h4>Scatter Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Show correlation between two variables</li>
+                    <li><strong>Data format</strong>: [x, y] coordinate pairs</li>
+                    <li><strong>Best for</strong>: Identifying patterns, trends, outliers</li>
+                    <li><strong>Analysis</strong>: Correlation, clustering, distribution</li>
+                </ul>
+
+                <h4>Bubble Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Show three-dimensional data</li>
+                    <li><strong>Data format</strong>: [x, y, size] triplets</li>
+                    <li><strong>Third dimension</strong>: Bubble size represents third variable</li>
+                    <li><strong>Best for</strong>: Multi-variable analysis</li>
+                </ul>
+
+                <h3>Chart Configuration Options</h3>
+                
+                <h4>Basic Settings</h4>
+                <ul>
+                    <li><strong>chart.type</strong>: 'scatter' or 'bubble'</li>
+                    <li><strong>chart.zoom</strong>: Enable zoom functionality</li>
+                    <li><strong>chart.height</strong>: Chart height in pixels</li>
+                    <li><strong>chart.dropShadow</strong>: Shadow effects</li>
+                </ul>
+
+                <h4>Data Configuration</h4>
+                <ul>
+                    <li><strong>series.data</strong>: Array of coordinate pairs/triplets</li>
+                    <li><strong>series.name</strong>: Series name for legend</li>
+                    <li><strong>Multi-series</strong>: Multiple data series</li>
+                    <li><strong>Datetime</strong>: Timestamp-based x-axis</li>
+                </ul>
+
+                <h4>Styling Options</h4>
+                <ul>
+                    <li><strong>markers</strong>: Point size, shape, colors</li>
+                    <li><strong>stroke</strong>: Border styling</li>
+                    <li><strong>fill</strong>: Fill color and opacity</li>
+                    <li><strong>colors</strong>: Series color palette</li>
+                </ul>
+
+                <h4>Axis Configuration</h4>
+                <ul>
+                    <li><strong>xaxis.type</strong>: 'numeric' or 'datetime'</li>
+                    <li><strong>xaxis.title</strong>: X-axis label</li>
+                    <li><strong>yaxis.title</strong>: Y-axis label</li>
+                    <li><strong>axis ranges</strong>: Min/max values</li>
+                </ul>
+
+                <h3>Data Visualization Best Practices</h3>
+                
+                <h4>When to Use Scatter Charts</h4>
+                <ul>
+                    <li>Showing correlation between variables</li>
+                    <li>Identifying patterns and trends</li>
+                    <li>Detecting outliers and anomalies</li>
+                    <li>Comparing multiple datasets</li>
+                </ul>
+
+                <h4>When to Use Bubble Charts</h4>
+                <ul>
+                    <li>Three-dimensional data visualization</li>
+                    <li>Showing magnitude relationships</li>
+                    <li>Comparing multiple variables</li>
+                    <li>Weighted data points</li>
+                </ul>
+
+                <h4>Design Guidelines</h4>
+                <ul>
+                    <li>Use appropriate scale for axes</li>
+                    <li>Include clear axis labels</li>
+                    <li>Use contrasting colors for series</li>
+                    <li>Add gridlines for reference</li>
+                    <li>Consider data point density</li>
+                </ul>
+
+                <h3>Advanced Features</h3>
+                
+                <h4>Interactive Features</h4>
+                <ul>
+                    <li><strong>Zoom</strong>: Zoom into specific regions</li>
+                    <li><strong>Pan</strong>: Navigate through zoomed data</li>
+                    <li><strong>Hover</strong>: Detailed tooltips</li>
+                    <li><strong>Selection</strong>: Select data points</li>
+                </ul>
+
+                <h4>Data Analysis</h4>
+                <ul>
+                    <li><strong>Correlation</strong>: Positive/negative relationships</li>
+                    <li><strong>Clustering</strong>: Group similar data points</li>
+                    <li><strong>Outliers</strong>: Identify unusual values</li>
+                    <li><strong>Trends</strong>: Linear/non-linear patterns</li>
+                </ul>
+
+                <h4>Customization Options</h4>
+                <ul>
+                    <li><strong>Marker shapes</strong>: Circle, square, triangle</li>
+                    <li><strong>Size variations</strong>: Variable marker sizes</li>
+                    <li><strong>Color gradients</strong>: Gradient fills</li>
+                    <li><strong>Animations</strong>: Entry animations</li>
+                </ul>
+
+                <h3>Common Use Cases</h3>
+                <ul>
+                    <li><strong>Scientific data</strong>: Experimental results</li>
+                    <li><strong>Financial analysis</strong>: Risk vs return</li>
+                    <li><strong>Market research</strong>: Customer segmentation</li>
+                    <li><strong>Quality control</strong>: Process monitoring</li>
+                    <li><strong>Medical research</strong>: Clinical trials</li>
+                </ul>
+
+                <h3>Data Preparation</h3>
+                <ul>
+                    <li>Clean and validate data points</li>
+                    <li>Handle missing values appropriately</li>
+                    <li>Consider data scaling and normalization</li>
+                    <li>Remove or highlight outliers</li>
+                    <li>Ensure data quality and accuracy</li>
+                </ul>
+
+                <h3>Performance Considerations</h3>
+                <ul>
+                    <li>Limit data points for performance</li>
+                    <li>Use data sampling for large datasets</li>
+                    <li>Optimize rendering for mobile</li>
+                    <li>Consider server-side processing</li>
+                    <li>Test with various data sizes</li>
+                </ul>
+
+                <h3>Statistical Analysis</h3>
+                <ul>
+                    <li><strong>Correlation coefficient</strong>: Measure relationship strength</li>
+                    <li><strong>Regression analysis</strong>: Fit trend lines</li>
+                    <li><strong>Standard deviation</strong>: Data spread</li>
+                    <li><strong>Confidence intervals</strong>: Data reliability</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Charts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Basic Scatter Chart
+    const basicScatterOptions = {
+        series: [{
+            name: "Sample A",
+            data: [
+                [16.4, 5.4], [21.7, 2], [25.4, 3], [29, 2.3], [33.6, 3.7],
+                [36.6, 3.9], [40.9, 3.5], [44.4, 4.1], [49.9, 3.2], [54.1, 2.8]
+            ]
+        }],
+        chart: {
+            height: 350,
+            type: 'scatter',
+            zoom: { enabled: true, type: 'xy' }
+        },
+        xaxis: {
+            type: 'numeric',
+            title: { text: 'X Axis' }
+        },
+        yaxis: {
+            title: { text: 'Y Axis' }
+        },
+        title: { text: 'Basic Scatter Chart', align: 'center' }
+    };
+    const basicScatterChart = new ApexCharts(document.querySelector("#basicScatterChart"), basicScatterOptions);
+    basicScatterChart.render();
+
+    // Bubble Chart
+    const bubbleOptions = {
+        series: [{
+            name: 'Bubble 1',
+            data: [
+                [16.4, 5.4, 10], [21.7, 2, 15], [25.4, 3, 8], [29, 2.3, 12],
+                [33.6, 3.7, 6], [36.6, 3.9, 9], [40.9, 3.5, 11], [44.4, 4.1, 7]
+            ]
+        }],
+        chart: { height: 350, type: 'bubble' },
+        dataLabels: { enabled: false },
+        fill: { opacity: 0.8 },
+        xaxis: {
+            type: 'numeric',
+            title: { text: 'X Value' }
+        },
+        yaxis: {
+            title: { text: 'Y Value' }
+        },
+        title: { text: 'Bubble Chart', align: 'center' }
+    };
+    const bubbleChart = new ApexCharts(document.querySelector("#bubbleChart"), bubbleOptions);
+    bubbleChart.render();
+
+    // Multi-Series Scatter Chart
+    const multiSeriesOptions = {
+        series: [{
+            name: 'Series 1',
+            data: [[1, 34], [3, 12], [5, 43], [7, 22], [9, 17], [11, 31], [13, 25], [15, 42]]
+        }, {
+            name: 'Series 2',
+            data: [[2, 15], [4, 28], [6, 19], [8, 35], [10, 23], [12, 38], [14, 16], [16, 29]]
+        }, {
+            name: 'Series 3',
+            data: [[1.5, 20], [3.5, 33], [5.5, 14], [7.5, 26], [9.5, 31], [11.5, 18], [13.5, 39], [15.5, 24]]
+        }],
+        chart: {
+            height: 350,
+            type: 'scatter',
+            zoom: { enabled: true, type: 'xy' }
+        },
+        colors: ['#008FFB', '#00E396', '#FEB019'],
+        xaxis: {
+            type: 'numeric',
+            title: { text: 'X Axis' }
+        },
+        yaxis: {
+            title: { text: 'Y Axis' }
+        },
+        title: { text: 'Multi-Series Scatter Chart', align: 'center' },
+        legend: { position: 'top' }
+    };
+    const multiSeriesChart = new ApexCharts(document.querySelector("#multiSeriesScatterChart"), multiSeriesOptions);
+    multiSeriesChart.render();
+
+    // Datetime Scatter Chart
+    const datetimeOptions = {
+        series: [{
+            name: 'Product A',
+            data: [
+                [1327359600000, 30.95], [1327446000000, 31.34], [1327532400000, 31.18],
+                [1327618800000, 31.05], [1327705200000, 31.25], [1327791600000, 31.31]
+            ]
+        }],
+        chart: {
+            type: 'scatter',
+            height: 350,
+            zoom: { enabled: true, type: 'xy' }
+        },
+        dataLabels: { enabled: false },
+        xaxis: {
+            type: 'datetime',
+            title: { text: 'Date' }
+        },
+        yaxis: {
+            title: { text: 'Price' }
+        },
+        title: { text: 'Datetime Scatter Chart', align: 'center' }
+    };
+    const datetimeChart = new ApexCharts(document.querySelector("#datetimeScatterChart"), datetimeOptions);
+    datetimeChart.render();
+
+    // Scatter with Trendline
+    const scatterTrendOptions = {
+        series: [{
+            name: 'Data Points',
+            data: [[2, 3], [4, 5], [6, 8], [8, 10], [10, 14], [12, 16], [14, 18], [16, 22]]
+        }],
+        chart: {
+            height: 350,
+            type: 'scatter',
+            dropShadow: {
+                enabled: true,
+                top: 3,
+                left: 2,
+                blur: 4,
+                opacity: 0.2
+            }
+        },
+        stroke: { width: 0, curve: 'straight' },
+        fill: {
+            type: 'solid',
+            gradient: {
+                shade: 'light',
+                type: "vertical",
+                shadeIntensity: 0.25,
+                opacityFrom: 0.85,
+                opacityTo: 0.85
+            }
+        },
+        markers: {
+            size: 6,
+            colors: ['#008FFB'],
+            strokeColors: '#fff',
+            strokeWidth: 2,
+            strokeOpacity: 0.9,
+            fillOpacity: 1,
+            shape: "circle"
+        },
+        xaxis: {
+            type: 'numeric',
+            title: { text: 'X Variable' }
+        },
+        yaxis: {
+            title: { text: 'Y Variable' }
+        },
+        title: { text: 'Scatter with Trend Analysis', align: 'center' }
+    };
+    const scatterTrendChart = new ApexCharts(document.querySelector("#scatterTrendChart"), scatterTrendOptions);
+    scatterTrendChart.render();
+});
+</script>
+{% endblock %}

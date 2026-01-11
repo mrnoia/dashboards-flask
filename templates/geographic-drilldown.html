@@ -1,0 +1,778 @@
+{% extends "base.html" %}
+
+{% block title %}Geographic Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>🌍 Geographic Analytics</h1>
+        <p>Multi-level geographic dashboard with region and country drilldown</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Total Revenue</h6>
+                <h2 id="total-revenue">$0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Active Regions</h6>
+                <h2 id="active-regions">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Top Region</h6>
+                <h2 id="top-region">-</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Avg. Performance</h6>
+                <h2 id="avg-performance">0%</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chart Area -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0" id="chart-title">Revenue by Region</h5>
+                    <button class="back-btn" id="back-btn" style="display: none;" onclick="goBack()">
+                        ← Back
+                    </button>
+                </div>
+                <div id="main-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Charts -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Geographic Distribution</h5>
+                <div id="distribution-chart"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Regional Performance</h5>
+                <div id="performance-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Geographic Details Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="card-title mb-4" id="table-title">Geographic Details</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Region/Country</th>
+                                <th>Revenue</th>
+                                <th>Orders</th>
+                                <th>Customers</th>
+                                <th>Avg. Order Value</th>
+                                <th>Growth Rate</th>
+                                <th>Performance</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="geo-table">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Regional Insights -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">🚀 Top Performing</h5>
+                <div id="top-performers-list"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">📈 High Growth</h5>
+                <div id="high-growth-list"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">⚠️ Needs Attention</h5>
+                <div id="needs-attention-list"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Geographic hierarchy data structure
+const geoData = {
+    regions: [
+        {
+            name: 'North America',
+            revenue: 2450000,
+            orders: 15420,
+            customers: 8920,
+            growthRate: 12.5,
+            performance: 92,
+            countries: [
+                {
+                    name: 'United States',
+                    revenue: 1850000,
+                    orders: 11200,
+                    customers: 6800,
+                    growthRate: 11.2,
+                    performance: 94,
+                    states: [
+                        { name: 'California', revenue: 520000, orders: 3200, customers: 1950, growthRate: 15.3, performance: 96 },
+                        { name: 'Texas', revenue: 380000, orders: 2400, customers: 1450, growthRate: 10.8, performance: 91 },
+                        { name: 'New York', revenue: 340000, orders: 2100, customers: 1280, growthRate: 8.9, performance: 89 },
+                        { name: 'Florida', revenue: 280000, orders: 1750, customers: 1050, growthRate: 12.1, performance: 92 },
+                        { name: 'Illinois', revenue: 180000, orders: 1150, customers: 680, growthRate: 9.5, performance: 87 }
+                    ]
+                },
+                {
+                    name: 'Canada',
+                    revenue: 450000,
+                    orders: 2800,
+                    customers: 1680,
+                    growthRate: 14.8,
+                    performance: 88,
+                    provinces: [
+                        { name: 'Ontario', revenue: 220000, orders: 1400, customers: 840, growthRate: 16.2, performance: 90 },
+                        { name: 'Quebec', revenue: 120000, orders: 750, customers: 450, growthRate: 13.5, performance: 86 },
+                        { name: 'British Columbia', revenue: 80000, orders: 500, customers: 300, growthRate: 15.8, performance: 89 }
+                    ]
+                },
+                {
+                    name: 'Mexico',
+                    revenue: 150000,
+                    orders: 1420,
+                    customers: 440,
+                    growthRate: 18.3,
+                    performance: 85,
+                    states: [
+                        { name: 'Mexico City', revenue: 65000, orders: 620, customers: 190, growthRate: 20.1, performance: 87 },
+                        { name: 'Jalisco', revenue: 35000, orders: 330, customers: 100, growthRate: 16.8, performance: 84 },
+                        { name: 'Nuevo León', revenue: 28000, orders: 260, customers: 80, growthRate: 17.5, performance: 83 }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Europe',
+            revenue: 1890000,
+            orders: 12350,
+            customers: 7680,
+            growthRate: 8.7,
+            performance: 87,
+            countries: [
+                {
+                    name: 'United Kingdom',
+                    revenue: 680000,
+                    orders: 4200,
+                    customers: 2650,
+                    growthRate: 7.2,
+                    performance: 89,
+                    regions: [
+                        { name: 'England', revenue: 520000, orders: 3200, customers: 2000, growthRate: 7.8, performance: 90 },
+                        { name: 'Scotland', revenue: 95000, orders: 580, customers: 370, growthRate: 6.5, performance: 87 },
+                        { name: 'Wales', revenue: 45000, orders: 280, customers: 175, growthRate: 5.8, performance: 85 },
+                        { name: 'Northern Ireland', revenue: 20000, orders: 140, customers: 105, growthRate: 4.9, performance: 82 }
+                    ]
+                },
+                {
+                    name: 'Germany',
+                    revenue: 520000,
+                    orders: 3400,
+                    customers: 2100,
+                    growthRate: 9.3,
+                    performance: 91,
+                    states: [
+                        { name: 'Bavaria', revenue: 150000, orders: 980, customers: 600, growthRate: 10.2, performance: 92 },
+                        { name: 'North Rhine-Westphalia', revenue: 140000, orders: 920, customers: 570, growthRate: 8.8, performance: 90 },
+                        { name: 'Baden-Württemberg', revenue: 110000, orders: 720, customers: 440, growthRate: 9.7, performance: 91 }
+                    ]
+                },
+                {
+                    name: 'France',
+                    revenue: 420000,
+                    orders: 2750,
+                    customers: 1680,
+                    growthRate: 8.1,
+                    performance: 85,
+                    regions: [
+                        { name: 'Île-de-France', revenue: 180000, orders: 1180, customers: 720, growthRate: 9.2, performance: 88 },
+                        { name: 'Auvergne-Rhône-Alpes', revenue: 95000, orders: 620, customers: 380, growthRate: 7.5, performance: 84 },
+                        { name: 'Hauts-de-France', revenue: 75000, orders: 490, customers: 300, growthRate: 6.8, performance: 82 }
+                    ]
+                },
+                {
+                    name: 'Spain',
+                    revenue: 270000,
+                    orders: 2000,
+                    customers: 1250,
+                    growthRate: 10.5,
+                    performance: 83,
+                    regions: [
+                        { name: 'Madrid', revenue: 95000, orders: 700, customers: 440, growthRate: 12.1, performance: 86 },
+                        { name: 'Catalonia', revenue: 85000, orders: 630, customers: 390, growthRate: 11.3, performance: 85 },
+                        { name: 'Andalusia', revenue: 55000, orders: 410, customers: 255, growthRate: 8.9, performance: 80 }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Asia Pacific',
+            revenue: 1680000,
+            orders: 18900,
+            customers: 11200,
+            growthRate: 18.9,
+            performance: 94,
+            countries: [
+                {
+                    name: 'China',
+                    revenue: 720000,
+                    orders: 8200,
+                    customers: 4800,
+                    growthRate: 22.3,
+                    performance: 96,
+                    provinces: [
+                        { name: 'Guangdong', revenue: 180000, orders: 2050, customers: 1200, growthRate: 24.1, performance: 97 },
+                        { name: 'Jiangsu', revenue: 150000, orders: 1700, customers: 1000, growthRate: 21.8, performance: 95 },
+                        { name: 'Zhejiang', revenue: 120000, orders: 1360, customers: 800, growthRate: 23.5, performance: 96 },
+                        { name: 'Shanghai', revenue: 110000, orders: 1250, customers: 730, growthRate: 20.9, performance: 94 },
+                        { name: 'Beijing', revenue: 90000, orders: 1020, customers: 600, growthRate: 21.2, performance: 95 }
+                    ]
+                },
+                {
+                    name: 'Japan',
+                    revenue: 480000,
+                    orders: 5400,
+                    customers: 3200,
+                    growthRate: 12.7,
+                    performance: 91,
+                    prefectures: [
+                        { name: 'Tokyo', revenue: 150000, orders: 1680, customers: 1000, growthRate: 13.8, performance: 93 },
+                        { name: 'Osaka', revenue: 95000, orders: 1070, customers: 630, growthRate: 11.9, performance: 90 },
+                        { name: 'Kanagawa', revenue: 85000, orders: 960, customers: 570, growthRate: 12.5, performance: 91 }
+                    ]
+                },
+                {
+                    name: 'India',
+                    revenue: 320000,
+                    orders: 3800,
+                    customers: 2400,
+                    growthRate: 25.8,
+                    performance: 88,
+                    states: [
+                        { name: 'Maharashtra', revenue: 95000, orders: 1120, customers: 710, growthRate: 27.2, performance: 90 },
+                        { name: 'Karnataka', revenue: 75000, orders: 890, customers: 560, growthRate: 26.5, performance: 89 },
+                        { name: 'Delhi', revenue: 65000, orders: 770, customers: 490, growthRate: 24.8, performance: 87 }
+                    ]
+                },
+                {
+                    name: 'Australia',
+                    revenue: 160000,
+                    orders: 1500,
+                    customers: 800,
+                    growthRate: 9.8,
+                    performance: 86,
+                    states: [
+                        { name: 'New South Wales', revenue: 70000, orders: 650, customers: 350, growthRate: 10.2, performance: 87 },
+                        { name: 'Victoria', revenue: 45000, orders: 420, customers: 225, growthRate: 9.5, performance: 85 },
+                        { name: 'Queensland', revenue: 28000, orders: 260, customers: 140, growthRate: 8.9, performance: 84 }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Latin America',
+            revenue: 680000,
+            orders: 8900,
+            customers: 4200,
+            growthRate: 15.2,
+            performance: 82,
+            countries: [
+                {
+                    name: 'Brazil',
+                    revenue: 320000,
+                    orders: 4200,
+                    customers: 1980,
+                    growthRate: 17.8,
+                    performance: 85,
+                    states: [
+                        { name: 'São Paulo', revenue: 120000, orders: 1570, customers: 740, growthRate: 19.2, performance: 87 },
+                        { name: 'Rio de Janeiro', revenue: 75000, orders: 980, customers: 460, growthRate: 16.5, performance: 84 },
+                        { name: 'Minas Gerais', revenue: 55000, orders: 720, customers: 340, growthRate: 17.1, performance: 85 }
+                    ]
+                },
+                {
+                    name: 'Argentina',
+                    revenue: 180000,
+                    orders: 2350,
+                    customers: 1120,
+                    growthRate: 13.5,
+                    performance: 80,
+                    provinces: [
+                        { name: 'Buenos Aires', revenue: 95000, orders: 1240, customers: 590, growthRate: 14.8, performance: 82 },
+                        { name: 'Córdoba', revenue: 45000, orders: 590, customers: 280, growthRate: 12.2, performance: 79 },
+                        { name: 'Santa Fe', revenue: 28000, orders: 370, customers: 175, growthRate: 11.8, performance: 78 }
+                    ]
+                },
+                {
+                    name: 'Chile',
+                    revenue: 110000,
+                    orders: 1450,
+                    customers: 680,
+                    growthRate: 12.8,
+                    performance: 83,
+                    regions: [
+                        { name: 'Santiago', revenue: 55000, orders: 720, customers: 340, growthRate: 13.9, performance: 85 },
+                        { name: 'Valparaíso', revenue: 28000, orders: 370, customers: 175, growthRate: 11.5, performance: 81 },
+                        { name: 'Biobío', revenue: 18000, orders: 240, customers: 115, growthRate: 10.9, performance: 80 }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Middle East & Africa',
+            revenue: 420000,
+            orders: 5600,
+            customers: 2800,
+            growthRate: 14.3,
+            performance: 78,
+            countries: [
+                {
+                    name: 'United Arab Emirates',
+                    revenue: 180000,
+                    orders: 2400,
+                    customers: 1200,
+                    growthRate: 16.8,
+                    performance: 82,
+                    emirates: [
+                        { name: 'Dubai', revenue: 95000, orders: 1270, customers: 630, growthRate: 18.2, performance: 84 },
+                        { name: 'Abu Dhabi', revenue: 55000, orders: 730, customers: 370, growthRate: 15.5, performance: 81 },
+                        { name: 'Sharjah', revenue: 20000, orders: 270, customers: 135, growthRate: 14.1, performance: 79 }
+                    ]
+                },
+                {
+                    name: 'South Africa',
+                    revenue: 120000,
+                    orders: 1600,
+                    customers: 800,
+                    growthRate: 11.2,
+                    performance: 76,
+                    provinces: [
+                        { name: 'Gauteng', revenue: 55000, orders: 730, customers: 370, growthRate: 12.5, performance: 78 },
+                        { name: 'Western Cape', revenue: 35000, orders: 470, customers: 235, growthRate: 10.8, performance: 75 },
+                        { name: 'KwaZulu-Natal', revenue: 20000, orders: 270, customers: 135, growthRate: 9.9, performance: 73 }
+                    ]
+                },
+                {
+                    name: 'Saudi Arabia',
+                    revenue: 80000,
+                    orders: 1060,
+                    customers: 530,
+                    growthRate: 13.7,
+                    performance: 77,
+                    regions: [
+                        { name: 'Riyadh', revenue: 35000, orders: 460, customers: 230, growthRate: 14.8, performance: 79 },
+                        { name: 'Jeddah', revenue: 25000, orders: 330, customers: 165, growthRate: 12.9, performance: 76 },
+                        { name: 'Dammam', revenue: 12000, orders: 160, customers: 80, growthRate: 11.5, performance: 74 }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+let currentLevel = 'region';
+let currentRegion = null;
+let currentCountry = null;
+let mainChart = null;
+let distributionChart = null;
+let performanceChart = null;
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    updateSummaryCards();
+    renderRegionChart();
+    updateGeoTable();
+    updateInsightsLists();
+});
+
+function initializeCharts() {
+    // Main chart options
+    const chartOptions = {
+        series: [],
+        chart: {
+            type: 'bar',
+            height: 400,
+            events: {
+                dataPointSelection: function(event, chartContext, config) {
+                    handleChartClick(config);
+                }
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 8,
+                dataLabels: {
+                    position: 'top',
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function(val) {
+                return '$' + (val / 1000000).toFixed(1) + 'M';
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ["#304758"]
+            }
+        },
+        xaxis: {
+            categories: [],
+            position: 'bottom',
+            axisBorder: { show: false },
+            axisTicks: { show: false }
+        },
+        yaxis: {
+            labels: {
+                show: true,
+                formatter: function(val) {
+                    return '$' + (val / 1000000).toFixed(1) + 'M';
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function(val) {
+                    return '$' + val.toLocaleString();
+                }
+            }
+        }
+    };
+
+    mainChart = new ApexCharts(document.querySelector("#main-chart"), chartOptions);
+    mainChart.render();
+
+    // Distribution chart
+    distributionChart = new ApexCharts(document.querySelector("#distribution-chart"), {
+        series: [],
+        chart: { type: 'donut', height: 300 },
+        labels: [],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }]
+    });
+    distributionChart.render();
+
+    // Performance chart
+    performanceChart = new ApexCharts(document.querySelector("#performance-chart"), {
+        series: [],
+        chart: { type: 'radar', height: 300 },
+        xaxis: { categories: [] },
+        yaxis: { show: true, min: 0, max: 100 }
+    });
+    performanceChart.render();
+}
+
+function updateSummaryCards() {
+    let totalRevenue = 0;
+    let totalOrders = 0;
+    let totalCustomers = 0;
+    let avgPerformance = 0;
+    let topRegion = '';
+
+    geoData.regions.forEach(region => {
+        totalRevenue += region.revenue;
+        totalOrders += region.orders;
+        totalCustomers += region.customers;
+        avgPerformance += region.performance;
+        if (region.revenue > (geoData.regions.find(r => r.name === topRegion)?.revenue || 0)) {
+            topRegion = region.name;
+        }
+    });
+
+    avgPerformance = Math.round(avgPerformance / geoData.regions.length);
+
+    document.getElementById('total-revenue').textContent = '$' + (totalRevenue / 1000000).toFixed(1) + 'M';
+    document.getElementById('active-regions').textContent = geoData.regions.length;
+    document.getElementById('top-region').textContent = topRegion.length > 12 ? topRegion.substring(0, 12) + '...' : topRegion;
+    document.getElementById('avg-performance').textContent = avgPerformance + '%';
+}
+
+function renderRegionChart() {
+    currentLevel = 'region';
+    const regions = geoData.regions.map(region => region.name);
+    const revenues = geoData.regions.map(region => region.revenue);
+
+    mainChart.updateOptions({
+        xaxis: { categories: regions },
+        title: { text: 'Revenue by Region' }
+    });
+    mainChart.updateSeries([{ name: 'Revenue', data: revenues }]);
+
+    updateDistributionChart(regions, revenues);
+    updatePerformanceChart();
+    
+    document.getElementById('chart-title').textContent = 'Revenue by Region';
+    document.getElementById('table-title').textContent = 'Regional Overview';
+    document.getElementById('back-btn').style.display = 'none';
+}
+
+function renderCountryChart(regionName) {
+    currentLevel = 'country';
+    currentRegion = regionName;
+    const region = geoData.regions.find(r => r.name === regionName);
+    
+    const countries = region.countries.map(country => country.name);
+    const revenues = region.countries.map(country => country.revenue);
+
+    mainChart.updateOptions({
+        xaxis: { categories: countries },
+        title: { text: `Revenue by Country in ${regionName}` }
+    });
+    mainChart.updateSeries([{ name: 'Revenue', data: revenues }]);
+
+    updateDistributionChart(countries, revenues);
+    updatePerformanceChart(region.countries);
+    
+    document.getElementById('chart-title').textContent = `Revenue by Country in ${regionName}`;
+    document.getElementById('table-title').textContent = `Countries in ${regionName}`;
+    document.getElementById('back-btn').style.display = 'inline-block';
+}
+
+function renderSubregionChart(regionName, countryName) {
+    currentLevel = 'subregion';
+    currentRegion = regionName;
+    currentCountry = countryName;
+    const region = geoData.regions.find(r => r.name === regionName);
+    const country = region.countries.find(c => c.name === countryName);
+    
+    let subregions = [];
+    let revenues = [];
+    
+    if (country.states) {
+        subregions = country.states.map(state => state.name);
+        revenues = country.states.map(state => state.revenue);
+    } else if (country.provinces) {
+        subregions = country.provinces.map(province => province.name);
+        revenues = country.provinces.map(province => province.revenue);
+    } else if (country.regions) {
+        subregions = country.regions.map(region => region.name);
+        revenues = country.regions.map(region => region.revenue);
+    } else if (country.prefectures) {
+        subregions = country.prefectures.map(prefecture => prefecture.name);
+        revenues = country.prefectures.map(prefecture => prefecture.revenue);
+    } else if (country.emirates) {
+        subregions = country.emirates.map(emirate => emirate.name);
+        revenues = country.emirates.map(emirate => emirate.revenue);
+    }
+
+    mainChart.updateOptions({
+        xaxis: { categories: subregions },
+        title: { text: `Revenue by Subregion in ${countryName}` }
+    });
+    mainChart.updateSeries([{ name: 'Revenue', data: revenues }]);
+
+    updateDistributionChart(subregions, revenues);
+    
+    document.getElementById('chart-title').textContent = `Revenue by Subregion in ${countryName}`;
+    document.getElementById('table-title').textContent = `Subregions in ${countryName}`;
+    document.getElementById('back-btn').style.display = 'inline-block';
+}
+
+function handleChartClick(config) {
+    const dataPointIndex = config.dataPointIndex;
+    
+    if (currentLevel === 'region') {
+        const regionName = geoData.regions[dataPointIndex].name;
+        renderCountryChart(regionName);
+    } else if (currentLevel === 'country') {
+        const countryName = geoData.regions
+            .find(r => r.name === currentRegion)
+            .countries[dataPointIndex].name;
+        renderSubregionChart(currentRegion, countryName);
+    }
+}
+
+function goBack() {
+    if (currentLevel === 'country') {
+        renderRegionChart();
+    } else if (currentLevel === 'subregion') {
+        renderCountryChart(currentRegion);
+    }
+}
+
+function updateDistributionChart(labels, values) {
+    distributionChart.updateOptions({ labels: labels });
+    distributionChart.updateSeries(values);
+}
+
+function updatePerformanceChart(data = null) {
+    if (!data) {
+        // Region level performance
+        const regions = geoData.regions.map(region => region.name);
+        const values = geoData.regions.map(region => region.performance);
+        
+        performanceChart.updateOptions({ xaxis: { categories: regions } });
+        performanceChart.updateSeries([{ name: 'Performance %', data: values }]);
+    } else {
+        // Country/Subregion level performance
+        const items = data.map(item => item.name);
+        const values = data.map(item => item.performance);
+        
+        performanceChart.updateOptions({ xaxis: { categories: items } });
+        performanceChart.updateSeries([{ name: 'Performance %', data: values }]);
+    }
+}
+
+function updateGeoTable() {
+    const tbody = document.getElementById('geo-table');
+    tbody.innerHTML = '';
+
+    let data = [];
+    
+    if (currentLevel === 'region') {
+        data = geoData.regions.map(region => ({
+            name: region.name,
+            revenue: region.revenue,
+            orders: region.orders,
+            customers: region.customers,
+            growthRate: region.growthRate,
+            performance: region.performance,
+            status: 'Active'
+        }));
+    } else if (currentLevel === 'country') {
+        const region = geoData.regions.find(r => r.name === currentRegion);
+        data = region.countries.map(country => ({
+            name: country.name,
+            revenue: country.revenue,
+            orders: country.orders,
+            customers: country.customers,
+            growthRate: country.growthRate,
+            performance: country.performance,
+            status: 'Active'
+        }));
+    } else if (currentLevel === 'subregion') {
+        const region = geoData.regions.find(r => r.name === currentRegion);
+        const country = region.countries.find(c => c.name === currentCountry);
+        
+        let subregions = [];
+        if (country.states) subregions = country.states;
+        else if (country.provinces) subregions = country.provinces;
+        else if (country.regions) subregions = country.regions;
+        else if (country.prefectures) subregions = country.prefectures;
+        else if (country.emirates) subregions = country.emirates;
+        
+        data = subregions.map(subregion => ({
+            name: subregion.name,
+            revenue: subregion.revenue,
+            orders: subregion.orders,
+            customers: subregion.customers,
+            growthRate: subregion.growthRate,
+            performance: subregion.performance,
+            status: 'Active'
+        }));
+    }
+
+    data.forEach(item => {
+        const row = tbody.insertRow();
+        const growthColor = item.growthRate >= 15 ? 'success' : item.growthRate >= 10 ? 'warning' : 'danger';
+        const performanceColor = item.performance >= 85 ? 'success' : item.performance >= 70 ? 'warning' : 'danger';
+        
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>$${item.revenue.toLocaleString()}</td>
+            <td>${item.orders.toLocaleString()}</td>
+            <td>${item.customers.toLocaleString()}</td>
+            <td>$${Math.round(item.revenue / item.orders).toLocaleString()}</td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <span class="text-${growthColor} me-1">▲</span>
+                    <span>${item.growthRate}%</span>
+                </div>
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <div class="progress me-2" style="width: 60px; height: 20px;">
+                        <div class="progress-bar bg-${performanceColor}" style="width: ${item.performance}%"></div>
+                    </div>
+                    <span>${item.performance}%</span>
+                </div>
+            </td>
+            <td><span class="badge bg-success">${item.status}</span></td>
+        `;
+    });
+}
+
+function updateInsightsLists() {
+    // Top Performers
+    const topPerformers = geoData.regions
+        .filter(r => r.performance >= 85)
+        .sort((a, b) => b.performance - a.performance)
+        .slice(0, 3);
+
+    const topPerformersList = document.getElementById('top-performers-list');
+    topPerformersList.innerHTML = topPerformers.map(region => `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>${region.name}</span>
+            <span class="badge bg-success">${region.performance}%</span>
+        </div>
+    `).join('');
+
+    // High Growth
+    const highGrowth = geoData.regions
+        .filter(r => r.growthRate >= 15)
+        .sort((a, b) => b.growthRate - a.growthRate)
+        .slice(0, 3);
+
+    const highGrowthList = document.getElementById('high-growth-list');
+    highGrowthList.innerHTML = highGrowth.map(region => `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>${region.name}</span>
+            <span class="badge bg-info">▲ ${region.growthRate}%</span>
+        </div>
+    `).join('');
+
+    // Needs Attention
+    const needsAttention = geoData.regions
+        .filter(r => r.performance < 80)
+        .sort((a, b) => a.performance - b.performance)
+        .slice(0, 3);
+
+    const needsAttentionList = document.getElementById('needs-attention-list');
+    needsAttentionList.innerHTML = needsAttention.map(region => `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>${region.name}</span>
+            <span class="badge bg-warning">${region.performance}%</span>
+        </div>
+    `).join('');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexCharts Tutorial - Build Charts with Bootstrap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px; /* Space for fixed navbar */
+        }
+        /* Navigation Styles */
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .main-container {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 1400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+            border-radius: 15px;
+            color: white;
+        }
+        .tutorial-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-left: 5px solid #3498db;
+        }
+        .code-block {
+            background: #2d2d2d;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        .code-block pre {
+            margin: 0;
+            color: #f8f8f2;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        .copy-btn:hover {
+            background: #2980b9;
+        }
+        .copy-btn.copied {
+            background: #27ae60;
+        }
+        .demo-chart {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 300px;
+            border: 1px solid #e9ecef;
+        }
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .nav-tabs {
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+        .nav-tabs .nav-link {
+            border: none;
+            color: #6c757d;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 10px 10px 0 0;
+            margin-right: 5px;
+        }
+        .nav-tabs .nav-link.active {
+            background: #3498db;
+            color: white;
+            border: none;
+        }
+        .nav-tabs .nav-link:hover {
+            border: none;
+            color: #3498db;
+        }
+        .tab-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 10px 10px 10px;
+        }
+        .prerequisites {
+            background: #e8f5e8;
+            border-left: 5px solid #27ae60;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .tip-box {
+            background: #fff3cd;
+            border-left: 5px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .warning-box {
+            background: #f8d7da;
+            border-left: 5px solid #e74c3c;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                📊 Dashboard Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="index.html">📈 Basic Dashboard</a></li>
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="apexcharts-complete.html">📊 Apex Charts & Bootstrap</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header-section">
+            <h1>📚 ApexCharts Tutorial</h1>
+            <p>Learn how to build beautiful charts with ApexCharts and Bootstrap 5</p>
+        </div>
+
+        <!-- Prerequisites -->
+        <div class="prerequisites">
+            <h5>📋 Prerequisites</h5>
+            <p>Before you start, make sure you have basic knowledge of:</p>
+            <ul>
+                <li>HTML5 and CSS3</li>
+                <li>JavaScript (ES6+)</li>
+                <li>Bootstrap 5 basics</li>
+            </ul>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="tutorial-section">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Getting Started - Basic Setup</h3>
+            </div>
+            
+            <p>First, create a basic HTML page with the required dependencies:</p>
+            
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Chart Dashboard&lt;/title&gt;
+    
+    <!-- Bootstrap 5 CSS -->
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    
+    <!-- Google Fonts -->
+    &lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"&gt;
+    
+    &lt;style&gt;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #f8f9fa; 
+            padding: 20px;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            min-height: 350px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12"&gt;
+                &lt;div class="chart-card"&gt;
+                    &lt;h5&gt;My First Chart&lt;/h5&gt;
+                    &lt;div id="myChart" class="chart-container"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    
+    <!-- ApexCharts Library -->
+    &lt;script src="https://cdn.jsdelivr.net/npm/apexcharts"&gt;&lt;/script&gt;
+    
+    &lt;script&gt;
+        // Chart code will go here
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Tip:</strong> Always include the ApexCharts script at the end of your body tag for better page loading performance.
+            </div>
+        </div>
+
+        <!-- Chart Types Navigation -->
+        <div class="tutorial-section">
+            <h3>📊 Chart Types</h3>
+            <p>Select a chart type to learn how to build it:</p>
+            
+            <ul class="nav nav-tabs" id="chartTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="line-tab" data-bs-toggle="tab" data-bs-target="#line" type="button">Line Chart</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="bar-tab" data-bs-toggle="tab" data-bs-target="#bar" type="button">Bar Chart</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pie-tab" data-bs-toggle="tab" data-bs-target="#pie" type="button">Pie Chart</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="area-tab" data-bs-toggle="tab" data-bs-target="#area" type="button">Area Chart</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="mixed-tab" data-bs-toggle="tab" data-bs-target="#mixed" type="button">Mixed Chart</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="chartTabsContent">
+                <!-- Line Chart Tab -->
+                <div class="tab-pane fade show active" id="line" role="tabpanel">
+                    <h4>📈 Line Chart</h4>
+                    <p>Perfect for showing trends over time.</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code>&lt;script&gt;
+// Line Chart Configuration
+const lineOptions = {
+    chart: {
+        type: 'line',
+        height: 350,
+        toolbar: { show: true }
+    },
+    series: [{
+        name: 'Revenue',
+        data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+    }, {
+        name: 'Profit',
+        data: [20, 30, 25, 40, 39, 50, 60, 81, 105]
+    }],
+    colors: ['#3498db', '#2ecc71'],
+    stroke: { 
+        curve: 'smooth',
+        width: 3
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+    },
+    yaxis: {
+        labels: {
+            formatter: function(value) {
+                return '$' + value + 'k';
+            }
+        }
+    },
+    tooltip: {
+        shared: true,
+        intersect: false
+    },
+    grid: {
+        borderColor: '#e9ecef'
+    }
+};
+
+// Create and render the chart
+const lineChart = new ApexCharts(document.querySelector("#myChart"), lineOptions);
+lineChart.render();
+&lt;/script&gt;</code></pre>
+                    </div>
+
+                    <div class="demo-chart">
+                        <div id="line-demo"></div>
+                    </div>
+                </div>
+
+                <!-- Bar Chart Tab -->
+                <div class="tab-pane fade" id="bar" role="tabpanel">
+                    <h4>📊 Bar Chart</h4>
+                    <p>Great for comparing values across categories.</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code>&lt;script&gt;
+// Bar Chart Configuration
+const barOptions = {
+    chart: {
+        type: 'bar',
+        height: 350,
+        toolbar: { show: true }
+    },
+    series: [{
+        name: 'Sales',
+        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    }],
+    colors: ['#e74c3c'],
+    plotOptions: {
+        bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            borderRadius: 8,
+            dataLabels: {
+                position: 'top'
+            }
+        }
+    },
+    dataLabels: {
+        enabled: true,
+        formatter: function(value) {
+            return value + ' units';
+        },
+        offsetY: -20,
+        style: {
+            fontSize: '12px',
+            colors: ['#304758']
+        }
+    },
+    xaxis: {
+        categories: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E', 
+                   'Product F', 'Product G', 'Product H', 'Product I']
+    },
+    yaxis: {
+        title: {
+            text: 'Sales (units)'
+        }
+    },
+    tooltip: {
+        y: {
+            formatter: function(value) {
+                return value + ' units sold';
+            }
+        }
+    }
+};
+
+// Create and render the chart
+const barChart = new ApexCharts(document.querySelector("#myChart"), barOptions);
+barChart.render();
+&lt;/script&gt;</code></pre>
+                    </div>
+
+                    <div class="demo-chart">
+                        <div id="bar-demo"></div>
+                    </div>
+                </div>
+
+                <!-- Pie Chart Tab -->
+                <div class="tab-pane fade" id="pie" role="tabpanel">
+                    <h4>🥧 Pie Chart</h4>
+                    <p>Ideal for showing parts of a whole.</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code>&lt;script&gt;
+// Pie Chart Configuration
+const pieOptions = {
+    chart: {
+        type: 'pie',
+        height: 350,
+        toolbar: { show: true }
+    },
+    series: [44, 55, 13, 43, 22],
+    colors: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71', '#9b59b6'],
+    labels: ['Desktop', 'Mobile', 'Tablet', 'Smart TV', 'Other'],
+    responsive: [{
+        breakpoint: 480,
+        options: {
+            chart: { width: 200 },
+            legend: { position: 'bottom' }
+        }
+    }],
+    plotOptions: {
+        pie: {
+            dataLabels: {
+                offset: -15
+            }
+        }
+    },
+    dataLabels: {
+        formatter: function(val, opts) {
+            return opts.w.globals.labels[opts.seriesIndex] + ': ' + val.toFixed(1) + '%';
+        }
+    },
+    tooltip: {
+        y: {
+            formatter: function(value) {
+                return value + '%';
+            }
+        }
+    }
+};
+
+// Create and render the chart
+const pieChart = new ApexCharts(document.querySelector("#myChart"), pieOptions);
+pieChart.render();
+&lt;/script&gt;</code></pre>
+                    </div>
+
+                    <div class="demo-chart">
+                        <div id="pie-demo"></div>
+                    </div>
+                </div>
+
+                <!-- Area Chart Tab -->
+                <div class="tab-pane fade" id="area" role="tabpanel">
+                    <h4>📉 Area Chart</h4>
+                    <p>Similar to line charts but with filled areas.</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code>&lt;script&gt;
+// Area Chart Configuration
+const areaOptions = {
+    chart: {
+        type: 'area',
+        height: 350,
+        toolbar: { show: true }
+    },
+    series: [{
+        name: 'Revenue',
+        data: [31, 40, 28, 51, 42, 109, 100, 120, 140]
+    }],
+    colors: ['#f39c12'],
+    stroke: { 
+        curve: 'smooth',
+        width: 3
+    },
+    fill: {
+        type: 'gradient',
+        gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.3,
+            stops: [0, 90, 100]
+        }
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+    },
+    yaxis: {
+        labels: {
+            formatter: function(value) {
+                return '$' + value + 'k';
+            }
+        }
+    },
+    tooltip: {
+        y: {
+            formatter: function(value) {
+                return '$' + value + 'k';
+            }
+        }
+    },
+    grid: {
+        borderColor: '#e9ecef'
+    }
+};
+
+// Create and render the chart
+const areaChart = new ApexCharts(document.querySelector("#myChart"), areaOptions);
+areaChart.render();
+&lt;/script&gt;</code></pre>
+                    </div>
+
+                    <div class="demo-chart">
+                        <div id="area-demo"></div>
+                    </div>
+                </div>
+
+                <!-- Mixed Chart Tab -->
+                <div class="tab-pane fade" id="mixed" role="tabpanel">
+                    <h4>🎨 Mixed Chart</h4>
+                    <p>Combine different chart types in one visualization.</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code>&lt;script&gt;
+// Mixed Chart Configuration
+const mixedOptions = {
+    chart: {
+        height: 350,
+        type: 'line',
+        toolbar: { show: true }
+    },
+    series: [{
+        name: 'Revenue',
+        type: 'column',
+        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45]
+    }, {
+        name: 'Profit Margin',
+        type: 'line',
+        data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43, 67]
+    }],
+    colors: ['#3498db', '#2ecc71'],
+    stroke: { 
+        width: [0, 3]  // No stroke for column, 3px for line
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    yaxis: [
+        {
+            title: {
+                text: 'Revenue ($k)'
+            }
+        },
+        {
+            opposite: true,
+            title: {
+                text: 'Profit Margin (%)'
+            }
+        }
+    ],
+    tooltip: {
+        shared: true,
+        intersect: false,
+        y: {
+            formatter: function(value, { seriesIndex, dataPointIndex, w }) {
+                if (seriesIndex === 0) {
+                    return '$' + value + 'k';
+                } else {
+                    return value + '%';
+                }
+            }
+        }
+    }
+};
+
+// Create and render the chart
+const mixedChart = new ApexCharts(document.querySelector("#myChart"), mixedOptions);
+mixedChart.render();
+&lt;/script&gt;</code></pre>
+                    </div>
+
+                    <div class="demo-chart">
+                        <div id="mixed-demo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Working with Data -->
+        <div class="tutorial-section">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Working with Data</h3>
+            </div>
+            
+            <p>Learn how to handle different data sources:</p>
+            
+            <h5>📊 Static Data</h5>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>// Static data array
+const salesData = [120, 150, 180, 200, 170, 220];
+
+// Static data with labels
+const categoryData = {
+    categories: ['Q1', 'Q2', 'Q3', 'Q4'],
+    series: [{
+        name: 'Revenue',
+        data: [45000, 52000, 48000, 61000]
+    }]
+};</code></pre>
+            </div>
+
+            <h5>🌐 API Data</h5>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>// Fetch data from API
+async function loadChartData() {
+    try {
+        const response = await fetch('https://api.example.com/sales');
+        const data = await response.json();
+        
+        // Update chart with API data
+        chart.updateSeries([{
+            name: 'Sales',
+            data: data.sales
+        }]);
+        
+    } catch (error) {
+        console.error('Error loading data:', error);
+    }
+}
+
+// Call the function
+loadChartData();</code></pre>
+            </div>
+
+            <h5>🔄 Real-time Data</h5>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>// Real-time data updates
+setInterval(() => {
+    const newData = Math.random() * 100;
+    
+    // Append new data point
+    chart.appendData([{
+        data: [{
+            x: new Date().getTime(),
+            y: newData
+        }]
+    }]);
+    
+    // Keep only last 20 points
+    if (chart.data.wlobals.series[0].data.length > 20) {
+        chart.data.wlobals.series[0].data.shift();
+    }
+    
+}, 2000); // Update every 2 seconds</code></pre>
+            </div>
+        </div>
+
+        <!-- Styling and Customization -->
+        <div class="tutorial-section">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Styling and Customization</h3>
+            </div>
+            
+            <h5>🎨 Color Themes</h5>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>// Custom colors
+const options = {
+    colors: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71', '#9b59b6'],
+    // ... other options
+};
+
+// Dark theme
+const darkOptions = {
+    theme: {
+        mode: 'dark'
+    },
+    chart: {
+        background: '#1a1a1a'
+    }
+};</code></pre>
+            </div>
+
+            <h5>📱 Responsive Design</h5>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>// Responsive breakpoints
+const options = {
+    chart: {
+        responsive: [{
+            breakpoint: 768,
+            options: {
+                chart: { height: 300 },
+                legend: { position: 'bottom' }
+            }
+        }, {
+            breakpoint: 480,
+            options: {
+                chart: { height: 250 },
+                xaxis: { labels: { show: false } }
+            }
+        }]
+    }
+};</code></pre>
+            </div>
+
+            <h5>✨ Animations</h5>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>// Animation settings
+const options = {
+    chart: {
+        animations: {
+            enabled: true,
+            easing: 'easeinout',
+            speed: 800,
+            animateGradually: {
+                enabled: true,
+                delay: 150
+            },
+            dynamicAnimation: {
+                enabled: true,
+                speed: 350
+            }
+        }
+    }
+};</code></pre>
+            </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="tutorial-section">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Best Practices</h3>
+            </div>
+            
+            <div class="tip-box">
+                <strong>💡 Performance Tips:</strong>
+                <ul>
+                    <li>Limit data points to 1000 for better performance</li>
+                    <li>Use lazy loading for multiple charts</li>
+                    <li>Debounce resize events</li>
+                    <li>Clear charts when destroying components</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Accessibility:</strong>
+                <ul>
+                    <li>Always provide alt text for charts</li>
+                    <li>Use high contrast colors</li>
+                    <li>Include data tables as fallbacks</li>
+                    <li>Test with screen readers</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Common Mistakes:</strong>
+                <ul>
+                    <li>Don't use pie charts for more than 5-7 categories</li>
+                    <li>Avoid 3D charts - they distort data</li>
+                    <li>Don't start Y-axis at zero for bar charts</li>
+                    <li>Be careful with logarithmic scales</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Complete Example -->
+        <div class="tutorial-section">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <h3 class="step-title">Complete Dashboard Example</h3>
+            </div>
+            
+            <p>Here's a complete example of a dashboard with multiple charts:</p>
+            
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Sales Dashboard&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;style&gt;
+        body { font-family: 'Inter', sans-serif; background: #f8f9fa; }
+        .chart-card { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 25px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container-fluid py-4"&gt;
+        &lt;h1 class="mb-4"&gt;Sales Dashboard&lt;/h1&gt;
+        
+        &lt;!-- Metrics Row --&gt;
+        &lt;div class="row mb-4"&gt;
+            &lt;div class="col-md-3"&gt;
+                &lt;div class="metric-card"&gt;
+                    &lt;h6&gt;Total Revenue&lt;/h6&gt;
+                    &lt;h3&gt;$245,678&lt;/h3&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-md-3"&gt;
+                &lt;div class="metric-card"&gt;
+                    &lt;h6&gt;Orders&lt;/h6&gt;
+                    &lt;h3&gt;1,234&lt;/h3&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-md-3"&gt;
+                &lt;div class="metric-card"&gt;
+                    &lt;h6&gt;Customers&lt;/h6&gt;
+                    &lt;h3&gt;892&lt;/h3&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-md-3"&gt;
+                &lt;div class="metric-card"&gt;
+                    &lt;h6&gt;Conversion&lt;/h6&gt;
+                    &lt;h3&gt;3.2%&lt;/h3&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;!-- Charts Row --&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-lg-8"&gt;
+                &lt;div class="chart-card"&gt;
+                    &lt;h5&gt;Revenue Trend&lt;/h5&gt;
+                    &lt;div id="revenueChart"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-lg-4"&gt;
+                &lt;div class="chart-card"&gt;
+                    &lt;h5&gt;Sales by Category&lt;/h5&gt;
+                    &lt;div id="categoryChart"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    
+    &lt;script src="https://cdn.jsdelivr.net/npm/apexcharts"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        // Revenue Chart
+        const revenueOptions = {
+            chart: { type: 'line', height: 350 },
+            series: [{
+                name: 'Revenue',
+                data: [30000, 35000, 32000, 40000, 38000, 45000, 42000, 48000, 52000]
+            }],
+            colors: ['#3498db'],
+            stroke: { curve: 'smooth' },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+            }
+        };
+        
+        // Category Chart
+        const categoryOptions = {
+            chart: { type: 'donut', height: 350 },
+            series: [44, 25, 19, 12],
+            labels: ['Electronics', 'Clothing', 'Food', 'Other'],
+            colors: ['#e74c3c', '#f39c12', '#2ecc71', '#9b59b6']
+        };
+        
+        // Render charts
+        new ApexCharts(document.querySelector("#revenueChart"), revenueOptions).render();
+        new ApexCharts(document.querySelector("#categoryChart"), categoryOptions).render();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling;
+            const code = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Demo charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Line Chart Demo
+            const lineDemo = {
+                chart: { type: 'line', height: 250, toolbar: false },
+                series: [{
+                    name: 'Revenue',
+                    data: [30, 40, 35, 50, 49, 60, 70]
+                }],
+                colors: ['#3498db'],
+                stroke: { curve: 'smooth' },
+                xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'] }
+            };
+            new ApexCharts(document.querySelector("#line-demo"), lineDemo).render();
+
+            // Bar Chart Demo
+            const barDemo = {
+                chart: { type: 'bar', height: 250, toolbar: false },
+                series: [{ name: 'Sales', data: [44, 55, 57, 56, 61] }],
+                colors: ['#e74c3c'],
+                xaxis: { categories: ['A', 'B', 'C', 'D', 'E'] }
+            };
+            new ApexCharts(document.querySelector("#bar-demo"), barDemo).render();
+
+            // Pie Chart Demo
+            const pieDemo = {
+                chart: { type: 'pie', height: 250, toolbar: false },
+                series: [44, 55, 13],
+                labels: ['Desktop', 'Mobile', 'Tablet'],
+                colors: ['#3498db', '#e74c3c', '#f39c12']
+            };
+            new ApexCharts(document.querySelector("#pie-demo"), pieDemo).render();
+
+            // Area Chart Demo
+            const areaDemo = {
+                chart: { type: 'area', height: 250, toolbar: false },
+                series: [{ name: 'Revenue', data: [31, 40, 28, 51, 42] }],
+                colors: ['#f39c12'],
+                stroke: { curve: 'smooth' },
+                fill: { type: 'gradient' }
+            };
+            new ApexCharts(document.querySelector("#area-demo"), areaDemo).render();
+
+            // Mixed Chart Demo
+            const mixedDemo = {
+                chart: { height: 250, type: 'line', toolbar: false },
+                series: [
+                    { name: 'Revenue', type: 'column', data: [23, 11, 22, 27] },
+                    { name: 'Margin', type: 'line', data: [44, 55, 41, 67] }
+                ],
+                colors: ['#3498db', '#2ecc71'],
+                stroke: { width: [0, 3] }
+            };
+            new ApexCharts(document.querySelector("#mixed-demo"), mixedDemo).render();
+        });
+    </script>
+</body>
+</html>

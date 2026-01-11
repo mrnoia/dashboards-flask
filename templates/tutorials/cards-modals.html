@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}Cards & Modals Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">🎴 Cards & Modals Tutorial</h1>
+        <p class="tutorial-subtitle">Master Bootstrap 5 cards and modals for responsive UI components</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Card component variations</li>
+                    <li>Modal dialog implementation</li>
+                    <li>Responsive card layouts</li>
+                    <li>Card interactions and animations</li>
+                    <li>Modal triggers and events</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>JavaScript fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>CSS styling understanding</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                🎴 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Cards Gallery</h3>
+                
+                <!-- Basic Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card image">
+                            <div class="card-body">
+                                <h5 class="card-title">Basic Card</h5>
+                                <p class="card-text">This is a simple Bootstrap card with image, title, and text content.</p>
+                                <a href="#" class="btn btn-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-header">Featured</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Centered Card</h5>
+                                <p class="card-text">This card has centered text content and a header section.</p>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary">View</button>
+                                    <button type="button" class="btn btn-outline-secondary">Edit</button>
+                                </div>
+                            </div>
+                            <div class="card-footer text-muted">2 days ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Card with Lists</h5>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">List item 1</li>
+                                    <li class="list-group-item">List item 2</li>
+                                    <li class="list-group-item">List item 3</li>
+                                </ul>
+                                <div class="card-body">
+                                    <a href="#" class="card-link">Card link</a>
+                                    <a href="#" class="card-link">Another link</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Trigger Cards -->
+                <h3 class="mt-5">Modal Examples</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card border-primary">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Launch Modal</h5>
+                                <p class="card-text">Click the button below to open a modal dialog.</p>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Launch Demo Modal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card border-success">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Success Modal</h5>
+                                <p class="card-text">Open a modal with success styling.</p>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#successModal">
+                                    Success Modal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>HTML Structure</h3>
+                <pre><code>&lt;!-- Basic Card --&gt;
+&lt;div class="card"&gt;
+  &lt;img src="image.jpg" class="card-img-top" alt="Card image"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;h5 class="card-title"&gt;Card Title&lt;/h5&gt;
+    &lt;p class="card-text"&gt;Card content goes here.&lt;/p&gt;
+    &lt;a href="#" class="btn btn-primary"&gt;Action&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Modal Trigger --&gt;
+&lt;button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"&gt;
+  Open Modal
+&lt;/button&gt;
+
+&lt;!-- Modal Structure --&gt;
+&lt;div class="modal fade" id="myModal" tabindex="-1"&gt;
+  &lt;div class="modal-dialog"&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;div class="modal-header"&gt;
+        &lt;h5 class="modal-title"&gt;Modal Title&lt;/h5&gt;
+        &lt;button type="button" class="btn-close" data-bs-dismiss="modal"&gt;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-body"&gt;
+        &lt;p&gt;Modal content goes here.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-footer"&gt;
+        &lt;button type="button" class="btn btn-secondary" data-bs-dismiss="modal"&gt;Close&lt;/button&gt;
+        &lt;button type="button" class="btn btn-primary"&gt;Save changes&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+                <h3>JavaScript for Modals</h3>
+                <pre><code>// Initialize modal with JavaScript
+const myModal = new bootstrap.Modal(document.getElementById('myModal'));
+
+// Show modal
+myModal.show();
+
+// Hide modal
+myModal.hide();
+
+// Listen to modal events
+const modalElement = document.getElementById('myModal');
+modalElement.addEventListener('show.bs.modal', function (event) {
+  // Do something when modal is about to be shown
+});
+
+modalElement.addEventListener('hidden.bs.modal', function (event) {
+  // Do something when modal is hidden
+});</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Bootstrap Cards</h3>
+                <p>Cards are flexible content containers built with minimal markup and styling options. They feature:</p>
+                
+                <h4>Card Structure</h4>
+                <ul>
+                    <li><strong>.card</strong>: Main container wrapper</li>
+                    <li><strong>.card-body</strong>: Main content area</li>
+                    <li><strong>.card-title</strong>: Card heading</li>
+                    <li><strong>.card-text</strong>: Main text content</li>
+                    <li><strong>.card-header/.card-footer</strong>: Optional header/footer sections</li>
+                    <li><strong>.card-img-top/.card-img-bottom</strong>: Top/bottom images</li>
+                </ul>
+
+                <h4>Card Variations</h4>
+                <ul>
+                    <li><strong>Basic cards</strong>: Simple content containers</li>
+                    <li><strong>Image cards</strong>: Cards with images</li>
+                    <li><strong>List group cards</strong>: Cards with list content</li>
+                    <li><strong>Header/footer cards</strong>: Cards with structural sections</li>
+                    <li><strong>Text alignment</strong>: Use text utilities for alignment</li>
+                </ul>
+
+                <h3>Bootstrap Modals</h3>
+                <p>Modals are flexible dialog prompts that require user interaction before continuing:</p>
+                
+                <h4>Modal Components</h4>
+                <ul>
+                    <li><strong>.modal</strong>: Root modal container</li>
+                    <li><strong>.modal-dialog</strong>: Modal positioning and sizing</li>
+                    <li><strong>.modal-content</strong>: Modal content wrapper</li>
+                    <li><strong>.modal-header</strong>: Header with title and close button</li>
+                    <li><strong>.modal-body</strong>: Main content area</li>
+                    <li><strong>.modal-footer</strong>: Footer with action buttons</li>
+                </ul>
+
+                <h4>Modal Triggers</h4>
+                <ul>
+                    <li><strong>Data attributes</strong>: Use data-bs-toggle="modal" and data-bs-target</li>
+                    <li><strong>JavaScript</strong>: Use Bootstrap.Modal constructor</li>
+                    <li><strong>Events</strong>: show.bs.modal, shown.bs.modal, hide.bs.modal, hidden.bs.modal</li>
+                </ul>
+
+                <h4>Best Practices</h4>
+                <ul>
+                    <li>Use semantic HTML5 tags within cards</li>
+                    <li>Ensure modals are accessible with proper ARIA attributes</li>
+                    <li>Test responsive behavior on different screen sizes</li>
+                    <li>Use appropriate modal sizes (modal-sm, modal-lg, modal-xl)</li>
+                    <li>Consider backdrop options for user experience</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Examples (hidden by default) -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Demo Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>This is a demo modal that showcases the basic Bootstrap modal functionality.</p>
+                <p>You can add any content here - forms, images, text, or other components.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">Success!</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="text-success mb-3">
+                        <svg width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                    </div>
+                    <h4>Operation Completed Successfully!</h4>
+                    <p>Your action has been processed and completed without any errors.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Great!</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

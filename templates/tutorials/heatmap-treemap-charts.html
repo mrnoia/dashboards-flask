@@ -1,0 +1,665 @@
+{% extends "base.html" %}
+
+{% block title %}Heatmap & Treemap Charts Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">🔥 Heatmap & Treemap Charts Tutorial</h1>
+        <p class="tutorial-subtitle">Master heatmap and treemap charts with ApexCharts and Bootstrap 5</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Basic heatmap configuration</li>
+                    <li>Treemap chart variations</li>
+                    <li>Color scales and gradients</li>
+                    <li>Hierarchical data visualization</li>
+                    <li>Interactive features</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>JavaScript fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>Understanding of data visualization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                🔥 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Basic Heatmap</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="basicHeatmapChart"></div>
+                    </div>
+                </div>
+
+                <h3>Treemap Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="treemapChart"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Color Range Heatmap</h3>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="colorRangeHeatmap"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Rounded Treemap</h3>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="roundedTreemap"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Multi-Series Heatmap</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="multiSeriesHeatmap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>Basic Heatmap</h3>
+                <pre><code>// Basic Heatmap Configuration
+function generateData(count, yrange) {
+  var i = 0;
+  var series = [];
+  while (i < count) {
+    var x = (i + 1).toString();
+    var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+    series.push({
+      x: x,
+      y: y
+    });
+    i++;
+  }
+  return series;
+}
+
+const options = {
+  series: [{
+    name: 'Metric 1',
+    data: generateData(18, {
+      min: 0,
+      max: 90
+    })
+  }, {
+    name: 'Metric 2',
+    data: generateData(18, {
+      min: 0,
+      max: 90
+    })
+  }, {
+    name: 'Metric 3',
+    data: generateData(18, {
+      min: 0,
+      max: 90
+    })
+  }],
+  chart: {
+    height: 350,
+    type: 'heatmap',
+  },
+  dataLabels: {
+    enabled: false
+  },
+  colors: ["#008FFB"],
+  xaxis: {
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+  },
+  title: {
+    text: 'Basic Heatmap Chart'
+  }
+};
+
+const chart = new ApexCharts(document.querySelector("#basicHeatmapChart"), options);
+chart.render();</code></pre>
+
+                <h3>Treemap Chart</h3>
+                <pre><code>// Treemap Chart Configuration
+const options = {
+  series: [{
+    data: [{
+      x: 'Category A',
+      y: 330
+    }, {
+      x: 'Category B',
+      y: 250
+    }, {
+      x: 'Category C',
+      y: 180
+    }, {
+      x: 'Category D',
+      y: 150
+    }, {
+      x: 'Category E',
+      y: 120
+    }, {
+      x: 'Category F',
+      y: 90
+    }, {
+      x: 'Category G',
+      y: 60
+    }, {
+      x: 'Category H',
+      y: 40
+    }]
+  }],
+  chart: {
+    type: 'treemap',
+    height: 350
+  },
+  title: {
+    text: 'Basic Treemap Chart',
+    align: 'center'
+  }
+};
+
+const chart = new ApexCharts(document.querySelector("#treemapChart"), options);
+chart.render();</code></pre>
+
+                <h3>Color Range Heatmap</h3>
+                <pre><code>// Color Range Heatmap Configuration
+const options = {
+  series: [{
+    name: 'Jan',
+    data: generateData(20, {
+      min: -30,
+      max: 55
+    })
+  }, {
+    name: 'Feb',
+    data: generateData(20, {
+      min: -30,
+      max: 55
+    })
+  }, {
+    name: 'Mar',
+    data: generateData(20, {
+      min: -30,
+      max: 55
+    })
+  }],
+  chart: {
+    height: 350,
+    type: 'heatmap',
+  },
+  plotOptions: {
+    heatmap: {
+      shadeIntensity: 0.5,
+      colorScale: {
+        ranges: [{
+          from: -30,
+          to: 5,
+          name: 'Low',
+          color: '#008FFB'
+        }, {
+          from: 6,
+          to: 20,
+          name: 'Medium',
+          color: '#00E396'
+        }, {
+          from: 21,
+          to: 45,
+          name: 'High',
+          color: '#FEB019'
+        }, {
+          from: 46,
+          to: 55,
+          name: 'Extreme',
+          color: '#FF4560'
+        }]
+      }
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  colors: ["#008FFB"],
+  xaxis: {
+    categories: ['10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm', '12am', '1am', '2am', '3am', '4am', '5am']
+  },
+  title: {
+    text: 'Color Range Heatmap'
+  }
+};</code></pre>
+
+                <h3>Rounded Treemap</h3>
+                <pre><code>// Rounded Treemap Configuration
+const options = {
+  series: [{
+    data: [{
+      x: 'Product A',
+      y: 218
+    }, {
+      x: 'Product B',
+      y: 149
+    }, {
+      x: 'Product C',
+      y: 184
+    }, {
+      x: 'Product D',
+      y: 255
+    }, {
+      x: 'Product E',
+      y: 276
+    }, {
+      x: 'Product F',
+      y: 197
+    }, {
+      x: 'Product G',
+      y: 213
+    }, {
+      x: 'Product H',
+      y: 104
+    }]
+  }],
+  chart: {
+    type: 'treemap',
+    height: 350
+  },
+  plotOptions: {
+    treemap: {
+      distributed: true,
+      enableShades: false
+    }
+  },
+  colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26A69A', '#D10CE8'],
+  title: {
+    text: 'Rounded Treemap Chart',
+    align: 'center'
+  }
+};</code></pre>
+
+                <h3>Multi-Series Heatmap</h3>
+                <pre><code>// Multi-Series Heatmap Configuration
+const options = {
+  series: [{
+    name: 'Week 1',
+    data: generateData(12, {
+      min: 0,
+      max: 90
+    })
+  }, {
+    name: 'Week 2',
+    data: generateData(12, {
+      min: 0,
+      max: 90
+    })
+  }, {
+    name: 'Week 3',
+    data: generateData(12, {
+      min: 0,
+      max: 90
+    })
+  }, {
+    name: 'Week 4',
+    data: generateData(12, {
+      min: 0,
+      max: 90
+    })
+  }],
+  chart: {
+    height: 350,
+    type: 'heatmap',
+    toolbar: {
+      show: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  colors: ["#008FFB", "#00E396", "#FEB019", "#FF4560"],
+  xaxis: {
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+  },
+  title: {
+    text: 'Multi-Series Heatmap'
+  },
+  grid: {
+    borderColor: '#f1f1f1'
+  }
+};</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Heatmap & Treemap Charts Overview</h3>
+                <p>Heatmaps and treemaps are excellent for visualizing hierarchical data and data intensity patterns.</p>
+                
+                <h4>Heatmap Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Show data intensity through color</li>
+                    <li><strong>Format</strong>: Grid with color-coded cells</li>
+                    <li><strong>Best for</strong>: Correlation matrices, activity patterns</li>
+                    <li><strong>Data type</strong>: Two-dimensional data sets</li>
+                </ul>
+
+                <h4>Treemap Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Show hierarchical data as nested rectangles</li>
+                    <li><strong>Format</strong>: Proportional rectangles representing values</li>
+                    <li><strong>Best for</strong>: Part-to-whole relationships</li>
+                    <li><strong>Data type</strong>: Hierarchical or categorical data</li>
+                </ul>
+
+                <h3>Chart Configuration Options</h3>
+                
+                <h4>Heatmap Settings</h4>
+                <ul>
+                    <li><strong>chart.type</strong>: 'heatmap'</li>
+                    <li><strong>plotOptions.heatmap</strong>: Heatmap-specific options</li>
+                    <li><strong>colorScale</strong>: Color range configuration</li>
+                    <li><strong>shadeIntensity</strong>: Color intensity control</li>
+                </ul>
+
+                <h4>Treemap Settings</h4>
+                <ul>
+                    <li><strong>chart.type</strong>: 'treemap'</li>
+                    <li><strong>plotOptions.treemap</strong>: Treemap-specific options</li>
+                    <li><strong>distributed</strong>: Color distribution</li>
+                    <li><strong>enableShades</strong>: Color shading effects</li>
+                </ul>
+
+                <h4>Data Configuration</h4>
+                <ul>
+                    <li><strong>series.data</strong>: Array of data points</li>
+                    <li><strong>Multi-series</strong>: Multiple data series</li>
+                    <li><strong>Data format</strong>: {x: category, y: value}</li>
+                    <li><strong>Dynamic data</strong>: Real-time updates</li>
+                </ul>
+
+                <h4>Color Configuration</h4>
+                <ul>
+                    <li><strong>colors</strong>: Color palette</li>
+                    <li><strong>colorScale.ranges</strong>: Custom color ranges</li>
+                    <li><strong>gradient</strong>: Color gradients</li>
+                    <li><strong>opacity</strong>: Transparency settings</li>
+                </ul>
+
+                <h3>Data Visualization Best Practices</h3>
+                
+                <h4>When to Use Heatmaps</h4>
+                <ul>
+                    <li>Showing correlation between variables</li>
+                    <li>Visualizing activity patterns over time</li>
+                    <li>Displaying density or intensity data</li>
+                    <li>Comparing multiple metrics simultaneously</li>
+                </ul>
+
+                <h4>When to Use Treemaps</h4>
+                <ul>
+                    <li>Showing hierarchical relationships</li>
+                    <li>Displaying part-to-whole proportions</li>
+                    <li>Visualizing categorical data sizes</li>
+                    <li>Comparing multiple categories at once</li>
+                </ul>
+
+                <h4>Design Guidelines</h4>
+                <ul>
+                    <li>Use intuitive color schemes</li>
+                    <li>Include clear legends and labels</li>
+                    <li>Consider colorblind-friendly palettes</li>
+                    <li>Maintain consistent color meanings</li>
+                    <li>Provide interactive tooltips</li>
+                </ul>
+
+                <h3>Advanced Features</h3>
+                
+                <h4>Interactive Features</h4>
+                <ul>
+                    <li><strong>Hover effects</strong>: Highlight on hover</li>
+                    <li><strong>Click actions</strong>: Drill-down functionality</li>
+                    <li><strong>Tooltips</strong>: Detailed information</li>
+                    <li><strong>Selection</strong>: Select specific areas</li>
+                </ul>
+
+                <h4>Color Schemes</h4>
+                <ul>
+                    <li><strong>Sequential</strong>: Single color progression</li>
+                    <li><strong>Diverging</strong>: Two-color progression</li>
+                    <li><strong>Categorical</strong>: Distinct colors for categories</li>
+                    <li><strong>Custom ranges</strong>: User-defined color ranges</li>
+                </ul>
+
+                <h4>Data Analysis</h4>
+                <ul>
+                    <li><strong>Pattern recognition</strong>: Identify data patterns</li>
+                    <li><strong>Anomaly detection</strong>: Spot outliers</li>
+                    <li><strong>Trend analysis</strong>: Identify trends</li>
+                    <li><strong>Comparison</strong>: Compare multiple datasets</li>
+                </ul>
+
+                <h3>Common Use Cases</h3>
+                <ul>
+                    <li><strong>Website analytics</strong>: User activity heatmaps</li>
+                    <li><strong>Financial data</strong>: Risk assessment matrices</li>
+                    <li><strong>Sales data</strong>: Regional performance treemaps</li>
+                    <li><strong>Scientific data</strong>: Experimental result visualization</li>
+                    <li><strong>Resource allocation</strong>: Budget distribution</li>
+                </ul>
+
+                <h3>Data Preparation</h3>
+                <ul>
+                    <li>Normalize data for consistent visualization</li>
+                    <li>Handle missing values appropriately</li>
+                    <li>Consider data aggregation for large datasets</li>
+                    <li>Ensure data quality and accuracy</li>
+                    <li>Choose appropriate data granularity</li>
+                </ul>
+
+                <h3>Performance Considerations</h3>
+                <ul>
+                    <li>Limit data points for performance</li>
+                    <li>Use data sampling for large datasets</li>
+                    <li>Optimize color calculations</li>
+                    <li>Consider server-side processing</li>
+                    <li>Test with various data sizes</li>
+                </ul>
+
+                <h3>Accessibility</h3>
+                <ul>
+                    <li>Provide text alternatives</li>
+                    <li>Ensure sufficient color contrast</li>
+                    <li>Include descriptive labels</li>
+                    <li>Consider colorblind-friendly palettes</li>
+                    <li>Test with screen readers</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Charts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Helper function to generate data
+    function generateData(count, yrange) {
+        var i = 0;
+        var series = [];
+        while (i < count) {
+            var x = (i + 1).toString();
+            var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+            series.push({ x: x, y: y });
+            i++;
+        }
+        return series;
+    }
+
+    // Basic Heatmap
+    const basicHeatmapOptions = {
+        series: [{
+            name: 'Metric 1',
+            data: generateData(18, { min: 0, max: 90 })
+        }, {
+            name: 'Metric 2',
+            data: generateData(18, { min: 0, max: 90 })
+        }, {
+            name: 'Metric 3',
+            data: generateData(18, { min: 0, max: 90 })
+        }],
+        chart: { height: 350, type: 'heatmap' },
+        dataLabels: { enabled: false },
+        colors: ["#008FFB"],
+        xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+        },
+        title: { text: 'Basic Heatmap Chart' }
+    };
+    const basicHeatmapChart = new ApexCharts(document.querySelector("#basicHeatmapChart"), basicHeatmapOptions);
+    basicHeatmapChart.render();
+
+    // Treemap Chart
+    const treemapOptions = {
+        series: [{
+            data: [
+                { x: 'Category A', y: 330 }, { x: 'Category B', y: 250 },
+                { x: 'Category C', y: 180 }, { x: 'Category D', y: 150 },
+                { x: 'Category E', y: 120 }, { x: 'Category F', y: 90 },
+                { x: 'Category G', y: 60 }, { x: 'Category H', y: 40 }
+            ]
+        }],
+        chart: { type: 'treemap', height: 350 },
+        title: { text: 'Basic Treemap Chart', align: 'center' }
+    };
+    const treemapChart = new ApexCharts(document.querySelector("#treemapChart"), treemapOptions);
+    treemapChart.render();
+
+    // Color Range Heatmap
+    const colorRangeOptions = {
+        series: [{
+            name: 'Jan',
+            data: generateData(20, { min: -30, max: 55 })
+        }, {
+            name: 'Feb',
+            data: generateData(20, { min: -30, max: 55 })
+        }, {
+            name: 'Mar',
+            data: generateData(20, { min: -30, max: 55 })
+        }],
+        chart: { height: 350, type: 'heatmap' },
+        plotOptions: {
+            heatmap: {
+                shadeIntensity: 0.5,
+                colorScale: {
+                    ranges: [{
+                        from: -30, to: 5, name: 'Low', color: '#008FFB'
+                    }, {
+                        from: 6, to: 20, name: 'Medium', color: '#00E396'
+                    }, {
+                        from: 21, to: 45, name: 'High', color: '#FEB019'
+                    }, {
+                        from: 46, to: 55, name: 'Extreme', color: '#FF4560'
+                    }]
+                }
+            }
+        },
+        dataLabels: { enabled: false },
+        colors: ["#008FFB"],
+        xaxis: {
+            categories: ['10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm', '12am', '1am', '2am', '3am', '4am', '5am']
+        },
+        title: { text: 'Color Range Heatmap' }
+    };
+    const colorRangeChart = new ApexCharts(document.querySelector("#colorRangeHeatmap"), colorRangeOptions);
+    colorRangeChart.render();
+
+    // Rounded Treemap
+    const roundedTreemapOptions = {
+        series: [{
+            data: [
+                { x: 'Product A', y: 218 }, { x: 'Product B', y: 149 },
+                { x: 'Product C', y: 184 }, { x: 'Product D', y: 255 },
+                { x: 'Product E', y: 276 }, { x: 'Product F', y: 197 },
+                { x: 'Product G', y: 213 }, { x: 'Product H', y: 104 }
+            ]
+        }],
+        chart: { type: 'treemap', height: 350 },
+        plotOptions: {
+            treemap: {
+                distributed: true,
+                enableShades: false
+            }
+        },
+        colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26A69A', '#D10CE8'],
+        title: { text: 'Rounded Treemap Chart', align: 'center' }
+    };
+    const roundedTreemapChart = new ApexCharts(document.querySelector("#roundedTreemap"), roundedTreemapOptions);
+    roundedTreemapChart.render();
+
+    // Multi-Series Heatmap
+    const multiSeriesOptions = {
+        series: [{
+            name: 'Week 1',
+            data: generateData(12, { min: 0, max: 90 })
+        }, {
+            name: 'Week 2',
+            data: generateData(12, { min: 0, max: 90 })
+        }, {
+            name: 'Week 3',
+            data: generateData(12, { min: 0, max: 90 })
+        }, {
+            name: 'Week 4',
+            data: generateData(12, { min: 0, max: 90 })
+        }],
+        chart: {
+            height: 350,
+            type: 'heatmap',
+            toolbar: { show: false }
+        },
+        dataLabels: { enabled: false },
+        colors: ["#008FFB", "#00E396", "#FEB019", "#FF4560"],
+        xaxis: {
+            categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+        },
+        title: { text: 'Multi-Series Heatmap' },
+        grid: { borderColor: '#f1f1f1' }
+    };
+    const multiSeriesChart = new ApexCharts(document.querySelector("#multiSeriesHeatmap"), multiSeriesOptions);
+    multiSeriesChart.render();
+});
+</script>
+{% endblock %}

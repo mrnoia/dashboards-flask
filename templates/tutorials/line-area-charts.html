@@ -1,0 +1,622 @@
+{% extends "base.html" %}
+
+{% block title %}Line & Area Charts Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">📈 Line & Area Charts Tutorial</h1>
+        <p class="tutorial-subtitle">Master line and area charts with ApexCharts and Bootstrap 5</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Basic line chart configuration</li>
+                    <li>Area chart variations</li>
+                    <li>Multi-series line charts</li>
+                    <li>Time series data</li>
+                    <li>Styling and animations</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>JavaScript fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>Understanding of data visualization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                📈 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Basic Line Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="basicLineChart"></div>
+                    </div>
+                </div>
+
+                <h3>Area Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="areaChart"></div>
+                    </div>
+                </div>
+
+                <h3>Multi-Series Line Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="multiSeriesChart"></div>
+                    </div>
+                </div>
+
+                <h3>Time Series Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="timeSeriesChart"></div>
+                    </div>
+                </div>
+
+                <h3>Stacked Area Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="stackedAreaChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>Basic Line Chart</h3>
+                <pre><code>// Basic Line Chart Configuration
+const options = {
+  series: [{
+    name: "Sales",
+    data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+  }],
+  chart: {
+    height: 350,
+    type: 'line',
+    zoom: {
+      enabled: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    curve: 'straight'
+  },
+  title: {
+    text: 'Monthly Sales',
+    align: 'left'
+  },
+  grid: {
+    row: {
+      colors: ['#f3f3f3', 'transparent'],
+      opacity: 0.5
+    }
+  },
+  xaxis: {
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+  }
+};
+
+const chart = new ApexCharts(document.querySelector("#basicLineChart"), options);
+chart.render();</code></pre>
+
+                <h3>Area Chart</h3>
+                <pre><code>// Area Chart Configuration
+const options = {
+  series: [{
+    name: "Revenue",
+    data: [31, 40, 28, 51, 42, 109, 100]
+  }],
+  chart: {
+    height: 350,
+    type: 'area',
+    toolbar: {
+      show: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    curve: 'smooth'
+  },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shadeIntensity: 1,
+      opacityFrom: 0.7,
+      opacityTo: 0.9,
+    }
+  },
+  xaxis: {
+    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]
+  },
+  tooltip: {
+    x: {
+      format: 'dd/MM/yy'
+    },
+  }
+};</code></pre>
+
+                <h3>Multi-Series Line Chart</h3>
+                <pre><code>// Multi-Series Line Chart
+const options = {
+  series: [{
+    name: 'Product A',
+    data: [44, 55, 41, 67, 22, 43, 55, 61]
+  }, {
+    name: 'Product B',
+    data: [13, 23, 20, 8, 13, 27, 33, 12]
+  }, {
+    name: 'Product C',
+    data: [11, 17, 15, 15, 21, 14, 15, 13]
+  }],
+  chart: {
+    height: 350,
+    type: 'line',
+    dropShadow: {
+      enabled: true,
+      color: '#000',
+      top: 18,
+      left: 7,
+      blur: 10,
+      opacity: 0.2
+    },
+    toolbar: {
+      show: false
+    }
+  },
+  colors: ['#77B6EA', '#545454', '#FF4560'],
+  dataLabels: {
+    enabled: true,
+  },
+  stroke: {
+    curve: 'smooth'
+  },
+  title: {
+    text: 'Product Comparison',
+    align: 'left'
+  },
+  grid: {
+    borderColor: '#e7e7e7',
+    row: {
+      colors: ['#f3f3f3', 'transparent'],
+      opacity: 0.5
+    },
+  },
+  markers: {
+    size: 1
+  },
+  xaxis: {
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    title: {
+      text: 'Month'
+    }
+  },
+  yaxis: {
+    title: {
+      text: 'Sales'
+    }
+  },
+  legend: {
+    position: 'top',
+    horizontalAlign: 'right',
+    floating: true,
+    offsetY: -25,
+    offsetX: -5
+  }
+};</code></pre>
+
+                <h3>Time Series Chart</h3>
+                <pre><code>// Time Series Chart
+const options = {
+  series: [{
+    name: 'Stock Price',
+    data: [
+      [1327359600000, 30.95],
+      [1327446000000, 31.34],
+      [1327532400000, 31.18],
+      [1327618800000, 31.05],
+      [1327705200000, 31.25],
+      [1327791600000, 31.31],
+      [1327878000000, 31.39]
+    ]
+  }],
+  chart: {
+    type: 'area',
+    height: 350,
+    zoom: {
+      autoScaleYaxis: true
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    curve: 'straight'
+  },
+  title: {
+    text: 'Stock Price Movement',
+    align: 'left'
+  },
+  grid: {
+    yaxis: {
+      lines: {
+        show: false
+      }
+    }
+  },
+  xaxis: {
+    type: 'datetime',
+  },
+  yaxis: {
+    opposite: true
+  },
+  theme: {
+    mode: 'light'
+  }
+};</code></pre>
+
+                <h3>Stacked Area Chart</h3>
+                <pre><code>// Stacked Area Chart
+const options = {
+  series: [{
+    name: 'South',
+    data: [31, 40, 28, 51, 42, 109, 100]
+  }, {
+    name: 'North',
+    data: [11, 32, 45, 32, 34, 52, 41]
+  }, {
+    name: 'East',
+    data: [15, 25, 38, 41, 36, 41, 36]
+  }],
+  chart: {
+    height: 350,
+    type: 'area',
+    stacked: true,
+    toolbar: {
+      show: true,
+      offsetX: 0,
+      offsetY: 0,
+      tools: {
+        download: true,
+        selection: true,
+        zoom: true,
+        zoomin: true,
+        zoomout: true,
+        pan: true,
+        reset: true
+      }
+    }
+  },
+  colors: ['#008FFB', '#00E396', '#FEB019'],
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    curve: 'smooth'
+  },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      opacityFrom: 0.6,
+      opacityTo: 0.8,
+    }
+  },
+  legend: {
+    position: 'top',
+    horizontalAlign: 'left'
+  },
+  xaxis: {
+    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]
+  }
+};</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Line & Area Charts Overview</h3>
+                <p>Line and area charts are perfect for showing trends over time or comparing multiple data series.</p>
+                
+                <h4>Line Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Show trends and changes over time</li>
+                    <li><strong>Data points</strong>: Connected with lines</li>
+                    <li><strong>Best for</strong>: Time series, continuous data</li>
+                    <li><strong>Variations</strong>: Smooth curves, straight lines, stepped</li>
+                </ul>
+
+                <h4>Area Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Show magnitude of change over time</li>
+                    <li><strong>Visual impact</strong>: Filled area under the line</li>
+                    <li><strong>Best for</strong>: Volume, cumulative data, part-to-whole</li>
+                    <li><strong>Variations</strong>: Stacked, overlapping, gradient fills</li>
+                </ul>
+
+                <h3>Chart Configuration Options</h3>
+                
+                <h4>Basic Settings</h4>
+                <ul>
+                    <li><strong>chart.type</strong>: 'line' or 'area'</li>
+                    <li><strong>chart.height</strong>: Chart height in pixels</li>
+                    <li><strong>chart.zoom</strong>: Enable zoom functionality</li>
+                    <li><strong>chart.toolbar</strong>: Show/hide toolbar</li>
+                </ul>
+
+                <h4>Series Configuration</h4>
+                <ul>
+                    <li><strong>series.name</strong>: Series name for legend</li>
+                    <li><strong>series.data</strong>: Array of data points</li>
+                    <li><strong>Multi-series</strong>: Array of series objects</li>
+                    <li><strong>Time series</strong>: [timestamp, value] pairs</li>
+                </ul>
+
+                <h4>Styling Options</h4>
+                <ul>
+                    <li><strong>stroke.curve</strong>: 'straight', 'smooth', 'stepline'</li>
+                    <li><strong>stroke.width</strong>: Line thickness</li>
+                    <li><strong>colors</strong>: Array of colors for series</li>
+                    <li><strong>markers</strong>: Data point markers</li>
+                </ul>
+
+                <h4>Fill Options</h4>
+                <ul>
+                    <li><strong>fill.type</strong>: 'solid', 'gradient', 'pattern'</li>
+                    <li><strong>fill.opacity</strong>: Fill transparency</li>
+                    <li><strong>gradient</strong>: Gradient configuration</li>
+                    <li><strong>stacked</strong>: Stack multiple series</li>
+                </ul>
+
+                <h3>Data Visualization Best Practices</h3>
+                
+                <h4>When to Use Line Charts</h4>
+                <ul>
+                    <li>Time series data</li>
+                    <li>Showing trends over time</li>
+                    <li>Comparing multiple categories</li>
+                    <li>Continuous data progression</li>
+                </ul>
+
+                <h4>When to Use Area Charts</h4>
+                <ul>
+                    <li>Showing volume or magnitude</li>
+                    <li>Part-to-whole relationships</li>
+                    <li>Cumulative totals</li>
+                    <li>Visual impact emphasis</li>
+                </ul>
+
+                <h4>Design Guidelines</h4>
+                <ul>
+                    <li>Limit to 5-7 series maximum</li>
+                    <li>Use contrasting colors for series</li>
+                    <li>Include clear axis labels</li>
+                    <li>Add tooltips for detailed values</li>
+                    <li>Consider data density and readability</li>
+                </ul>
+
+                <h3>Advanced Features</h3>
+                
+                <h4>Interactivity</h4>
+                <ul>
+                    <li><strong>Zoom</strong>: Zoom into specific time ranges</li>
+                    <li><strong>Pan</strong>: Navigate through zoomed data</li>
+                    <li><strong>Selection</strong>: Select data ranges</li>
+                    <li><strong>Hover</strong>: Detailed tooltips on hover</li>
+                </ul>
+
+                <h4>Time Series Features</h4>
+                <ul>
+                    <li><strong>Datetime x-axis</strong>: Proper time formatting</li>
+                    <li><strong>Time zones</strong>: Handle different time zones</li>
+                    <li><strong>Missing data</strong>: Handle gaps in data</li>
+                    <li><strong>Real-time updates</strong>: Dynamic data updates</li>
+                </ul>
+
+                <h4>Performance Considerations</h4>
+                <ul>
+                    <li>Limit data points for performance</li>
+                    <li>Use sampling for large datasets</li>
+                    <li>Consider server-side aggregation</li>
+                    <li>Optimize for mobile devices</li>
+                </ul>
+
+                <h3>Common Use Cases</h3>
+                <ul>
+                    <li><strong>Financial data</strong>: Stock prices, revenue trends</li>
+                    <li><strong>Analytics</strong>: Website traffic, user metrics</li>
+                    <li><strong>Sales data</strong>: Revenue, units sold over time</li>
+                    <li><strong>Weather data</strong>: Temperature, precipitation trends</li>
+                    <li><strong>Performance metrics</strong>: System performance over time</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Charts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Basic Line Chart
+    const basicLineOptions = {
+        series: [{
+            name: "Sales",
+            data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+        }],
+        chart: {
+            height: 350,
+            type: 'line',
+            zoom: { enabled: false }
+        },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'straight' },
+        title: { text: 'Monthly Sales', align: 'left' },
+        grid: {
+            row: {
+                colors: ['#f3f3f3', 'transparent'],
+                opacity: 0.5
+            }
+        },
+        xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+        }
+    };
+    const basicLineChart = new ApexCharts(document.querySelector("#basicLineChart"), basicLineOptions);
+    basicLineChart.render();
+
+    // Area Chart
+    const areaOptions = {
+        series: [{
+            name: "Revenue",
+            data: [31, 40, 28, 51, 42, 109, 100]
+        }],
+        chart: {
+            height: 350,
+            type: 'area',
+            toolbar: { show: false }
+        },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth' },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.9
+            }
+        },
+        xaxis: {
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]
+        }
+    };
+    const areaChart = new ApexCharts(document.querySelector("#areaChart"), areaOptions);
+    areaChart.render();
+
+    // Multi-Series Line Chart
+    const multiSeriesOptions = {
+        series: [{
+            name: 'Product A',
+            data: [44, 55, 41, 67, 22, 43, 55, 61]
+        }, {
+            name: 'Product B',
+            data: [13, 23, 20, 8, 13, 27, 33, 12]
+        }, {
+            name: 'Product C',
+            data: [11, 17, 15, 15, 21, 14, 15, 13]
+        }],
+        chart: {
+            height: 350,
+            type: 'line',
+            toolbar: { show: false }
+        },
+        colors: ['#77B6EA', '#545454', '#FF4560'],
+        dataLabels: { enabled: true },
+        stroke: { curve: 'smooth' },
+        title: { text: 'Product Comparison', align: 'left' },
+        markers: { size: 4 },
+        xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
+        }
+    };
+    const multiSeriesChart = new ApexCharts(document.querySelector("#multiSeriesChart"), multiSeriesOptions);
+    multiSeriesChart.render();
+
+    // Time Series Chart
+    const timeSeriesOptions = {
+        series: [{
+            name: 'Stock Price',
+            data: [
+                [1327359600000, 30.95],
+                [1327446000000, 31.34],
+                [1327532400000, 31.18],
+                [1327618800000, 31.05],
+                [1327705200000, 31.25],
+                [1327791600000, 31.31],
+                [1327878000000, 31.39]
+            ]
+        }],
+        chart: {
+            type: 'area',
+            height: 350,
+            zoom: { autoScaleYaxis: true }
+        },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'straight' },
+        title: { text: 'Stock Price Movement', align: 'left' },
+        xaxis: { type: 'datetime' }
+    };
+    const timeSeriesChart = new ApexCharts(document.querySelector("#timeSeriesChart"), timeSeriesOptions);
+    timeSeriesChart.render();
+
+    // Stacked Area Chart
+    const stackedAreaOptions = {
+        series: [{
+            name: 'South',
+            data: [31, 40, 28, 51, 42, 109, 100]
+        }, {
+            name: 'North',
+            data: [11, 32, 45, 32, 34, 52, 41]
+        }, {
+            name: 'East',
+            data: [15, 25, 38, 41, 36, 41, 36]
+        }],
+        chart: {
+            height: 350,
+            type: 'area',
+            stacked: true,
+            toolbar: { show: true }
+        },
+        colors: ['#008FFB', '#00E396', '#FEB019'],
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth' },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                opacityFrom: 0.6,
+                opacityTo: 0.8
+            }
+        },
+        xaxis: {
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]
+        }
+    };
+    const stackedAreaChart = new ApexCharts(document.querySelector("#stackedAreaChart"), stackedAreaOptions);
+    stackedAreaChart.render();
+});
+</script>
+{% endblock %}

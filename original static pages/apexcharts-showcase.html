@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexCharts Components Showcase</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px; /* Space for fixed navbar */
+        }
+        /* Navigation Styles */
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 1400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .chart-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .chart-container {
+            min-height: 300px;
+            position: relative;
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+            border-radius: 15px;
+            color: white;
+        }
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .header-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .badge-basic { background: #e3f2fd; color: #1976d2; }
+        .badge-advanced { background: #f3e5f5; color: #7b1fa2; }
+        .badge-interactive { background: #e8f5e8; color: #388e3c; }
+        .badge-financial { background: #fff3e0; color: #f57c00; }
+        .chart-card.hidden { opacity: 0.2; transform: scale(0.95); }
+        .chart-card.highlighted { box-shadow: 0 15px 35px rgba(52, 152, 219, 0.3); border-color: #3498db; }
+        .controls-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .btn-group-custom {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .btn-custom {
+            padding: 8px 16px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .btn-custom:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .btn-custom.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .feature-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .feature-list li:before {
+            content: "✓";
+            color: #2ecc71;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                📊 Dashboard Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="index.html">📈 Basic Dashboard</a></li>
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="apexcharts-complete.html">📊 Apex Charts & Bootstrap</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header-section">
+            <h1>🎨 ApexCharts Components Showcase</h1>
+            <p>Comprehensive demonstration of all major ApexCharts types and features</p>
+            <div class="mt-3">
+                <span class="category-badge badge-basic" onclick="filterCharts('basic')" style="cursor: pointer;">Basic Charts</span>
+                <span class="category-badge badge-advanced" onclick="filterCharts('advanced')" style="cursor: pointer;">Advanced Charts</span>
+                <span class="category-badge badge-interactive" onclick="filterCharts('interactive')" style="cursor: pointer;">Interactive</span>
+                <span class="category-badge badge-financial" onclick="filterCharts('financial')" style="cursor: pointer;">Financial</span>
+                <span class="category-badge" style="background: #e9ecef; color: #495057; cursor: pointer;" onclick="showAllCharts()">👁️ Show All</span>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-section">
+            <h5>🎮 Interactive Controls</h5>
+            <div class="btn-group-custom">
+                <button class="btn-custom" onclick="toggleTheme()">🌓 Toggle Theme</button>
+                <button class="btn-custom" onclick="exportCharts()">📊 Export All</button>
+            </div>
+        </div>
+
+        <!-- Basic Charts Row -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="basic">
+                    <h5 class="chart-title">📊 Line Chart</h5>
+                    <span class="category-badge badge-basic">Basic</span>
+                    <div id="line-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Smooth curves and animations</li>
+                        <li>Multiple series support</li>
+                        <li>Interactive tooltips</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="basic">
+                    <h5 class="chart-title">📈 Area Chart</h5>
+                    <span class="category-badge badge-basic">Basic</span>
+                    <div id="area-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Gradient fills</li>
+                        <li>Stacked area support</li>
+                        <li>Transparency controls</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column Charts Row -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="basic">
+                    <h5 class="chart-title">📊 Column Chart</h5>
+                    <span class="category-badge badge-basic">Basic</span>
+                    <div id="column-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Grouped columns</li>
+                        <li>Custom colors</li>
+                        <li>Data labels</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="basic">
+                    <h5 class="chart-title">📉 Bar Chart</h5>
+                    <span class="category-badge badge-basic">Basic</span>
+                    <div id="bar-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Horizontal orientation</li>
+                        <li>Ranking display</li>
+                        <li>Progress bars</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie & Donut Charts -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="basic">
+                    <h5 class="chart-title">🥧 Pie Chart</h5>
+                    <span class="category-badge badge-basic">Basic</span>
+                    <div id="pie-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Percentage display</li>
+                        <li>Custom labels</li>
+                        <li>Explosion effects</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="basic">
+                    <h5 class="chart-title">🍩 Donut Chart</h5>
+                    <span class="category-badge badge-basic">Basic</span>
+                    <div id="donut-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Center text display</li>
+                        <li>Multiple rings</li>
+                        <li>Total statistics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Charts -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="advanced">
+                    <h5 class="chart-title">📈 Scatter Plot</h5>
+                    <span class="category-badge badge-advanced">Advanced</span>
+                    <div id="scatter-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Correlation analysis</li>
+                        <li>Bubble sizing</li>
+                        <li>Trend lines</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="advanced">
+                    <h5 class="chart-title">🎯 Radar Chart</h5>
+                    <span class="category-badge badge-advanced">Advanced</span>
+                    <div id="radar-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Multi-dimensional data</li>
+                        <li>Polygon fills</li>
+                        <li>Comparison analysis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial & Special Charts -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="financial">
+                    <h5 class="chart-title">💹 Candlestick Chart</h5>
+                    <span class="category-badge badge-financial">Financial</span>
+                    <div id="candlestick-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>OHLC data</li>
+                        <li>Bull/Bear indication</li>
+                        <li>Volume integration</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card" data-category="advanced">
+                    <h5 class="chart-title">🌡️ Heatmap</h5>
+                    <span class="category-badge badge-advanced">Advanced</span>
+                    <div id="heatmap-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Color intensity</li>
+                        <li>Matrix display</li>
+                        <li>Pattern recognition</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mixed Charts -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="chart-card" data-category="advanced">
+                    <h5 class="chart-title">🎨 Mixed Chart (Line + Column)</h5>
+                    <span class="category-badge badge-advanced">Advanced</span>
+                    <div id="mixed-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Multiple chart types</li>
+                        <li>Dual Y-axis</li>
+                        <li>Combined analytics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Chart -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="chart-card" data-category="interactive">
+                    <h5 class="chart-title">⚡ Real-time Chart</h5>
+                    <span class="category-badge badge-interactive">Interactive</span>
+                    <div id="realtime-chart" class="chart-container"></div>
+                    <ul class="feature-list">
+                        <li>Live data streaming</li>
+                        <li>Auto-scrolling</li>
+                        <li>Performance monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        // Global variables
+        let charts = {};
+        let isDarkTheme = false;
+        let realtimeInterval;
+
+        // Generate sample data
+        function generateData(count, min, max) {
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push(Math.floor(Math.random() * (max - min + 1)) + min);
+            }
+            return data;
+        }
+
+        // Generate time series data
+        function generateTimeSeriesData(count) {
+            const data = [];
+            const now = new Date();
+            for (let i = count - 1; i >= 0; i--) {
+                const time = new Date(now - i * 3600000);
+                data.push({
+                    x: time.getTime(),
+                    y: Math.floor(Math.random() * 100) + 50
+                });
+            }
+            return data;
+        }
+
+        // Initialize all charts
+        function initCharts() {
+            // Line Chart
+            charts.line = new ApexCharts(document.querySelector("#line-chart"), {
+                series: [{
+                    name: 'Revenue',
+                    data: generateData(12, 30, 80)
+                }, {
+                    name: 'Profit',
+                    data: generateData(12, 20, 60)
+                }],
+                chart: {
+                    type: 'line',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#3498db', '#2ecc71'],
+                stroke: { curve: 'smooth', width: 3 },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                },
+                tooltip: { shared: true }
+            });
+
+            // Area Chart
+            charts.area = new ApexCharts(document.querySelector("#area-chart"), {
+                series: [{
+                    name: 'Sales',
+                    data: generateData(12, 40, 90)
+                }],
+                chart: {
+                    type: 'area',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#e74c3c'],
+                stroke: { curve: 'smooth' },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.7,
+                        opacityTo: 0.3
+                    }
+                },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                }
+            });
+
+            // Column Chart
+            charts.column = new ApexCharts(document.querySelector("#column-chart"), {
+                series: [{
+                    name: 'Product A',
+                    data: generateData(8, 20, 70)
+                }, {
+                    name: 'Product B',
+                    data: generateData(8, 15, 60)
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#f39c12', '#9b59b6'],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    }
+                },
+                xaxis: {
+                    categories: ['Q1', 'Q2', 'Q3', 'Q4', 'Q1', 'Q2', 'Q3', 'Q4']
+                }
+            });
+
+            // Bar Chart
+            charts.bar = new ApexCharts(document.querySelector("#bar-chart"), {
+                series: [{
+                    name: 'Score',
+                    data: generateData(6, 60, 100)
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#1abc9c'],
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        borderRadius: 5
+                    }
+                },
+                xaxis: {
+                    categories: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E', 'Team F']
+                }
+            });
+
+            // Pie Chart
+            charts.pie = new ApexCharts(document.querySelector("#pie-chart"), {
+                series: generateData(5, 10, 30),
+                chart: {
+                    type: 'pie',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71', '#9b59b6'],
+                labels: ['Desktop', 'Mobile', 'Tablet', 'Smart TV', 'Other'],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: { width: 200 },
+                        legend: { position: 'bottom' }
+                    }
+                }]
+            });
+
+            // Donut Chart
+            charts.donut = new ApexCharts(document.querySelector("#donut-chart"), {
+                series: generateData(4, 20, 35),
+                chart: {
+                    type: 'donut',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#e67e22', '#3498db', '#2ecc71', '#e74c3c'],
+                labels: ['Direct', 'Social', 'Email', 'Organic'],
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%',
+                            labels: {
+                                show: true,
+                                total: {
+                                    show: true,
+                                    label: 'Total',
+                                    formatter: function() {
+                                        return 100;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Scatter Plot
+            charts.scatter = new ApexCharts(document.querySelector("#scatter-chart"), {
+                series: [{
+                    name: 'Series 1',
+                    data: Array.from({length: 20}, () => [Math.random() * 100, Math.random() * 100])
+                }],
+                chart: {
+                    type: 'scatter',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#8e44ad'],
+                xaxis: {
+                    type: 'numeric'
+                }
+            });
+
+            // Radar Chart
+            charts.radar = new ApexCharts(document.querySelector("#radar-chart"), {
+                series: [{
+                    name: 'Product A',
+                    data: generateData(6, 40, 90)
+                }, {
+                    name: 'Product B',
+                    data: generateData(6, 30, 80)
+                }],
+                chart: {
+                    type: 'radar',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#3498db', '#e74c3c'],
+                xaxis: {
+                    categories: ['Speed', 'Reliability', 'Comfort', 'Safety', 'Efficiency', 'Design']
+                },
+                stroke: { width: 2 }
+            });
+
+            // Candlestick Chart
+            charts.candlestick = new ApexCharts(document.querySelector("#candlestick-chart"), {
+                series: [{
+                    name: 'Stock',
+                    data: Array.from({length: 20}, () => {
+                        const open = Math.random() * 100 + 50;
+                        const close = open + (Math.random() - 0.5) * 20;
+                        const high = Math.max(open, close) + Math.random() * 10;
+                        const low = Math.min(open, close) - Math.random() * 10;
+                        return {
+                            x: new Date().getTime() - Math.random() * 10000000000,
+                            y: [open, high, low, close]
+                        };
+                    })
+                }],
+                chart: {
+                    type: 'candlestick',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#2ecc71', '#e74c3c'],
+                xaxis: { type: 'datetime' }
+            });
+
+            // Heatmap
+            charts.heatmap = new ApexCharts(document.querySelector("#heatmap-chart"), {
+                series: [{
+                    name: 'Metric 1',
+                    data: Array.from({length: 10}, (_, i) => ({
+                        x: `Item ${i + 1}`,
+                        y: Math.random() * 100
+                    }))
+                }, {
+                    name: 'Metric 2',
+                    data: Array.from({length: 10}, (_, i) => ({
+                        x: `Item ${i + 1}`,
+                        y: Math.random() * 100
+                    }))
+                }],
+                chart: {
+                    type: 'heatmap',
+                    height: 300,
+                    toolbar: { show: true }
+                },
+                colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0'],
+                dataLabels: { enabled: false }
+            });
+
+            // Mixed Chart
+            charts.mixed = new ApexCharts(document.querySelector("#mixed-chart"), {
+                series: [{
+                    name: 'Revenue',
+                    type: 'column',
+                    data: generateData(12, 40, 80)
+                }, {
+                    name: 'Profit Margin',
+                    type: 'line',
+                    data: generateData(12, 20, 60)
+                }],
+                chart: {
+                    height: 300,
+                    type: 'line',
+                    toolbar: { show: true }
+                },
+                colors: ['#3498db', '#2ecc71'],
+                stroke: { width: [0, 3] },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                }
+            });
+
+            // Real-time Chart
+            charts.realtime = new ApexCharts(document.querySelector("#realtime-chart"), {
+                series: [{
+                    name: 'Live Data',
+                    data: generateTimeSeriesData(20)
+                }],
+                chart: {
+                    type: 'line',
+                    height: 300,
+                    animations: {
+                        enabled: true,
+                        easing: 'linear',
+                        dynamicAnimation: { speed: 1000 }
+                    },
+                    toolbar: { show: true },
+                    zoom: { enabled: false }
+                },
+                colors: ['#e74c3c'],
+                stroke: { curve: 'smooth', width: 3 },
+                xaxis: {
+                    type: 'datetime',
+                    range: 3600000
+                },
+                yaxis: { max: 150 }
+            });
+
+            // Render all charts
+            Object.values(charts).forEach(chart => chart.render());
+
+            // Start real-time updates
+            startRealtimeUpdates();
+        }
+
+        // Real-time data update
+        function startRealtimeUpdates() {
+            realtimeInterval = setInterval(() => {
+                const newData = {
+                    x: new Date().getTime(),
+                    y: Math.floor(Math.random() * 100) + 50
+                };
+                
+                charts.realtime.appendData([{
+                    data: [newData]
+                }]);
+            }, 2000);
+        }
+
+        // Control functions
+        function filterCharts(category) {
+            const allCards = document.querySelectorAll('.chart-card');
+            
+            allCards.forEach(card => {
+                if (card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                    card.classList.add('highlighted');
+                } else {
+                    card.classList.add('hidden');
+                    card.classList.remove('highlighted');
+                }
+            });
+
+            // Scroll to first highlighted chart
+            const firstHighlighted = document.querySelector('.chart-card.highlighted');
+            if (firstHighlighted) {
+                firstHighlighted.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function showAllCharts() {
+            const allCards = document.querySelectorAll('.chart-card');
+            allCards.forEach(card => {
+                card.classList.remove('hidden', 'highlighted');
+            });
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            const theme = isDarkTheme ? 'dark' : 'light';
+            
+            Object.values(charts).forEach(chart => {
+                chart.updateOptions({
+                    theme: { mode: theme },
+                    chart: { background: isDarkTheme ? '#1a1a1a' : '#ffffff' }
+                });
+            });
+        }
+
+        function exportCharts() {
+            Object.entries(charts).forEach(([name, chart]) => {
+                chart.dataURI().then(({ imgURI }) => {
+                    const link = document.createElement('a');
+                    link.href = imgURI;
+                    link.download = `${name}-chart.png`;
+                    link.click();
+                });
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initCharts);
+
+        // Cleanup on unload
+        window.addEventListener('beforeunload', () => {
+            if (realtimeInterval) {
+                clearInterval(realtimeInterval);
+            }
+        });
+    </script>
+</body>
+</html>

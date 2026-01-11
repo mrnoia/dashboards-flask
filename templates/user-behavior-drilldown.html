@@ -1,0 +1,503 @@
+{% extends "base.html" %}
+
+{% block title %}User Behavior Drilldown Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .funnel-step { cursor: pointer; transition: all 0.3s ease; border-left: 4px solid transparent; }
+    .funnel-step:hover { border-left-color: #3498db; background-color: #f8f9fa; }
+    .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+    .back-btn:hover { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+    .segment-card { transition: all 0.3s ease; cursor: pointer; }
+    .segment-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .heatmap-cell { text-align: center; padding: 8px; border-radius: 4px; }
+    .high-activity { background-color: #d4edda; color: #155724; }
+    .medium-activity { background-color: #fff3cd; color: #856404; }
+    .low-activity { background-color: #f8d7da; color: #721c24; }
+    .conversion-rate { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .drop-off { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb Navigation -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" id="breadcrumb">
+                    <li class="breadcrumb-item active">Conversion Funnel Overview</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center conversion-rate">
+                <h6 class="text-white">Overall Conversion</h6>
+                <h2 id="overall-conversion" class="text-white">0%</h2>
+                <small class="text-white" id="conversion-change">+0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Total Users</h6>
+                <h2 id="total-users">0</h2>
+                <small class="text-success" id="users-change">+0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center drop-off">
+                <h6 class="text-white">Biggest Drop-off</h6>
+                <h2 id="biggest-drop" class="text-white">-</h2>
+                <small class="text-white" id="drop-percentage">0%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Avg Session Time</h6>
+                <h2 id="avg-session">0m</h2>
+                <small class="text-muted" id="session-change">+0%</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Segments -->
+    <div class="row mb-4" id="segment-cards">
+        <div class="col-md-3 mb-3">
+            <div class="card p-3 segment-card" onclick="drillToSegment('New Users')">
+                <h6 class="text-muted">New Users</h6>
+                <h4 id="new-users-count">0</h4>
+                <small class="text-success" id="new-users-conversion">0% conv</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card p-3 segment-card" onclick="drillToSegment('Returning Users')">
+                <h6 class="text-muted">Returning Users</h6>
+                <h4 id="returning-users-count">0</h4>
+                <small class="text-success" id="returning-users-conversion">0% conv</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card p-3 segment-card" onclick="drillToSegment('Mobile Users')">
+                <h6 class="text-muted">Mobile Users</h6>
+                <h4 id="mobile-users-count">0</h4>
+                <small class="text-success" id="mobile-users-conversion">0% conv</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card p-3 segment-card" onclick="drillToSegment('Desktop Users')">
+                <h6 class="text-muted">Desktop Users</h6>
+                <h4 id="desktop-users-count">0</h4>
+                <small class="text-success" id="desktop-users-conversion">0% conv</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Funnel Chart -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0" id="chart-title">Conversion Funnel Analysis</h5>
+                    <button class="back-btn" id="back-btn" style="display: none;" onclick="goBack()">
+                        ← Back to Overview
+                    </button>
+                </div>
+                <div id="main-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Journey Heatmap -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">User Journey Heatmap</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm" id="heatmap-table">
+                        <thead>
+                            <tr>
+                                <th>Page → Step</th>
+                                <th>Visit</th>
+                                <th>Search</th>
+                                <th>View</th>
+                                <th>Cart</th>
+                                <th>Checkout</th>
+                            </tr>
+                        </thead>
+                        <tbody id="heatmap-body">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Top Drop-off Reasons</h5>
+                <div id="dropoff-reasons">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Behavior Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="card-title mb-4" id="table-title">Funnel Step Details</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Funnel Step</th>
+                                <th>Users</th>
+                                <th>Conversion Rate</th>
+                                <th>Drop-off</th>
+                                <th>Avg Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // User behavior hierarchical data
+    const behaviorData = {
+        overall: {
+            funnel: [
+                { step: 'Visit', users: 100000, conversion: 100, time: '0:30' },
+                { step: 'Search', users: 75000, conversion: 75, time: '1:15' },
+                { step: 'Product View', users: 45000, conversion: 60, time: '2:30' },
+                { step: 'Add to Cart', users: 18000, conversion: 40, time: '3:45' },
+                { step: 'Checkout', users: 12000, conversion: 67, time: '5:20' },
+                { step: 'Purchase', users: 8500, conversion: 71, time: '6:15' }
+            ]
+        },
+        segments: {
+            'New Users': {
+                users: 40000,
+                funnel: [
+                    { step: 'Visit', users: 40000, conversion: 100, time: '0:25' },
+                    { step: 'Search', users: 25000, conversion: 62.5, time: '1:30' },
+                    { step: 'Product View', users: 12000, conversion: 48, time: '2:45' },
+                    { step: 'Add to Cart', users: 3500, conversion: 29, time: '4:00' },
+                    { step: 'Checkout', users: 2000, conversion: 57, time: '5:45' },
+                    { step: 'Purchase', users: 1200, conversion: 60, time: '6:30' }
+                ]
+            },
+            'Returning Users': {
+                users: 60000,
+                funnel: [
+                    { step: 'Visit', users: 60000, conversion: 100, time: '0:35' },
+                    { step: 'Search', users: 50000, conversion: 83.3, time: '1:05' },
+                    { step: 'Product View', users: 33000, conversion: 66, time: '2:20' },
+                    { step: 'Add to Cart', users: 14500, conversion: 44, time: '3:30' },
+                    { step: 'Checkout', users: 10000, conversion: 69, time: '5:00' },
+                    { step: 'Purchase', users: 7300, conversion: 73, time: '6:00' }
+                ]
+            },
+            'Mobile Users': {
+                users: 55000,
+                funnel: [
+                    { step: 'Visit', users: 55000, conversion: 100, time: '0:20' },
+                    { step: 'Search', users: 38000, conversion: 69, time: '1:00' },
+                    { step: 'Product View', users: 22000, conversion: 58, time: '2:15' },
+                    { step: 'Add to Cart', users: 8000, conversion: 36, time: '3:30' },
+                    { step: 'Checkout', users: 5500, conversion: 69, time: '5:10' },
+                    { step: 'Purchase', users: 4000, conversion: 73, time: '5:45' }
+                ]
+            },
+            'Desktop Users': {
+                users: 45000,
+                funnel: [
+                    { step: 'Visit', users: 45000, conversion: 100, time: '0:40' },
+                    { step: 'Search', users: 37000, conversion: 82, time: '1:30' },
+                    { step: 'Product View', users: 23000, conversion: 62, time: '2:45' },
+                    { step: 'Add to Cart', users: 10000, conversion: 43, time: '4:00' },
+                    { step: 'Checkout', users: 6500, conversion: 65, time: '5:30' },
+                    { step: 'Purchase', users: 4500, conversion: 69, time: '6:30' }
+                ]
+            }
+        }
+    };
+
+    let currentView = 'overall';
+    let currentSegment = null;
+    let chart = null;
+
+    // Initialize dashboard
+    function initDashboard() {
+        updateMetrics();
+        updateSegmentCards();
+        renderFunnelChart('overall');
+        updateHeatmap();
+        updateDropoffReasons();
+        updateTable('overall');
+    }
+
+    // Update metrics
+    function updateMetrics() {
+        const funnel = behaviorData.overall.funnel;
+        const overallConversion = ((funnel[funnel.length - 1].users / funnel[0].users) * 100).toFixed(1);
+        const totalUsers = funnel[0].users;
+        
+        // Find biggest drop-off
+        let biggestDrop = { step: '', percentage: 0 };
+        for (let i = 1; i < funnel.length; i++) {
+            const dropPercentage = ((funnel[i - 1].users - funnel[i].users) / funnel[i - 1].users * 100);
+            if (dropPercentage > biggestDrop.percentage) {
+                biggestDrop = { step: funnel[i].step, percentage: dropPercentage };
+            }
+        }
+
+        document.getElementById('overall-conversion').innerText = overallConversion + '%';
+        document.getElementById('conversion-change').innerText = '+2.3% vs last month';
+        document.getElementById('total-users').innerText = totalUsers.toLocaleString();
+        document.getElementById('users-change').innerText = '+15%';
+        document.getElementById('biggest-drop').innerText = biggestDrop.step;
+        document.getElementById('drop-percentage').innerText = biggestDrop.percentage.toFixed(1) + '%';
+        document.getElementById('avg-session').innerText = '4m 32s';
+        document.getElementById('session-change').innerText = '+8%';
+    }
+
+    // Update segment cards
+    function updateSegmentCards() {
+        Object.entries(behaviorData.segments).forEach(([segmentName, data]) => {
+            const conversion = ((data.funnel[data.funnel.length - 1].users / data.funnel[0].users) * 100).toFixed(1);
+            const id = segmentName.toLowerCase().replace(' ', '-').replace('users', '-users');
+            
+            const countEl = document.getElementById(id + '-count');
+            const convEl = document.getElementById(id + '-conversion');
+            
+            if (countEl) countEl.innerText = data.users.toLocaleString();
+            if (convEl) convEl.innerText = conversion + '% conv';
+        });
+    }
+
+    // Render funnel chart
+    function renderFunnelChart(view, segment = null) {
+        let funnel, chartTitle;
+        
+        if (view === 'overall') {
+            funnel = behaviorData.overall.funnel;
+            chartTitle = 'Conversion Funnel Analysis - All Users';
+        } else {
+            funnel = behaviorData.segments[segment].funnel;
+            chartTitle = `Conversion Funnel Analysis - ${segment}`;
+        }
+
+        const options = {
+            chart: {
+                type: 'bar',
+                height: 350,
+                toolbar: { show: true },
+                events: {
+                    dataPointSelection: function(event, chartContext, config) {
+                        if (view === 'overall') {
+                            showStepDetails(config.dataPointIndex);
+                        }
+                    }
+                }
+            },
+            colors: ['#3498db', '#2ecc71', '#f39c12', '#e67e22', '#e74c3c', '#9b59b6'],
+            series: [{
+                name: 'Users',
+                data: funnel.map(step => step.users)
+            }],
+            xaxis: {
+                categories: funnel.map(step => step.step)
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(value) {
+                        return value.toLocaleString();
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function(value) {
+                        return value.toLocaleString() + ' users';
+                    }
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 5,
+                    horizontal: true,
+                    dataLabels: {
+                        position: 'right'
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function(value, { seriesIndex, dataPointIndex, w }) {
+                    const step = funnel[dataPointIndex];
+                    return step.conversion + '%';
+                },
+                style: {
+                    colors: ['#333']
+                }
+            }
+        };
+
+        if (chart) chart.destroy();
+        chart = new ApexCharts(document.querySelector("#main-chart"), options);
+        chart.render();
+
+        document.getElementById('chart-title').textContent = chartTitle;
+    }
+
+    // Update heatmap
+    function updateHeatmap() {
+        const heatmapData = [
+            { page: 'Homepage', visit: 100000, search: 45000, view: 25000, cart: 8000, checkout: 5000 },
+            { page: 'Category', visit: 75000, search: 55000, view: 35000, cart: 12000, checkout: 8000 },
+            { page: 'Product', visit: 45000, search: 15000, view: 45000, cart: 18000, checkout: 12000 },
+            { page: 'Search Results', visit: 55000, search: 55000, view: 30000, cart: 10000, checkout: 7000 }
+        ];
+
+        const heatmapBody = document.getElementById('heatmap-body');
+        heatmapBody.innerHTML = heatmapData.map(row => {
+            const maxVal = Math.max(row.visit, row.search, row.view, row.cart, row.checkout);
+            return `
+                <tr>
+                    <td><strong>${row.page}</strong></td>
+                    <td class="heatmap-cell ${row.visit === maxVal ? 'high-activity' : 'medium-activity'}">${row.visit.toLocaleString()}</td>
+                    <td class="heatmap-cell ${row.search === maxVal ? 'high-activity' : row.search > maxVal * 0.5 ? 'medium-activity' : 'low-activity'}">${row.search.toLocaleString()}</td>
+                    <td class="heatmap-cell ${row.view === maxVal ? 'high-activity' : 'medium-activity'}">${row.view.toLocaleString()}</td>
+                    <td class="heatmap-cell ${row.cart === maxVal ? 'high-activity' : row.cart > maxVal * 0.3 ? 'medium-activity' : 'low-activity'}">${row.cart.toLocaleString()}</td>
+                    <td class="heatmap-cell ${row.checkout === maxVal ? 'high-activity' : 'low-activity'}">${row.checkout.toLocaleString()}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // Update drop-off reasons
+    function updateDropoffReasons() {
+        const reasons = [
+            { reason: 'High shipping costs', percentage: 35, users: 12500 },
+            { reason: 'Complex checkout process', percentage: 28, users: 10000 },
+            { reason: 'Payment issues', percentage: 20, users: 7143 },
+            { reason: 'Site performance', percentage: 12, users: 4286 },
+            { reason: 'Other', percentage: 5, users: 1786 }
+        ];
+
+        const dropoffDiv = document.getElementById('dropoff-reasons');
+        dropoffDiv.innerHTML = reasons.map(reason => `
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>${reason.reason}</span>
+                    <span class="text-muted">${reason.percentage}%</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar" role="progressbar" style="width: ${reason.percentage}%; background-color: #e74c3c;"></div>
+                </div>
+                <small class="text-muted">${reason.users.toLocaleString()} users</small>
+            </div>
+        `).join('');
+    }
+
+    // Update table
+    function updateTable(view, segment = null) {
+        const tableBody = document.getElementById('table-body');
+        const tableTitle = document.getElementById('table-title');
+        let funnel;
+
+        if (view === 'overall') {
+            funnel = behaviorData.overall.funnel;
+            tableTitle.textContent = 'Funnel Step Details';
+        } else {
+            funnel = behaviorData.segments[segment].funnel;
+            tableTitle.textContent = `Funnel Step Details - ${segment}`;
+        }
+
+        tableBody.innerHTML = funnel.map((step, index) => {
+            const prevUsers = index > 0 ? funnel[index - 1].users : step.users;
+            const dropoff = index > 0 ? ((prevUsers - step.users) / prevUsers * 100).toFixed(1) : 0;
+            const trend = dropoff > 20 ? '🔴' : dropoff > 10 ? '🟡' : '🟢';
+
+            return `
+                <tr class="funnel-step" onclick="${view === 'overall' ? `showStepDetails(${index})` : ''}">
+                    <td>
+                        ${step.step}
+                        ${view === 'overall' ? '<span class="text-muted ms-2">›</span>' : ''}
+                    </td>
+                    <td>${step.users.toLocaleString()}</td>
+                    <td><span class="badge bg-success">${step.conversion}%</span></td>
+                    <td>
+                        <span class="badge bg-${dropoff > 20 ? 'danger' : dropoff > 10 ? 'warning' : 'success'}">
+                            ${dropoff}%
+                        </span>
+                    </td>
+                    <td>${step.time}</td>
+                    <td>${trend}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // Drill down to segment
+    function drillToSegment(segmentName) {
+        currentView = 'segment';
+        currentSegment = segmentName;
+
+        // Update breadcrumb
+        document.getElementById('breadcrumb').innerHTML = `
+            <li class="breadcrumb-item"><a href="#" onclick="goBack()">Conversion Funnel Overview</a></li>
+            <li class="breadcrumb-item active">${segmentName}</li>
+        `;
+
+        // Show back button
+        document.getElementById('back-btn').style.display = 'block';
+
+        // Hide segment cards
+        document.getElementById('segment-cards').style.display = 'none';
+
+        // Update chart and table
+        renderFunnelChart('segment', segmentName);
+        updateTable('segment', segmentName);
+    }
+
+    // Show step details (placeholder for future enhancement)
+    function showStepDetails(stepIndex) {
+        const step = behaviorData.overall.funnel[stepIndex];
+        alert(`Detailed analysis for "${step.step}" step:\n\nUsers: ${step.users.toLocaleString()}\nConversion: ${step.conversion}%\nAvg Time: ${step.time}\n\nThis would open a detailed view of user behavior at this specific step.`);
+    }
+
+    // Go back to overall view
+    function goBack() {
+        currentView = 'overall';
+        currentSegment = null;
+
+        // Update breadcrumb
+        document.getElementById('breadcrumb').innerHTML = '<li class="breadcrumb-item active">Conversion Funnel Overview</li>';
+
+        // Hide back button
+        document.getElementById('back-btn').style.display = 'none';
+
+        // Show segment cards
+        document.getElementById('segment-cards').style.display = 'flex';
+
+        // Update chart and table
+        renderFunnelChart('overall');
+        updateTable('overall');
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+{% endblock %}

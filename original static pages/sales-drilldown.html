@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Drilldown Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px; /* Space for fixed navbar */
+        }
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            min-width: 280px;
+            max-width: 350px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .card { border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .breadcrumb { background: none; padding: 0; }
+        .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: #6c757d; }
+        .drilldown-btn { cursor: pointer; transition: all 0.3s ease; }
+        .drilldown-btn:hover { background-color: #e9ecef; }
+        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; }
+        .back-btn:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                📊 Dashboard Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                            <li><a class="dropdown-item" href="product-hierarchy-drilldown.html">📦 Product Hierarchy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📚 Tutorials
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">📊 Chart Tutorials</h6></li>
+                            <li><a class="dropdown-item" href="bar-column-charts.html">📊 Bar & Column Charts</a></li>
+                            <li><a class="dropdown-item" href="line-area-charts.html">📈 Line & Area Charts</a></li>
+                            <li><a class="dropdown-item" href="pie-donut-charts.html">🥧 Pie & Donut Charts</a></li>
+                            <li><a class="dropdown-item" href="scatter-bubble-charts.html">🫧 Scatter & Bubble Charts</a></li>
+                            <li><a class="dropdown-item" href="heatmap-treemap-charts.html">🔥 Heatmaps & Treemaps</a></li>
+                            <li><a class="dropdown-item" href="radar-polar-charts.html">🎯 Radar & Polar Charts</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">🎨 Bootstrap Components</h6></li>
+                            <li><a class="dropdown-item" href="layout-components.html">🏗️ Layout Components</a></li>
+                            <li><a class="dropdown-item" href="navigation-elements.html">🧭 Navigation Elements</a></li>
+                            <li><a class="dropdown-item" href="forms-inputs.html">📝 Forms & Inputs</a></li>
+                            <li><a class="dropdown-item" href="cards-modals.html">🎴 Cards & Modals</a></li>
+                            <li><a class="dropdown-item" href="tables-data-display.html">📊 Tables & Data Display</a></li>
+                            <li><a class="dropdown-item" href="responsive-design.html">📱 Responsive Design</a></li>
+                        </ul>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" id="breadcrumb">
+                        <li class="breadcrumb-item active">Total Sales</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <h6 class="text-muted">Total Revenue</h6>
+                    <h2 id="total-revenue">$0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <h6 class="text-muted">Units Sold</h6>
+                    <h2 id="units-sold">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <h6 class="text-muted">Avg Order Value</h6>
+                    <h2 id="avg-order">$0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 text-center">
+                    <h6 class="text-muted">Top Category</h6>
+                    <h2 id="top-category">-</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chart Area -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0" id="chart-title">Sales by Category</h5>
+                        <button class="back-btn" id="back-btn" style="display: none;" onclick="goBack()">
+                            ← Back
+                        </button>
+                    </div>
+                    <div id="main-chart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card p-4">
+                    <h5 class="card-title mb-4">Detailed Breakdown</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Revenue</th>
+                                    <th>Units</th>
+                                    <th>Growth</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        // Multi-level data structure
+        const salesData = {
+            categories: [
+                {
+                    name: 'Electronics',
+                    revenue: 45000,
+                    units: 320,
+                    growth: '+12%',
+                    subcategories: [
+                        { name: 'Laptops', revenue: 25000, units: 80, growth: '+15%' },
+                        { name: 'Smartphones', revenue: 15000, units: 180, growth: '+8%' },
+                        { name: 'Tablets', revenue: 5000, units: 60, growth: '+5%' }
+                    ]
+                },
+                {
+                    name: 'Clothing',
+                    revenue: 32000,
+                    units: 850,
+                    growth: '+8%',
+                    subcategories: [
+                        { name: 'Men\'s Wear', revenue: 18000, units: 400, growth: '+10%' },
+                        { name: 'Women\'s Wear', revenue: 12000, units: 350, growth: '+6%' },
+                        { name: 'Accessories', revenue: 2000, units: 100, growth: '+3%' }
+                    ]
+                },
+                {
+                    name: 'Home & Garden',
+                    revenue: 28000,
+                    units: 450,
+                    growth: '+15%',
+                    subcategories: [
+                        { name: 'Furniture', revenue: 18000, units: 120, growth: '+20%' },
+                        { name: 'Decor', revenue: 6000, units: 200, growth: '+12%' },
+                        { name: 'Garden Tools', revenue: 4000, units: 130, growth: '+8%' }
+                    ]
+                },
+                {
+                    name: 'Sports',
+                    revenue: 18000,
+                    units: 280,
+                    growth: '+6%',
+                    subcategories: [
+                        { name: 'Fitness Equipment', revenue: 10000, units: 80, growth: '+10%' },
+                        { name: 'Outdoor Gear', revenue: 5000, units: 120, growth: '+4%' },
+                        { name: 'Apparel', revenue: 3000, units: 80, growth: '+2%' }
+                    ]
+                }
+            ]
+        };
+
+        let currentLevel = 'categories';
+        let currentCategory = null;
+        let chart = null;
+        const breadcrumb = document.getElementById('breadcrumb');
+        const backBtn = document.getElementById('back-btn');
+
+        // Initialize dashboard
+        function initDashboard() {
+            updateSummaryCards();
+            renderChart('categories');
+            updateTable('categories');
+        }
+
+        // Update summary cards
+        function updateSummaryCards() {
+            const totalRevenue = salesData.categories.reduce((sum, cat) => sum + cat.revenue, 0);
+            const totalUnits = salesData.categories.reduce((sum, cat) => sum + cat.units, 0);
+            const avgOrder = totalRevenue / totalUnits;
+            const topCategory = salesData.categories.reduce((max, cat) => 
+                cat.revenue > max.revenue ? cat : max, salesData.categories[0]);
+
+            document.getElementById('total-revenue').innerText = `$${totalRevenue.toLocaleString()}`;
+            document.getElementById('units-sold').innerText = totalUnits.toLocaleString();
+            document.getElementById('avg-order').innerText = `$${avgOrder.toFixed(0)}`;
+            document.getElementById('top-category').innerText = topCategory.name;
+        }
+
+        // Render chart based on current level
+        function renderChart(level, category = null) {
+            const chartTitle = document.getElementById('chart-title');
+            let data, categories, chartType;
+
+            if (level === 'categories') {
+                data = salesData.categories.map(cat => cat.revenue);
+                categories = salesData.categories.map(cat => cat.name);
+                chartTitle.textContent = 'Sales by Category';
+                chartType = 'bar';
+            } else if (level === 'subcategories') {
+                data = category.subcategories.map(sub => sub.revenue);
+                categories = category.subcategories.map(sub => sub.name);
+                chartTitle.textContent = `Sales by Subcategory - ${category.name}`;
+                chartType = 'column';
+            }
+
+            const options = {
+                chart: {
+                    type: chartType,
+                    height: 350,
+                    toolbar: { show: true },
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            if (level === 'categories') {
+                                drillDown(config.dataPointIndex);
+                            }
+                        }
+                    }
+                },
+                colors: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71'],
+                series: [{
+                    name: 'Revenue',
+                    data: data
+                }],
+                xaxis: {
+                    categories: categories
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 5,
+                        dataLabels: {
+                            position: 'top',
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function(value) {
+                        return '$' + (value / 1000).toFixed(1) + 'k';
+                    },
+                    offsetY: -20,
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#304758"]
+                    }
+                }
+            };
+
+            if (chart) {
+                chart.destroy();
+            }
+            chart = new ApexCharts(document.querySelector("#main-chart"), options);
+            chart.render();
+        }
+
+        // Update detail table
+        function updateTable(level, category = null) {
+            const tableBody = document.getElementById('table-body');
+            let data;
+
+            if (level === 'categories') {
+                data = salesData.categories;
+            } else if (level === 'subcategories') {
+                data = category.subcategories;
+            }
+
+            tableBody.innerHTML = data.map(item => `
+                <tr class="drilldown-btn" onclick="${level === 'categories' ? `drillDown(${data.indexOf(item)})` : ''}">
+                    <td>
+                        ${item.name}
+                        ${level === 'categories' ? '<span class="text-muted ms-2">›</span>' : ''}
+                    </td>
+                    <td>$${item.revenue.toLocaleString()}</td>
+                    <td>${item.units.toLocaleString()}</td>
+                    <td><span class="badge bg-success">${item.growth}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // Drill down to subcategories
+        function drillDown(categoryIndex) {
+            const category = salesData.categories[categoryIndex];
+            currentLevel = 'subcategories';
+            currentCategory = category;
+
+            // Update breadcrumb
+            breadcrumb.innerHTML = `
+                <li class="breadcrumb-item"><a href="#" onclick="goBack()">Total Sales</a></li>
+                <li class="breadcrumb-item active">${category.name}</li>
+            `;
+
+            // Show back button
+            backBtn.style.display = 'block';
+
+            // Update chart and table
+            renderChart('subcategories', category);
+            updateTable('subcategories', category);
+        }
+
+        // Go back to previous level
+        function goBack() {
+            currentLevel = 'categories';
+            currentCategory = null;
+
+            // Update breadcrumb
+            breadcrumb.innerHTML = '<li class="breadcrumb-item active">Total Sales</li>';
+
+            // Hide back button
+            backBtn.style.display = 'none';
+
+            // Update chart and table
+            renderChart('categories');
+            updateTable('categories');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

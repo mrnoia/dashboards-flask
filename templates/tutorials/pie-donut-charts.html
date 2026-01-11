@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+
+{% block title %}Pie & Donut Charts Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">🥧 Pie & Donut Charts Tutorial</h1>
+        <p class="tutorial-subtitle">Master pie and donut charts with ApexCharts and Bootstrap 5</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Basic pie chart configuration</li>
+                    <li>Donut chart variations</li>
+                    <li>Custom styling and colors</li>
+                    <li>Labels and legends</li>
+                    <li>Interactive features</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>JavaScript fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>Understanding of data visualization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                🥧 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Basic Pie Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="basicPieChart"></div>
+                    </div>
+                </div>
+
+                <h3>Donut Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="donutChart"></div>
+                    </div>
+                </div>
+
+                <h3>Semi-Donut Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="semiDonutChart"></div>
+                    </div>
+                </div>
+
+                <h3>3D Donut Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="donut3DChart"></div>
+                    </div>
+                </div>
+
+                <h3>Monochrome Pie Chart</h3>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="monochromeChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>Basic Pie Chart</h3>
+                <pre><code>// Basic Pie Chart Configuration
+const options = {
+  series: [44, 55, 13, 43, 22],
+  chart: {
+    width: 380,
+    type: 'pie',
+  },
+  labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+  responsive: [{
+    breakpoint: 480,
+    options: {
+      chart: {
+        width: 200
+      },
+      legend: {
+        position: 'bottom'
+      }
+    }
+  }]
+};
+
+const chart = new ApexCharts(document.querySelector("#basicPieChart"), options);
+chart.render();</code></pre>
+
+                <h3>Donut Chart</h3>
+                <pre><code>// Donut Chart Configuration
+const options = {
+  series: [44, 55, 41, 17, 15],
+  chart: {
+    type: 'donut',
+  },
+  dataLabels: {
+    enabled: false
+  },
+  responsive: [{
+    breakpoint: 480,
+    options: {
+      chart: {
+        width: 200
+      },
+      legend: {
+        show: false
+      }
+    }
+  },
+  labels: ['Apples', 'Oranges', 'Bananas', 'Berries', 'Grapes']
+};</code></pre>
+
+                <h3>Semi-Donut Chart</h3>
+                <pre><code>// Semi-Donut Chart Configuration
+const options = {
+  series: [44, 55, 41, 17, 15],
+  chart: {
+    type: 'donut',
+  },
+  plotOptions: {
+    pie: {
+      startAngle: -90,
+      endAngle: 90,
+      offsetY: 10
+    }
+  },
+  grid: {
+    padding: {
+      bottom: -80
+    }
+  },
+  responsive: [{
+    breakpoint: 480,
+    options: {
+      chart: {
+        width: 200
+      },
+      legend: {
+        position: 'bottom'
+      }
+    }
+  },
+  labels: ['Sales', 'Marketing', 'Development', 'Support', 'Design']
+};</code></pre>
+
+                <h3>3D Donut Chart</h3>
+                <pre><code>// 3D Donut Chart Configuration
+const options = {
+  series: [44, 55, 41, 17, 15],
+  chart: {
+    type: 'donut',
+  },
+  plotOptions: {
+    pie: {
+      donut: {
+        labels: {
+          show: true,
+          total: {
+            show: true,
+            label: 'Total',
+            formatter: function () {
+              return 172
+            }
+          }
+        }
+      }
+    }
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: function(val, opts) {
+      return opts.w.config.labels[opts.seriesIndex] + ': ' + val + '%'
+    }
+  },
+  responsive: [{
+    breakpoint: 480,
+    options: {
+      chart: {
+        width: 200
+      },
+      legend: {
+        position: 'bottom'
+      }
+    }
+  }],
+  labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+};</code></pre>
+
+                <h3>Monochrome Pie Chart</h3>
+                <pre><code>// Monochrome Pie Chart Configuration
+const options = {
+  series: [25, 15, 44, 55, 41, 17],
+  chart: {
+    type: 'pie',
+  },
+  stroke: {
+    width: 0
+  },
+  colors: ["#3056D3", "#80CAEE", "#6AD2FF", "#34CDFA", "#4ADEDE", "#2EDFFA"],
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shade: 'dark',
+      type: "diagonal1",
+      shadeIntensity: 0.8,
+      gradientToColors: undefined,
+      inverseColors: false,
+      opacityFrom: 1,
+      opacityTo: 0.8,
+    }
+  },
+  labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  responsive: [{
+    breakpoint: 480,
+    options: {
+      chart: {
+        width: 200
+      },
+      legend: {
+        position: 'bottom'
+      }
+    }
+  }]
+};</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Pie & Donut Charts Overview</h3>
+                <p>Pie and donut charts are circular charts divided into slices to illustrate numerical proportions.</p>
+                
+                <h4>Pie Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Show parts of a whole</li>
+                    <li><strong>Format</strong>: Complete circle divided into slices</li>
+                    <li><strong>Best for</strong>: 2-7 categories maximum</li>
+                    <li><strong>Data type</strong>: Percentages or proportions</li>
+                </ul>
+
+                <h4>Donut Charts</h4>
+                <ul>
+                    <li><strong>Purpose</strong>: Similar to pie charts with center space</li>
+                    <li><strong>Format</strong>: Pie chart with hollow center</li>
+                    <li><strong>Advantage</strong>: Can display additional info in center</li>
+                    <li><strong>Visual</strong>: Often easier to read than pie charts</li>
+                </ul>
+
+                <h3>Chart Configuration Options</h3>
+                
+                <h4>Basic Settings</h4>
+                <ul>
+                    <li><strong>chart.type</strong>: 'pie' or 'donut'</li>
+                    <li><strong>series</strong>: Array of values</li>
+                    <li><strong>labels</strong>: Array of category names</li>
+                    <li><strong>responsive</strong>: Responsive configuration</li>
+                </ul>
+
+                <h4>Styling Options</h4>
+                <ul>
+                    <li><strong>colors</strong>: Array of colors for slices</li>
+                    <li><strong>stroke</strong>: Border styling</li>
+                    <li><strong>fill</strong>: Fill options and gradients</li>
+                    <li><strong>dataLabels</strong>: Label formatting</li>
+                </ul>
+
+                <h4>Legend Configuration</h4>
+                <ul>
+                    <li><strong>legend.position</strong>: 'top', 'bottom', 'right', 'left'</li>
+                    <li><strong>legend.show</strong>: Show/hide legend</li>
+                    <li><strong>legend.floating</strong>: Floating legend</li>
+                    <li><strong>legend.horizontalAlign</strong>: Legend alignment</li>
+                </ul>
+
+                <h4>Plot Options</h4>
+                <ul>
+                    <li><strong>plotOptions.pie.startAngle</strong>: Starting angle</li>
+                    <li><strong>plotOptions.pie.endAngle</strong>: Ending angle</li>
+                    <li><strong>plotOptions.pie.offsetY</strong>: Vertical offset</li>
+                    <li><strong>plotOptions.pie.expandOnClick</strong>: Click behavior</li>
+                </ul>
+
+                <h3>Data Visualization Best Practices</h3>
+                
+                <h4>When to Use Pie Charts</h4>
+                <ul>
+                    <li>Showing composition of a whole</li>
+                    <li>Comparing parts to the total</li>
+                    <li>Simple data with few categories</li>
+                    <li>Percentage-based data</li>
+                </ul>
+
+                <h4>When to Use Donut Charts</h4>
+                <ul>
+                    <li>Similar use cases as pie charts</li>
+                    <li>When you want to display text in center</li>
+                    <li>For slightly better readability</li>
+                    <li>Modern, cleaner appearance</li>
+                </ul>
+
+                <h4>Design Guidelines</h4>
+                <ul>
+                    <li>Limit to 5-7 categories maximum</li>
+                    <li>Order slices logically (largest to smallest)</li>
+                    <li>Use contrasting, distinguishable colors</li>
+                    <li>Include clear labels and legends</li>
+                    <li>Avoid 3D effects that distort perception</li>
+                </ul>
+
+                <h3>Advanced Features</h3>
+                
+                <h4>Interactive Features</h4>
+                <ul>
+                    <li><strong>Hover effects</strong>: Highlight on hover</li>
+                    <li><strong>Click actions</strong>: Expand or drill down</li>
+                    <li><strong>Tooltips</strong>: Detailed information</li>
+                    <li><strong>Selection</strong>: Select specific slices</li>
+                </ul>
+
+                <h4>Label Options</h4>
+                <ul>
+                    <li><strong>Inside labels</strong>: Labels on slices</li>
+                    <li><strong>Outside labels</strong>: Labels with lines</li>
+                    <li><strong>Percentage values</strong>: Show percentages</li>
+                    <li><strong>Custom formatting</strong>: Custom label formats</li>
+                </ul>
+
+                <h4>Special Variations</h4>
+                <ul>
+                    <li><strong>Semi-donut</strong>: Half-circle charts</li>
+                    <li><strong>Monochrome</strong>: Single color scheme</li>
+                    <li><strong>Gradient fills</strong>: Gradient color effects</li>
+                    <li><strong>Exploded slices</strong>: Separated sections</li>
+                </ul>
+
+                <h3>Common Use Cases</h3>
+                <ul>
+                    <li><strong>Market share</strong>: Company market percentages</li>
+                    <li><strong>Budget allocation</strong>: Department spending</li>
+                    <li><strong>Survey results</strong>: Response distribution</li>
+                    <li><strong>Sales by category</strong>: Product category sales</li>
+                    <li><strong>Demographics</strong>: Population distribution</li>
+                </ul>
+
+                <h3>Accessibility Considerations</h3>
+                <ul>
+                    <li>Provide text alternatives</li>
+                    <li>Ensure color contrast</li>
+                    <li>Include descriptive labels</li>
+                    <li>Consider colorblind-friendly palettes</li>
+                    <li>Test with screen readers</li>
+                </ul>
+
+                <h3>Performance Tips</h3>
+                <ul>
+                    <li>Keep data points reasonable</li>
+                    <li>Optimize for mobile devices</li>
+                    <li>Use appropriate chart sizes</li>
+                    <li>Consider server-side rendering for complex charts</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Charts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Basic Pie Chart
+    const basicPieOptions = {
+        series: [44, 55, 13, 43, 22],
+        chart: {
+            width: 380,
+            type: 'pie',
+        },
+        labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }]
+    };
+    const basicPieChart = new ApexCharts(document.querySelector("#basicPieChart"), basicPieOptions);
+    basicPieChart.render();
+
+    // Donut Chart
+    const donutOptions = {
+        series: [44, 55, 41, 17, 15],
+        chart: { type: 'donut' },
+        dataLabels: { enabled: false },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { show: false }
+            }
+        }],
+        labels: ['Apples', 'Oranges', 'Bananas', 'Berries', 'Grapes']
+    };
+    const donutChart = new ApexCharts(document.querySelector("#donutChart"), donutOptions);
+    donutChart.render();
+
+    // Semi-Donut Chart
+    const semiDonutOptions = {
+        series: [44, 55, 41, 17, 15],
+        chart: { type: 'donut' },
+        plotOptions: {
+            pie: {
+                startAngle: -90,
+                endAngle: 90,
+                offsetY: 10
+            }
+        },
+        grid: { padding: { bottom: -80 } },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }],
+        labels: ['Sales', 'Marketing', 'Development', 'Support', 'Design']
+    };
+    const semiDonutChart = new ApexCharts(document.querySelector("#semiDonutChart"), semiDonutOptions);
+    semiDonutChart.render();
+
+    // 3D Donut Chart
+    const donut3DOptions = {
+        series: [44, 55, 41, 17, 15],
+        chart: { type: 'donut' },
+        plotOptions: {
+            pie: {
+                donut: {
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            formatter: function () { return 172 }
+                        }
+                    }
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function(val, opts) {
+                return opts.w.config.labels[opts.seriesIndex] + ': ' + val + '%'
+            }
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }],
+        labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+    };
+    const donut3DChart = new ApexCharts(document.querySelector("#donut3DChart"), donut3DOptions);
+    donut3DChart.render();
+
+    // Monochrome Pie Chart
+    const monochromeOptions = {
+        series: [25, 15, 44, 55, 41, 17],
+        chart: { type: 'pie' },
+        stroke: { width: 0 },
+        colors: ["#3056D3", "#80CAEE", "#6AD2FF", "#34CDFA", "#4ADEDE", "#2EDFFA"],
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shade: 'dark',
+                type: "diagonal1",
+                shadeIntensity: 0.8,
+                opacityFrom: 1,
+                opacityTo: 0.8
+            }
+        },
+        labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }]
+    };
+    const monochromeChart = new ApexCharts(document.querySelector("#monochromeChart"), monochromeOptions);
+    monochromeChart.render();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pie & Donut Charts Tutorial - ApexCharts & Bootstrap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            min-width: 280px;
+            max-width: 350px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .tutorial-header {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .tutorial-title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .tutorial-subtitle {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .tutorial-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 2rem;
+            color: #34495e;
+        }
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .highlight {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        .nav-tabs .nav-link {
+            color: #2c3e50;
+            font-weight: 500;
+            border: none;
+            background: rgba(52, 152, 219, 0.1);
+            margin-right: 0.5rem;
+            border-radius: 10px 10px 0 0;
+        }
+        .nav-tabs .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            background: white;
+            border-radius: 0 10px 10px 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                            <li><a class="dropdown-item" href="product-hierarchy-drilldown.html">📦 Product Hierarchy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📚 Tutorials
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">📊 Chart Tutorials</h6></li>
+                            <li><a class="dropdown-item" href="bar-column-charts.html">📊 Bar & Column Charts</a></li>
+                            <li><a class="dropdown-item" href="line-area-charts.html">📈 Line & Area Charts</a></li>
+                            <li><a class="dropdown-item" href="pie-donut-charts.html">🥧 Pie & Donut Charts</a></li>
+                            <li><a class="dropdown-item" href="scatter-bubble-charts.html">🫧 Scatter & Bubble Charts</a></li>
+                            <li><a class="dropdown-item" href="heatmap-treemap-charts.html">🔥 Heatmaps & Treemaps</a></li>
+                            <li><a class="dropdown-item" href="radar-polar-charts.html">🎯 Radar & Polar Charts</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">🎨 Bootstrap Components</h6></li>
+                            <li><a class="dropdown-item" href="layout-components.html">🏗️ Layout Components</a></li>
+                            <li><a class="dropdown-item" href="navigation-elements.html">🧭 Navigation Elements</a></li>
+                            <li><a class="dropdown-item" href="forms-inputs.html">📝 Forms & Inputs</a></li>
+                            <li><a class="dropdown-item" href="cards-modals.html">🎴 Cards & Modals</a></li>
+                            <li><a class="dropdown-item" href="tables-data-display.html">📊 Tables & Data Display</a></li>
+                            <li><a class="dropdown-item" href="responsive-design.html">📱 Responsive Design</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Tutorial Header -->
+        <div class="tutorial-header">
+            <h1 class="tutorial-title">🥧 Pie & Donut Charts Tutorial</h1>
+            <p class="tutorial-subtitle">Master proportional data visualization with ApexCharts and Bootstrap 5</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>What You'll Learn:</h5>
+                    <ul class="feature-list">
+                        <li>Basic pie chart configuration</li>
+                        <li>Donut chart variations</li>
+                        <li>Custom labels and legends</li>
+                        <li>Interactive features</li>
+                        <li>Advanced styling options</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Prerequisites:</h5>
+                    <ul class="feature-list">
+                        <li>Basic HTML knowledge</li>
+                        <li>JavaScript fundamentals</li>
+                        <li>Bootstrap 5 basics</li>
+                        <li>ApexCharts installation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🎯 Introduction to Pie & Donut Charts</h2>
+            <p>Pie and donut charts are perfect for showing proportions and percentages of a whole. They excel at displaying composition data and making it easy to understand relative sizes at a glance.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🥧 Pie Charts</h5>
+                    <ul class="feature-list">
+                        <li>Classic proportional visualization</li>
+                        <li>Easy to understand at a glance</li>
+                        <li>Best for 5-7 categories max</li>
+                        <li>Clear percentage representation</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🍩 Donut Charts</h5>
+                    <ul class="feature-list">
+                        <li>Modern alternative to pie charts</li>
+                        <li>Center space for additional info</li>
+                        <li>Less visual weight than pie charts</li>
+                        <li>Great for dashboards and reports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basic Pie Chart -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🔧 Basic Pie Chart Implementation</h2>
+            
+            <ul class="nav nav-tabs" id="pieTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pie-preview-tab" data-bs-toggle="tab" data-bs-target="#pie-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pie-code-tab" data-bs-toggle="tab" data-bs-target="#pie-code" type="button" role="tab">Code</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pie-explanation-tab" data-bs-toggle="tab" data-bs-target="#pie-explanation" type="button" role="tab">Explanation</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="pieTabContent">
+                <div class="tab-pane fade show active" id="pie-preview" role="tabpanel">
+                    <div class="chart-container">
+                        <div id="basic-pie-chart"></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pie-code" role="tabpanel">
+                    <h5>HTML Structure:</h5>
+                    <div class="code-block">
+&lt;div class="container"&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-md-12"&gt;
+            &lt;div class="card"&gt;
+                &lt;div class="card-header"&gt;
+                    &lt;h5&gt;Market Share Distribution&lt;/h5&gt;
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+                    &lt;div id="basic-pie-chart"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+                    </div>
+                    
+                    <h5>JavaScript Implementation:</h5>
+                    <div class="code-block">
+// Basic Pie Chart Configuration
+const options = {
+    series: [44, 55, 13, 43, 22],
+    chart: {
+        type: 'pie',
+        height: 350
+    },
+    labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+    responsive: [{
+        breakpoint: 480,
+        options: {
+            chart: {
+                width: 200
+            },
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }],
+    colors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+};
+
+const chart = new ApexCharts(document.querySelector("#basic-pie-chart"), options);
+chart.render();
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pie-explanation" role="tabpanel">
+                    <h5>Key Configuration Options:</h5>
+                    <ul class="feature-list">
+                        <li><span class="highlight">type: 'pie'</span> - Sets the chart type to pie</li>
+                        <li><span class="highlight">series</span> - Array of values for each segment</li>
+                        <li><span class="highlight">labels</span> - Labels for each segment</li>
+                        <li><span class="highlight">responsive</span> - Responsive configuration for different screen sizes</li>
+                        <li><span class="highlight">colors</span> - Custom colors for each segment</li>
+                    </ul>
+                    
+                    <h5>Bootstrap Integration:</h5>
+                    <p>The pie chart is wrapped in a Bootstrap card component for consistent styling and responsive layout. The card structure provides proper spacing and visual hierarchy.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donut Chart -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🍩 Donut Chart with Custom Labels</h2>
+            
+            <ul class="nav nav-tabs" id="donutTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="donut-preview-tab" data-bs-toggle="tab" data-bs-target="#donut-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="donut-code-tab" data-bs-toggle="tab" data-bs-target="#donut-code" type="button" role="tab">Code</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="donutTabContent">
+                <div class="tab-pane fade show active" id="donut-preview" role="tabpanel">
+                    <div class="chart-container">
+                        <div id="donut-chart"></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="donut-code" role="tabpanel">
+                    <h5>Donut Chart with Custom Labels:</h5>
+                    <div class="code-block">
+// Donut Chart with Custom Labels
+const donutOptions = {
+    series: [44, 55, 41, 17, 15],
+    chart: {
+        type: 'donut',
+        height: 350
+    },
+    plotOptions: {
+        pie: {
+            donut: {
+                size: '70%',
+                labels: {
+                    show: true,
+                    total: {
+                        show: true,
+                        label: 'Total',
+                        formatter: function (w) {
+                            return w.globals.seriesTotals.reduce((a, b) => {
+                                return a + b
+                            }, 0)
+                        }
+                    }
+                }
+            }
+        }
+    },
+    labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
+    dataLabels: {
+        enabled: true,
+        formatter: function (val, opts) {
+            return opts.w.globals.labels[opts.seriesIndex] + ': ' + val + '%'
+        }
+    },
+    responsive: [{
+        breakpoint: 480,
+        options: {
+            chart: {
+                width: 200
+            },
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }],
+    colors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+};
+
+const donutChart = new ApexCharts(document.querySelector("#donut-chart"), donutOptions);
+donutChart.render();
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Donut Chart -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🚀 Advanced Donut Chart with Gradient</h2>
+            
+            <ul class="nav nav-tabs" id="advancedTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="advanced-preview-tab" data-bs-toggle="tab" data-bs-target="#advanced-preview" type="button" role="tab">Preview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="advanced-code-tab" data-bs-toggle="tab" data-bs-target="#advanced-code" type="button" role="tab">Code</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="advancedTabContent">
+                <div class="tab-pane fade show active" id="advanced-preview" role="tabpanel">
+                    <div class="chart-container">
+                        <div id="advanced-donut-chart"></div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="advanced-code" role="tabpanel">
+                    <h5>Advanced Donut Chart with Gradient:</h5>
+                    <div class="code-block">
+// Advanced Donut Chart with Gradient
+const advancedOptions = {
+    series: [44, 55, 41, 17, 15],
+    chart: {
+        type: 'donut',
+        height: 350,
+        dropShadow: {
+            enabled: true,
+            color: '#000',
+            top: 18,
+            left: 7,
+            blur: 10,
+            opacity: 0.2
+        }
+    },
+    plotOptions: {
+        pie: {
+            customScale: 0.8,
+            donut: {
+                size: '75%',
+                labels: {
+                    show: true,
+                    name: {
+                        show: true,
+                        fontSize: '22px',
+                        fontFamily: 'Inter, sans-serif',
+                        color: '#2c3e50',
+                        offsetY: -10
+                    },
+                    value: {
+                        show: true,
+                        fontSize: '16px',
+                        fontFamily: 'Inter, sans-serif',
+                        color: '#34495e',
+                        offsetY: 16,
+                        formatter: function (val) {
+                            return val
+                        }
+                    },
+                    total: {
+                        show: true,
+                        label: 'Total',
+                        color: '#2c3e50',
+                        formatter: function (w) {
+                            return w.globals.seriesTotals.reduce((a, b) => {
+                                return a + b
+                            }, 0)
+                        }
+                    }
+                }
+            }
+        }
+    },
+    labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
+    dataLabels: {
+        enabled: false
+    },
+    legend: {
+        position: 'bottom',
+        horizontalAlign: 'center',
+        offsetY: 20
+    },
+    fill: {
+        type: 'gradient',
+        gradient: {
+            shade: 'light',
+            type: 'vertical',
+            shadeIntensity: 0.5,
+            gradientToColors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6'],
+            inverseColors: true,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [0, 100]
+        }
+    },
+    states: {
+        hover: {
+            filter: {
+                type: 'none'
+            }
+        }
+    },
+    stroke: {
+        show: true,
+        width: 0,
+        colors: ['#fff']
+    },
+    tooltip: {
+        enabled: true,
+        custom: function({series, seriesIndex, dataPointIndex, w}) {
+            return '<div class="arrow_box">' +
+                '<span>' + w.globals.labels[seriesIndex] + ': ' + series[seriesIndex][dataPointIndex] + '</span>' +
+                '</div>'
+        }
+    }
+};
+
+const advancedChart = new ApexCharts(document.querySelector("#advanced-donut-chart"), advancedOptions);
+advancedChart.render();
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multiple Pie Charts -->
+        <div class="tutorial-section">
+            <h2 class="section-title">📊 Multiple Pie Charts Grid</h2>
+            <p>Display multiple pie charts in a responsive grid layout using Bootstrap's grid system.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Revenue by Region</h5>
+                        <div id="pie-chart-1"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Sales by Product</h5>
+                        <div id="pie-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Features -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🚀 Advanced Features & Customization</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🎨 Custom Styling</h5>
+                    <ul class="feature-list">
+                        <li>Gradient fills and patterns</li>
+                        <li>Custom labels and tooltips</li>
+                        <li>Drop shadows and effects</li>
+                        <li>Interactive legends</li>
+                        <li>Animation configurations</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>📱 Responsive Design</h5>
+                    <ul class="feature-list">
+                        <li>Mobile-optimized layouts</li>
+                        <li>Touch-friendly interactions</li>
+                        <li>Adaptive sizing</li>
+                        <li>Bootstrap grid integration</li>
+                        <li>Flexible container sizing</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div id="interactive-chart"></div>
+            </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="tutorial-section">
+            <h2 class="section-title">✅ Best Practices</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>📊 Data Visualization</h5>
+                    <ul class="feature-list">
+                        <li>Limit to 5-7 categories maximum</li>
+                        <li>Use contrasting colors</li>
+                        <li>Start at 12 o'clock position</li>
+                        <li>Order segments logically</li>
+                        <li>Avoid 3D effects for clarity</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🎨 Design Principles</h5>
+                    <ul class="feature-list">
+                        <li>Maintain aspect ratios</li>
+                        <li>Use whitespace effectively</li>
+                        <li>Ensure accessibility</li>
+                        <li>Test on multiple devices</li>
+                        <li>Provide clear labels</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="tutorial-section">
+            <h2 class="section-title">🔗 Related Tutorials</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📈 Line & Area Charts</h5>
+                            <p class="card-text">Learn to create time series and trend visualizations</p>
+                            <a href="line-area-charts.html" class="btn btn-primary">Previous Tutorial →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">🫧 Scatter & Bubble Charts</h5>
+                            <p class="card-text">Master correlation and distribution visualization</p>
+                            <a href="scatter-bubble-charts.html" class="btn btn-primary">Next Tutorial →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📊 Complete Guide</h5>
+                            <p class="card-text">Back to comprehensive ApexCharts guide</p>
+                            <a href="apexcharts-complete.html" class="btn btn-primary">View Guide →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <script>
+        // Basic Pie Chart
+        const pieOptions = {
+            series: [44, 55, 13, 43, 22],
+            chart: {
+                type: 'pie',
+                height: 350
+            },
+            labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }],
+            colors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+        };
+
+        const pieChart = new ApexCharts(document.querySelector("#basic-pie-chart"), pieOptions);
+        pieChart.render();
+
+        // Donut Chart
+        const donutOptions = {
+            series: [44, 55, 41, 17, 15],
+            chart: {
+                type: 'donut',
+                height: 350
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '70%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                label: 'Total',
+                                formatter: function (w) {
+                                    return w.globals.seriesTotals.reduce((a, b) => {
+                                        return a + b
+                                    }, 0)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
+            dataLabels: {
+                enabled: true,
+                formatter: function (val, opts) {
+                    return opts.w.globals.labels[opts.seriesIndex] + ': ' + val + '%'
+                }
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }],
+            colors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+        };
+
+        const donutChart = new ApexCharts(document.querySelector("#donut-chart"), donutOptions);
+        donutChart.render();
+
+        // Advanced Donut Chart
+        const advancedOptions = {
+            series: [44, 55, 41, 17, 15],
+            chart: {
+                type: 'donut',
+                height: 350,
+                dropShadow: {
+                    enabled: true,
+                    color: '#000',
+                    top: 18,
+                    left: 7,
+                    blur: 10,
+                    opacity: 0.2
+                }
+            },
+            plotOptions: {
+                pie: {
+                    customScale: 0.8,
+                    donut: {
+                        size: '75%',
+                        labels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: '22px',
+                                fontFamily: 'Inter, sans-serif',
+                                color: '#2c3e50',
+                                offsetY: -10
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '16px',
+                                fontFamily: 'Inter, sans-serif',
+                                color: '#34495e',
+                                offsetY: 16,
+                                formatter: function (val) {
+                                    return val
+                                }
+                            },
+                            total: {
+                                show: true,
+                                label: 'Total',
+                                color: '#2c3e50',
+                                formatter: function (w) {
+                                    return w.globals.seriesTotals.reduce((a, b) => {
+                                        return a + b
+                                    }, 0)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                offsetY: 20
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shade: 'light',
+                    type: 'vertical',
+                    shadeIntensity: 0.5,
+                    gradientToColors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6'],
+                    inverseColors: true,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 100]
+                }
+            },
+            states: {
+                hover: {
+                    filter: {
+                        type: 'none'
+                    }
+                }
+            },
+            stroke: {
+                show: true,
+                width: 0,
+                colors: ['#fff']
+            },
+            colors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+        };
+
+        const advancedChart = new ApexCharts(document.querySelector("#advanced-donut-chart"), advancedOptions);
+        advancedChart.render();
+
+        // Pie Chart 1 - Revenue by Region
+        const pie1Options = {
+            series: [35, 25, 20, 15, 5],
+            chart: {
+                type: 'pie',
+                height: 300
+            },
+            labels: ['North America', 'Europe', 'Asia', 'South America', 'Africa'],
+            colors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+        };
+
+        const pie1Chart = new ApexCharts(document.querySelector("#pie-chart-1"), pie1Options);
+        pie1Chart.render();
+
+        // Pie Chart 2 - Sales by Product
+        const pie2Options = {
+            series: [30, 25, 20, 15, 10],
+            chart: {
+                type: 'pie',
+                height: 300
+            },
+            labels: ['Electronics', 'Clothing', 'Food', 'Books', 'Other'],
+            colors: ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6']
+        };
+
+        const pie2Chart = new ApexCharts(document.querySelector("#pie-chart-2"), pie2Options);
+        pie2Chart.render();
+
+        // Interactive Chart
+        const interactiveOptions = {
+            series: [44, 55, 41, 17, 15],
+            chart: {
+                type: 'donut',
+                height: 350,
+                events: {
+                    dataPointSelection: function(event, chartContext, config) {
+                        console.log('Selected:', config.w.globals.labels[config.dataPointIndex]);
+                    }
+                }
+            },
+            plotOptions: {
+                pie: {
+                    expandOnClick: true,
+                    donut: {
+                        size: '70%',
+                    }
+                }
+            },
+            labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
+            dataLabels: {
+                enabled: true,
+                formatter: function (val, opts) {
+                    return opts.w.globals.labels[opts.seriesIndex] + ': ' + val + '%'
+                }
+            },
+            legend: {
+                position: 'bottom'
+            },
+            colors: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+        };
+
+        const interactiveChart = new ApexCharts(document.querySelector("#interactive-chart"), interactiveOptions);
+        interactiveChart.render();
+    </script>
+</body>
+</html>

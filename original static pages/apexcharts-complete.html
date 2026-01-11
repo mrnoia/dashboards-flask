@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Charts & Bootstrap - Complete Dashboard Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px; /* Space for fixed navbar */
+        }
+        /* Navigation Styles */
+        .navbar-custom {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3498db !important;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white !important;
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+        .navbar-custom .nav-link.active {
+            color: white !important;
+            background: #3498db;
+        }
+        .navbar-custom .dropdown-menu {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+        }
+        .navbar-custom .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background: #3498db;
+            color: white;
+        }
+        .main-container {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 1400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+            border-radius: 15px;
+            color: white;
+        }
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .view-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            color: #6c757d;
+        }
+        .view-btn.active {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        .view-btn:hover:not(.active) {
+            background: #f8f9fa;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .chart-container {
+            min-height: 300px;
+            position: relative;
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .category-badge:hover {
+            transform: scale(1.05);
+        }
+        .badge-basic { background: #e3f2fd; color: #1976d2; }
+        .badge-advanced { background: #f3e5f5; color: #7b1fa2; }
+        .badge-interactive { background: #e8f5e8; color: #388e3c; }
+        .badge-financial { background: #fff3e0; color: #f57c00; }
+        .chart-card.hidden { opacity: 0.2; transform: scale(0.95); }
+        .chart-card.highlighted { box-shadow: 0 15px 35px rgba(52, 152, 219, 0.3); border-color: #3498db; }
+        .controls-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .btn-custom {
+            padding: 8px 16px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .btn-custom:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .tutorial-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-left: 5px solid #3498db;
+        }
+        .code-block {
+            background: #2d2d2d;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        .code-block pre {
+            margin: 0;
+            color: #f8f8f2;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        .copy-btn:hover {
+            background: #2980b9;
+        }
+        .copy-btn.copied {
+            background: #27ae60;
+        }
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .nav-tabs {
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+        .nav-tabs .nav-link {
+            border: none;
+            color: #6c757d;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 10px 10px 0 0;
+            margin-right: 5px;
+        }
+        .nav-tabs .nav-link.active {
+            background: #3498db;
+            color: white;
+            border: none;
+        }
+        .nav-tabs .nav-link:hover {
+            border: none;
+            color: #3498db;
+        }
+        .tab-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 10px 10px 10px;
+        }
+        .demo-chart {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 250px;
+            border: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                📊 Dashboard Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📊 Dashboards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="index.html">📈 Basic Dashboard</a></li>
+                            <li><a class="dropdown-item" href="sales-drilldown.html">💰 Sales Analytics</a></li>
+                            <li><a class="dropdown-item" href="geographic-drilldown.html">🌍 Geographic Analytics</a></li>
+                            <li><a class="dropdown-item" href="time-drilldown.html">⏰ Time Analytics</a></li>
+                            <li><a class="dropdown-item" href="user-behavior-drilldown.html">👥 User Behavior</a></li>
+                            <li><a class="dropdown-item" href="customer-analytics.html">🎯 Customer Analytics</a></li>
+                            <li><a class="dropdown-item" href="marketing-performance.html">📢 Marketing Performance</a></li>
+                            <li><a class="dropdown-item" href="inventory-management.html">📦 Inventory Management</a></li>
+                            <li><a class="dropdown-item" href="financial-overview.html">💹 Financial Overview</a></li>
+                            <li><a class="dropdown-item" href="product-analytics.html">📦 Product Analytics</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="apexcharts-complete.html">📊 Apex Charts & Bootstrap</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header-section">
+            <h1>🧩 Bootstrap Components & Dashboard Tutorial</h1>
+            <p>Learn how to build interactive dashboards with Bootstrap and ApexCharts</p>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <button class="view-btn" onclick="switchView('showcase')">📊 ApexCharts Showcase</button>
+            <button class="view-btn" onclick="switchView('tutorial')">📊 ApexCharts Tutorial</button>
+            <button class="view-btn active" onclick="switchView('components')">🧩 Bootstrap Components</button>
+            <button class="view-btn" onclick="switchView('dashboards')">📈 Dashboard Examples</button>
+        </div>
+
+        <!-- Showcase Section -->
+        <div id="showcase-section" class="content-section">
+            <!-- Category Filters -->
+            <div class="controls-section">
+                <h5>🎯 Filter Charts</h5>
+                <div>
+                    <span class="category-badge badge-basic" onclick="filterCharts('basic')">Basic Charts</span>
+                    <span class="category-badge badge-advanced" onclick="filterCharts('advanced')">Advanced Charts</span>
+                    <span class="category-badge badge-interactive" onclick="filterCharts('interactive')">Interactive</span>
+                    <span class="category-badge badge-financial" onclick="filterCharts('financial')">Financial</span>
+                    <span class="category-badge" style="background: #e9ecef; color: #495057;" onclick="showAllCharts()">👁️ Show All</span>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="basic">
+                        <h5>📊 Line Chart</h5>
+                        <span class="category-badge badge-basic">Basic</span>
+                        <div id="line-chart" class="chart-container"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="basic">
+                        <h5>📈 Area Chart</h5>
+                        <span class="category-badge badge-basic">Basic</span>
+                        <div id="area-chart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="basic">
+                        <h5>📊 Column Chart</h5>
+                        <span class="category-badge badge-basic">Basic</span>
+                        <div id="column-chart" class="chart-container"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="basic">
+                        <h5>📉 Bar Chart</h5>
+                        <span class="category-badge badge-basic">Basic</span>
+                        <div id="bar-chart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="basic">
+                        <h5>🥧 Pie Chart</h5>
+                        <span class="category-badge badge-basic">Basic</span>
+                        <div id="pie-chart" class="chart-container"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="basic">
+                        <h5>🍩 Donut Chart</h5>
+                        <span class="category-badge badge-basic">Basic</span>
+                        <div id="donut-chart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="advanced">
+                        <h5>📈 Scatter Plot</h5>
+                        <span class="category-badge badge-advanced">Advanced</span>
+                        <div id="scatter-chart" class="chart-container"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="advanced">
+                        <h5>🎯 Radar Chart</h5>
+                        <span class="category-badge badge-advanced">Advanced</span>
+                        <div id="radar-chart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="financial">
+                        <h5>💹 Candlestick Chart</h5>
+                        <span class="category-badge badge-financial">Financial</span>
+                        <div id="candlestick-chart" class="chart-container"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-card" data-category="advanced">
+                        <h5>🌡️ Heatmap</h5>
+                        <span class="category-badge badge-advanced">Advanced</span>
+                        <div id="heatmap-chart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="chart-card" data-category="advanced">
+                        <h5>🎨 Mixed Chart</h5>
+                        <span class="category-badge badge-advanced">Advanced</span>
+                        <div id="mixed-chart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="chart-card" data-category="interactive">
+                        <h5>⚡ Real-time Chart</h5>
+                        <span class="category-badge badge-interactive">Interactive</span>
+                        <div id="realtime-chart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutorial Section -->
+        <div id="tutorial-section" class="content-section">
+            <!-- Getting Started -->
+            <div class="tutorial-section">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Getting Started</h3>
+                </div>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Chart&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;style&gt;
+        .chart-card { background: white; border-radius: 15px; padding: 25px; }
+        .chart-container { min-height: 350px; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;div class="chart-card"&gt;
+            &lt;div id="myChart" class="chart-container"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/apexcharts"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        const options = { chart: { type: 'line' }, series: [{ data: [30, 40, 35] }] };
+        new ApexCharts(document.querySelector("#myChart"), options).render();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                </div>
+            </div>
+
+            <!-- Chart Types -->
+            <div class="tutorial-section">
+                <h3>📊 Chart Types</h3>
+                <ul class="nav nav-tabs" id="chartTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#line-tut">Line</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#bar-tut">Bar</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pie-tut">Pie</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="line-tut">
+                        <h5>📈 Line Chart</h5>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre>const options = {
+    chart: { type: 'line', height: 350 },
+    series: [{ name: 'Revenue', data: [30, 40, 35, 50] }],
+    colors: ['#3498db'],
+    stroke: { curve: 'smooth' },
+    xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr'] }
+};
+new ApexCharts(document.querySelector("#chart"), options).render();</pre>
+                        </div>
+                        <div class="demo-chart">
+                            <div id="line-demo"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="bar-tut">
+                        <h5>📊 Bar Chart</h5>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre>const options = {
+    chart: { type: 'bar', height: 350 },
+    series: [{ name: 'Sales', data: [44, 55, 57] }],
+    colors: ['#e74c3c'],
+    plotOptions: { bar: { borderRadius: 8 } },
+    xaxis: { categories: ['A', 'B', 'C'] }
+};
+new ApexCharts(document.querySelector("#chart"), options).render();</pre>
+                        </div>
+                        <div class="demo-chart">
+                            <div id="bar-demo"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pie-tut">
+                        <h5>🥧 Pie Chart</h5>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre>const options = {
+    chart: { type: 'pie', height: 350 },
+    series: [44, 55, 13],
+    labels: ['Desktop', 'Mobile', 'Tablet'],
+    colors: ['#3498db', '#e74c3c', '#f39c12']
+};
+new ApexCharts(document.querySelector("#chart"), options).render();</pre>
+                        </div>
+                        <div class="demo-chart">
+                            <div id="pie-demo"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="tutorial-section">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Best Practices</h3>
+                </div>
+                <ul>
+                    <li>📊 Use appropriate chart types for your data</li>
+                    <li>🎨 Keep color schemes consistent</li>
+                    <li>📱 Make charts responsive</li>
+                    <li>♿ Ensure accessibility</li>
+                    <li>⚡ Optimize performance</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bootstrap Components Section -->
+        <div id="components-section" class="content-section active">
+            <!-- Components Overview -->
+            <div class="tutorial-section">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Bootstrap Components for Dashboards</h3>
+                </div>
+                <p>Interactive Bootstrap components with live demos for building dashboards.</p>
+            </div>
+
+            <!-- Navigation Components -->
+            <div class="tutorial-section">
+                <h4>🧭 Navigation Components</h4>
+                
+                <h5>Breadcrumb Navigation</h5>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;nav aria-label="breadcrumb"&gt;
+    &lt;ol class="breadcrumb"&gt;
+        &lt;li class="breadcrumb-item"&gt;&lt;a href="#"&gt;Dashboard&lt;/a&gt;&lt;/li&gt;
+        &lt;li class="breadcrumb-item active"&gt;Sales Details&lt;/li&gt;
+    &lt;/ol&gt;
+&lt;/nav&gt;</pre>
+                </div>
+                
+                <!-- Live Demo -->
+                <div class="card p-3 mb-3">
+                    <h6>Live Demo:</h6>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#" onclick="alert('Navigating to Dashboard')">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Sales Details</li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <h5>Tabs Navigation</h5>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;ul class="nav nav-tabs"&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;button class="nav-link active" data-bs-toggle="tab" data-bs-target="#overview"&gt;Overview&lt;/button&gt;
+    &lt;/li&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;button class="nav-link" data-bs-toggle="tab" data-bs-target="#details"&gt;Details&lt;/button&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="tab-content"&gt;
+    &lt;div class="tab-pane fade show active" id="overview"&gt;
+        &lt;div id="overview-chart"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="tab-pane fade" id="details"&gt;
+        &lt;div id="details-chart"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <!-- Live Demo -->
+                <div class="card p-3 mb-3">
+                    <h6>Live Demo:</h6>
+                    <ul class="nav nav-tabs" id="comp-tabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#comp-overview">Overview</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#comp-details">Details</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="comp-overview">
+                            <div class="alert alert-info">Overview Content</div>
+                        </div>
+                        <div class="tab-pane fade" id="comp-details">
+                            <div class="alert alert-success">Details Content</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Components -->
+            <div class="tutorial-section">
+                <h4>🃏 Card Components</h4>
+                
+                <h5>Metric Cards</h5>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;div class="row"&gt;
+    &lt;div class="col-md-3"&gt;
+        &lt;div class="card p-3 text-center"&gt;
+            &lt;h6 class="text-muted"&gt;Total Revenue&lt;/h6&gt;
+            &lt;h2 id="total-revenue"&gt;$0&lt;/h2&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="col-md-3"&gt;
+        &lt;div class="card p-3 text-center"&gt;
+            &lt;h6 class="text-muted"&gt;Active Users&lt;/h6&gt;
+            &lt;h2 id="active-users"&gt;0&lt;/h2&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <!-- Live Demo -->
+                <div class="card p-3 mb-3">
+                    <h6>Live Demo:</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card p-3 text-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; cursor: pointer;" onclick="updateMetric('revenue')">
+                                <h6>Total Revenue</h6>
+                                <h2 id="demo-revenue">$45,000</h2>
+                                <small>Click to update</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card p-3 text-center" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; cursor: pointer;" onclick="updateMetric('users')">
+                                <h6>Active Users</h6>
+                                <h2 id="demo-users">1,234</h2>
+                                <small>Click to update</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card p-3 text-center" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; cursor: pointer;" onclick="updateMetric('conversion')">
+                                <h6>Conversion Rate</h6>
+                                <h2 id="demo-conversion">3.2%</h2>
+                                <small>Click to update</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card p-3 text-center" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; cursor: pointer;" onclick="updateMetric('growth')">
+                                <h6>Growth</h6>
+                                <h2 id="demo-growth">+15%</h2>
+                                <small>Click to update</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h5>Chart Cards</h5>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;div class="card p-4"&gt;
+    &lt;div class="d-flex justify-content-between align-items-center mb-4"&gt;
+        &lt;h5 class="card-title mb-0"&gt;Monthly Performance&lt;/h5&gt;
+        &lt;button class="btn btn-sm btn-outline-secondary" onclick="goBack()"&gt;← Back&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div id="main-chart"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <!-- Live Demo -->
+                <div class="card p-3 mb-3">
+                    <h6>Live Demo:</h6>
+                    <div class="card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">Monthly Performance</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="showAlert('Going back to previous view')">← Back</button>
+                        </div>
+                        <div id="comp-demo-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Components -->
+            <div class="tutorial-section">
+                <h4>📊 Table Components</h4>
+                
+                <h5>Responsive Tables</h5>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;div class="table-responsive"&gt;
+    &lt;table class="table table-hover"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Category&lt;/th&gt;
+                &lt;th&gt;Revenue&lt;/th&gt;
+                &lt;th&gt;Growth&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody id="table-body"&gt;
+            &lt;!-- Dynamic content --&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <!-- Live Demo -->
+                <div class="card p-3 mb-3">
+                    <h6>Live Demo:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Revenue</th>
+                                    <th>Units Sold</th>
+                                    <th>Growth</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr onclick="highlightRow(this)" style="cursor: pointer;">
+                                    <td>Electronics</td>
+                                    <td>$45,000</td>
+                                    <td>320</td>
+                                    <td><span class="badge bg-success">+15%</span></td>
+                                    <td><span class="badge bg-primary">Active</span></td>
+                                </tr>
+                                <tr onclick="highlightRow(this)" style="cursor: pointer;">
+                                    <td>Clothing</td>
+                                    <td>$32,000</td>
+                                    <td>850</td>
+                                    <td><span class="badge bg-success">+8%</span></td>
+                                    <td><span class="badge bg-primary">Active</span></td>
+                                </tr>
+                                <tr onclick="highlightRow(this)" style="cursor: pointer;">
+                                    <td>Home & Garden</td>
+                                    <td>$28,000</td>
+                                    <td>450</td>
+                                    <td><span class="badge bg-warning">+3%</span></td>
+                                    <td><span class="badge bg-secondary">Paused</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Button Components -->
+            <div class="tutorial-section">
+                <h4>🎮 Button Components</h4>
+                
+                <h5>Action Buttons</h5>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;div class="btn-group-custom"&gt;
+    &lt;button class="btn btn-primary" onclick="refreshData()"&gt;🔄 Refresh&lt;/button&gt;
+    &lt;button class="btn btn-success" onclick="exportData()"&gt;📊 Export&lt;/button&gt;
+    &lt;button class="btn btn-info" onclick="toggleView()"&gt;👁️ Toggle View&lt;/button&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <!-- Live Demo -->
+                <div class="card p-3 mb-3">
+                    <h6>Live Demo:</h6>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-primary" onclick="showAlert('Refreshing data...')">🔄 Refresh</button>
+                        <button class="btn btn-success" onclick="showAlert('Exporting data...')">📊 Export</button>
+                        <button class="btn btn-info" onclick="showAlert('Toggling view...')">👁️ Toggle View</button>
+                        <button class="btn btn-warning" onclick="showAlert('Opening settings...')">⚙️ Settings</button>
+                        <button class="btn btn-danger" onclick="showAlert('Deleting item...')">🗑️ Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Examples Section -->
+        <div id="dashboards-section" class="content-section">
+            <!-- Dashboard Overview -->
+            <div class="tutorial-section">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Interactive & Drillable Dashboard Examples</h3>
+                </div>
+                <p>Complete examples showing how to build production-ready dashboards with Bootstrap and ApexCharts.</p>
+            </div>
+
+            <!-- Example 1: Sales Dashboard -->
+            <div class="tutorial-section">
+                <h4>💰 Sales Dashboard Example</h4>
+                <p>Features metric cards, interactive charts, and drilldown functionality.</p>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Sales Dashboard&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;style&gt;
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .chart-container {
+            min-height: 350px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container-fluid py-4"&gt;
+        &lt;h1 class="mb-4"&gt;Sales Dashboard&lt;/h1&gt;
+        
+        &lt;!-- Metrics Row --&gt;
+        &lt;div class="row mb-4"&gt;
+            &lt;div class="col-md-3"&gt;
+                &lt;div class="metric-card" onclick="drillToCategory('Electronics')"&gt;
+                    &lt;h6&gt;Electronics Revenue&lt;/h6&gt;
+                    &lt;h3&gt;$45,000&lt;/h3&gt;
+                    &lt;small&gt;Click to drill down →&lt;/small&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;!-- Chart Row --&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12"&gt;
+                &lt;div class="card p-4"&gt;
+                    &lt;h5&gt;Revenue by Category&lt;/h5&gt;
+                    &lt;div id="revenue-chart"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    
+    &lt;script src="https://cdn.jsdelivr.net/npm/apexcharts"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        // Chart data
+        const salesData = {
+            categories: ['Electronics', 'Clothing', 'Home & Garden', 'Sports'],
+            revenue: [45000, 32000, 28000, 18000]
+        };
+        
+        // Chart configuration
+        const options = {
+            chart: {
+                type: 'bar',
+                height: 350,
+                events: {
+                    dataPointSelection: function(event, chartContext, config) {
+                        drillToCategory(salesData.categories[config.dataPointIndex]);
+                    }
+                }
+            },
+            series: [{
+                name: 'Revenue',
+                data: salesData.revenue
+            }],
+            colors: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71']
+        };
+        
+        // Create chart
+        const chart = new ApexCharts(document.querySelector("#revenue-chart"), options);
+        chart.render();
+        
+        // Drilldown function
+        function drillToCategory(category) {
+            alert(`Drilling down to ${category} details...`);
+            // Load detailed data for selected category
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                </div>
+            </div>
+
+            <!-- Example 2: Geographic Dashboard -->
+            <div class="tutorial-section">
+                <h4>🌍 Geographic Dashboard Example</h4>
+                <p>Shows regional data with interactive drilldown to country-level details.</p>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre>&lt;div class="container-fluid"&gt;
+    &lt;!-- Breadcrumb Navigation --&gt;
+    &lt;nav aria-label="breadcrumb"&gt;
+        &lt;ol class="breadcrumb"&gt;
+            &lt;li class="breadcrumb-item"&gt;&lt;a href="#" onclick="goBack()"&gt;Global&lt;/a&gt;&lt;/li&gt;
+            &lt;li class="breadcrumb-item active"&gt;North America&lt;/li&gt;
+        &lt;/ol&gt;
+    &lt;/nav&gt;
+    
+    &lt;!-- Region Cards --&gt;
+    &lt;div class="row mb-4"&gt;
+        &lt;div class="col-md-3"&gt;
+            &lt;div class="card text-center p-3" onclick="drillToRegion('North America')"&gt;
+                &lt;h5&gt;North America&lt;/h5&gt;
+                &lt;h3&gt;$125,000&lt;/h3&gt;
+                &lt;small class="text-success"&gt;+15%&lt;/small&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    
+    &lt;!-- Chart with Drilldown --&gt;
+    &lt;div class="card p-4"&gt;
+        &lt;div class="d-flex justify-content-between align-items-center mb-4"&gt;
+            &lt;h5&gt;Revenue by Region&lt;/h5&gt;
+            &lt;button class="btn btn-outline-secondary" onclick="goBack()"&gt;← Back to Global&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div id="region-chart"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="tutorial-section">
+                <h4>🎯 Dashboard Best Practices</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>📱 Responsive Design</h6>
+                        <ul>
+                            <li>Use Bootstrap grid system</li>
+                            <li>Test on all screen sizes</li>
+                            <li>Use responsive chart options</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>🎨 Visual Hierarchy</h6>
+                        <ul>
+                            <li>Important metrics at top</li>
+                            <li>Clear section separation</li>
+                            <li>Consistent color scheme</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>⚡ Performance</h6>
+                        <ul>
+                            <li>Lazy load charts</li>
+                            <li>Debounce resize events</li>
+                            <li>Optimize data updates</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>♿ Accessibility</h6>
+                        <ul>
+                            <li>Use semantic HTML</li>
+                            <li>Provide keyboard navigation</li>
+                            <li>Include data tables</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-section">
+            <h5>🎮 Controls</h5>
+            <div class="btn-custom me-2" onclick="toggleTheme()">🌓 Toggle Theme</div>
+            <div class="btn-custom" onclick="exportCharts()">📊 Export Charts</div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        let charts = {};
+        let isDarkTheme = false;
+        let currentView = 'showcase';
+
+        function generateData(count, min, max) {
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push(Math.floor(Math.random() * (max - min + 1)) + min);
+            }
+            return data;
+        }
+
+        function initShowcaseCharts() {
+            charts.line = new ApexCharts(document.querySelector("#line-chart"), {
+                chart: { type: 'line', height: 300, toolbar: true },
+                series: [{ name: 'Revenue', data: generateData(12, 30, 80) }],
+                colors: ['#3498db'],
+                stroke: { curve: 'smooth' },
+                xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] }
+            });
+
+            charts.area = new ApexCharts(document.querySelector("#area-chart"), {
+                chart: { type: 'area', height: 300, toolbar: true },
+                series: [{ name: 'Sales', data: generateData(12, 40, 90) }],
+                colors: ['#e74c3c'],
+                stroke: { curve: 'smooth' },
+                fill: { type: 'gradient' }
+            });
+
+            charts.column = new ApexCharts(document.querySelector("#column-chart"), {
+                chart: { type: 'bar', height: 300, toolbar: true },
+                series: [{ name: 'Product A', data: generateData(8, 20, 70) }],
+                colors: ['#f39c12']
+            });
+
+            charts.bar = new ApexCharts(document.querySelector("#bar-chart"), {
+                chart: { type: 'bar', height: 300, toolbar: true },
+                series: [{ name: 'Score', data: generateData(6, 60, 100) }],
+                colors: ['#1abc9c'],
+                plotOptions: { bar: { horizontal: true } }
+            });
+
+            charts.pie = new ApexCharts(document.querySelector("#pie-chart"), {
+                chart: { type: 'pie', height: 300, toolbar: true },
+                series: generateData(5, 10, 30),
+                colors: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71', '#9b59b6'],
+                labels: ['Desktop', 'Mobile', 'Tablet', 'Smart TV', 'Other']
+            });
+
+            charts.donut = new ApexCharts(document.querySelector("#donut-chart"), {
+                chart: { type: 'donut', height: 300, toolbar: true },
+                series: generateData(4, 20, 35),
+                colors: ['#e67e22', '#3498db', '#2ecc71', '#e74c3c'],
+                labels: ['Direct', 'Social', 'Email', 'Organic']
+            });
+
+            charts.scatter = new ApexCharts(document.querySelector("#scatter-chart"), {
+                chart: { type: 'scatter', height: 300, toolbar: true },
+                series: [{ data: Array.from({length: 20}, () => [Math.random() * 100, Math.random() * 100]) }],
+                colors: ['#8e44ad']
+            });
+
+            charts.radar = new ApexCharts(document.querySelector("#radar-chart"), {
+                chart: { type: 'radar', height: 300, toolbar: true },
+                series: [
+                    { name: 'Product A', data: generateData(6, 40, 90) },
+                    { name: 'Product B', data: generateData(6, 30, 80) }
+                ],
+                colors: ['#3498db', '#e74c3c'],
+                xaxis: { categories: ['Speed', 'Reliability', 'Comfort', 'Safety', 'Efficiency', 'Design'] }
+            });
+
+            charts.candlestick = new ApexCharts(document.querySelector("#candlestick-chart"), {
+                chart: { type: 'candlestick', height: 300, toolbar: true },
+                series: [{
+                    data: Array.from({length: 20}, () => {
+                        const open = Math.random() * 100 + 50;
+                        const close = open + (Math.random() - 0.5) * 20;
+                        const high = Math.max(open, close) + Math.random() * 10;
+                        const low = Math.min(open, close) - Math.random() * 10;
+                        return { x: new Date().getTime() - Math.random() * 10000000000, y: [open, high, low, close] };
+                    })
+                }],
+                colors: ['#2ecc71', '#e74c3c']
+            });
+
+            charts.heatmap = new ApexCharts(document.querySelector("#heatmap-chart"), {
+                chart: { type: 'heatmap', height: 300, toolbar: true },
+                series: [
+                    { data: Array.from({length: 10}, (_, i) => ({ x: `Item ${i + 1}`, y: Math.random() * 100 })) },
+                    { data: Array.from({length: 10}, (_, i) => ({ x: `Item ${i + 1}`, y: Math.random() * 100 })) }
+                ],
+                colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0']
+            });
+
+            charts.mixed = new ApexCharts(document.querySelector("#mixed-chart"), {
+                chart: { height: 300, type: 'line', toolbar: true },
+                series: [
+                    { name: 'Revenue', type: 'column', data: generateData(12, 40, 80) },
+                    { name: 'Profit Margin', type: 'line', data: generateData(12, 20, 60) }
+                ],
+                colors: ['#3498db', '#2ecc71'],
+                stroke: { width: [0, 3] }
+            });
+
+            charts.realtime = new ApexCharts(document.querySelector("#realtime-chart"), {
+                chart: { type: 'line', height: 300, animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 1000 } }, toolbar: true },
+                series: [{ name: 'Live Data', data: Array.from({length: 20}, (_, i) => ({ x: new Date().getTime() - (19-i) * 3600000, y: Math.random() * 100 + 50 })) }],
+                colors: ['#e74c3c'],
+                stroke: { curve: 'smooth', width: 3 }
+            });
+
+            Object.values(charts).forEach(chart => chart.render());
+
+            setInterval(() => {
+                const newData = { x: new Date().getTime(), y: Math.random() * 100 + 50 };
+                charts.realtime.appendData([{ data: [newData] }]);
+            }, 2000);
+        }
+
+        function initTutorialCharts() {
+            new ApexCharts(document.querySelector("#line-demo"), {
+                chart: { type: 'line', height: 250, toolbar: false },
+                series: [{ name: 'Revenue', data: [30, 40, 35, 50] }],
+                colors: ['#3498db'],
+                stroke: { curve: 'smooth' },
+                xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr'] }
+            }).render();
+
+            new ApexCharts(document.querySelector("#bar-demo"), {
+                chart: { type: 'bar', height: 250, toolbar: false },
+                series: [{ name: 'Sales', data: [44, 55, 57] }],
+                colors: ['#e74c3c'],
+                xaxis: { categories: ['A', 'B', 'C'] }
+            }).render();
+
+            new ApexCharts(document.querySelector("#pie-demo"), {
+                chart: { type: 'pie', height: 250, toolbar: false },
+                series: [44, 55, 13],
+                labels: ['Desktop', 'Mobile', 'Tablet'],
+                colors: ['#3498db', '#e74c3c', '#f39c12']
+            }).render();
+        }
+
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(view + '-section').classList.add('active');
+            
+            if (view === 'showcase' && Object.keys(charts).length === 0) {
+                initShowcaseCharts();
+            } else if (view === 'tutorial') {
+                initTutorialCharts();
+            }
+            // Components and Dashboards sections don't need chart initialization
+        }
+
+        function filterCharts(category) {
+            const allCards = document.querySelectorAll('#showcase-section .chart-card');
+            allCards.forEach(card => {
+                if (card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                    card.classList.add('highlighted');
+                } else {
+                    card.classList.add('hidden');
+                    card.classList.remove('highlighted');
+                }
+            });
+        }
+
+        function showAllCharts() {
+            const allCards = document.querySelectorAll('#showcase-section .chart-card');
+            allCards.forEach(card => card.classList.remove('hidden', 'highlighted'));
+        }
+
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            const theme = isDarkTheme ? 'dark' : 'light';
+            Object.values(charts).forEach(chart => {
+                chart.updateOptions({
+                    theme: { mode: theme },
+                    chart: { background: isDarkTheme ? '#1a1a1a' : '#ffffff' }
+                });
+            });
+        }
+
+        function exportCharts() {
+            Object.entries(charts).forEach(([name, chart]) => {
+                chart.dataURI().then(({ imgURI }) => {
+                    const link = document.createElement('a');
+                    link.href = imgURI;
+                    link.download = `${name}-chart.png`;
+                    link.click();
+                });
+            });
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling;
+            const code = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Component demo functions
+        function updateMetric(metric) {
+            const values = {
+                revenue: '$' + (Math.floor(Math.random() * 50000) + 30000).toLocaleString(),
+                users: Math.floor(Math.random() * 2000) + 800,
+                conversion: (Math.random() * 2 + 2).toFixed(1) + '%',
+                growth: '+' + (Math.floor(Math.random() * 20) + 5) + '%'
+            };
+            
+            const elementId = 'demo-' + metric;
+            const element = document.getElementById(elementId);
+            if (element && values[metric]) {
+                element.textContent = values[metric];
+                element.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+
+        function showAlert(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-info position-fixed top-0 start-50 translate-middle-x';
+            alertDiv.style.cssText = 'z-index: 9999; min-width: 300px;';
+            alertDiv.textContent = message;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 2000);
+        }
+
+        function highlightRow(row) {
+            // Remove previous highlights
+            document.querySelectorAll('table tbody tr').forEach(tr => {
+                tr.style.backgroundColor = '';
+            });
+            
+            // Highlight selected row
+            row.style.backgroundColor = '#e3f2fd';
+            row.style.transition = 'background-color 0.3s ease';
+        }
+
+        // Initialize component demo chart
+        function initComponentChart() {
+            const options = {
+                chart: { type: 'line', height: 200, toolbar: false },
+                series: [{ name: 'Performance', data: [30, 40, 35, 50, 49] }],
+                colors: ['#3498db'],
+                stroke: { curve: 'smooth' },
+                xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] }
+            };
+            new ApexCharts(document.querySelector("#comp-demo-chart"), options).render();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initShowcaseCharts();
+            initComponentChart();
+        });
+    </script>
+</body>
+</html>

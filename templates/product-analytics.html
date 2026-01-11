@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% block title %}Product Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>📊 Product Analytics</h1>
+        <p>Comprehensive product performance analysis and insights</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Total Products</h6>
+                <h2 id="total-products">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Active Products</h6>
+                <h2 id="active-products">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Avg Performance</h6>
+                <h2 id="avg-performance">0%</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Top Performer</h6>
+                <h2 id="top-performer">-</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Charts Row -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Product Performance Overview</h5>
+                <div id="performance-chart"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Category Distribution</h5>
+                <div id="category-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Charts Row -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Product Status Breakdown</h5>
+                <div id="status-chart"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Performance Trends</h5>
+                <div id="trends-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Product Performance Details</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Units Sold</th>
+                                <th>Revenue</th>
+                                <th>Performance</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-table">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Insights -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">📈 Top Performers</h5>
+                <div id="top-performers-list"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">⚠️ Underperformers</h5>
+                <div id="underperformers-list"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">🆕 New Products</h5>
+                <div id="new-products-list"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Product analytics data
+const productAnalyticsData = {
+    products: [
+        { id: 'PRD001', name: 'Laptop Pro 15"', category: 'Electronics', price: 1299, unitsSold: 450, revenue: 584550, performance: 92, status: 'Active', isNew: false },
+        { id: 'PRD002', name: 'Wireless Mouse', category: 'Electronics', price: 29.99, unitsSold: 1200, revenue: 35988, performance: 78, status: 'Active', isNew: false },
+        { id: 'PRD003', name: 'Business Shirt Premium', category: 'Clothing', price: 89.99, unitsSold: 320, revenue: 28796.8, performance: 85, status: 'Active', isNew: false },
+        { id: 'PRD004', name: 'Smartphone X12', category: 'Electronics', price: 899, unitsSold: 280, revenue: 251720, performance: 88, status: 'Active', isNew: true },
+        { id: 'PRD005', name: 'Yoga Mat Professional', category: 'Sports', price: 49.99, unitsSold: 580, revenue: 28994.2, performance: 82, status: 'Active', isNew: false },
+        { id: 'PRD006', name: 'Office Chair Ergonomic', category: 'Furniture', price: 349, unitsSold: 150, revenue: 52350, performance: 90, status: 'Active', isNew: false },
+        { id: 'PRD007', name: 'Tablet Pro 11"', category: 'Electronics', price: 649, unitsSold: 220, revenue: 142780, performance: 75, status: 'Active', isNew: true },
+        { id: 'PRD008', name: 'Running Shoes Ultra', category: 'Sports', price: 129.99, unitsSold: 410, revenue: 53295.9, performance: 87, status: 'Active', isNew: false },
+        { id: 'PRD009', name: 'Coffee Maker Deluxe', category: 'Home', price: 199.99, unitsSold: 180, revenue: 35998.2, performance: 70, status: 'Active', isNew: false },
+        { id: 'PRD010', name: 'Backpack Travel Pro', category: 'Accessories', price: 79.99, unitsSold: 340, revenue: 27196.6, performance: 83, status: 'Active', isNew: true },
+        { id: 'PRD011', name: 'Gaming Headset', category: 'Electronics', price: 149.99, unitsSold: 290, revenue: 43497.1, performance: 65, status: 'Active', isNew: false },
+        { id: 'PRD012', name: 'Kitchen Knife Set', category: 'Home', price: 89.99, unitsSold: 260, revenue: 23397.4, performance: 72, status: 'Active', isNew: false }
+    ],
+    monthlyTrends: [
+        { month: 'Jan', performance: 78, sales: 2450 },
+        { month: 'Feb', performance: 82, sales: 2680 },
+        { month: 'Mar', performance: 85, sales: 2920 },
+        { month: 'Apr', performance: 83, sales: 2850 },
+        { month: 'May', performance: 88, sales: 3100 },
+        { month: 'Jun', performance: 91, sales: 3350 }
+    ]
+};
+
+let performanceChart, categoryChart, statusChart, trendsChart;
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    updateSummaryCards();
+    updateProductTable();
+    updateInsightsLists();
+});
+
+function initializeCharts() {
+    // Performance Chart
+    performanceChart = new ApexCharts(document.querySelector("#performance-chart"), {
+        series: [{
+            name: 'Performance Score',
+            data: []
+        }],
+        chart: {
+            type: 'bar',
+            height: 400,
+            toolbar: { show: false }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 8,
+                horizontal: false,
+                dataLabels: { position: 'top' }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            offsetY: -20,
+            style: { fontSize: '12px', colors: ["#304758"] }
+        },
+        xaxis: { categories: [] },
+        yaxis: {
+            title: { text: 'Performance Score' },
+            min: 0,
+            max: 100
+        },
+        tooltip: {
+            y: { formatter: function(val) { return val + '%'; } }
+        }
+    });
+
+    // Category Chart
+    categoryChart = new ApexCharts(document.querySelector("#category-chart"), {
+        series: [],
+        chart: { type: 'donut', height: 300 },
+        labels: [],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }]
+    });
+
+    // Status Chart
+    statusChart = new ApexCharts(document.querySelector("#status-chart"), {
+        series: [],
+        chart: { type: 'pie', height: 300 },
+        labels: ['Active', 'Inactive', 'Discontinued'],
+        colors: ['#00E396', '#FEB019', '#FF4560'],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }]
+    });
+
+    // Trends Chart
+    trendsChart = new ApexCharts(document.querySelector("#trends-chart"), {
+        series: [
+            { name: 'Performance', data: [] },
+            { name: 'Sales (hundreds)', data: [] }
+        ],
+        chart: { type: 'line', height: 300, toolbar: { show: false } },
+        stroke: { curve: 'smooth', width: 2 },
+        xaxis: { categories: [] },
+        yaxis: [
+            { title: { text: 'Performance %' }, min: 0, max: 100 },
+            { opposite: true, title: { text: 'Sales (hundreds)' } }
+        ],
+        colors: ['#008FFB', '#00E396']
+    });
+
+    // Render all charts
+    performanceChart.render();
+    categoryChart.render();
+    statusChart.render();
+    trendsChart.render();
+
+    // Update charts with data
+    updateCharts();
+}
+
+function updateCharts() {
+    // Performance Chart
+    const productNames = productAnalyticsData.products.map(p => p.name.length > 15 ? p.name.substring(0, 15) + '...' : p.name);
+    const performanceScores = productAnalyticsData.products.map(p => p.performance);
+    
+    performanceChart.updateOptions({
+        xaxis: { categories: productNames }
+    });
+    performanceChart.updateSeries([{
+        name: 'Performance Score',
+        data: performanceScores
+    }]);
+
+    // Category Chart
+    const categoryData = {};
+    productAnalyticsData.products.forEach(product => {
+        categoryData[product.category] = (categoryData[product.category] || 0) + 1;
+    });
+    
+    categoryChart.updateOptions({ labels: Object.keys(categoryData) });
+    categoryChart.updateSeries(Object.values(categoryData));
+
+    // Status Chart
+    const statusData = {
+        'Active': productAnalyticsData.products.filter(p => p.status === 'Active').length,
+        'Inactive': productAnalyticsData.products.filter(p => p.status === 'Inactive').length,
+        'Discontinued': productAnalyticsData.products.filter(p => p.status === 'Discontinued').length
+    };
+    
+    statusChart.updateSeries(Object.values(statusData));
+
+    // Trends Chart
+    const months = productAnalyticsData.monthlyTrends.map(t => t.month);
+    const performanceData = productAnalyticsData.monthlyTrends.map(t => t.performance);
+    const salesData = productAnalyticsData.monthlyTrends.map(t => t.sales / 100);
+    
+    trendsChart.updateOptions({ xaxis: { categories: months } });
+    trendsChart.updateSeries([
+        { name: 'Performance', data: performanceData },
+        { name: 'Sales (hundreds)', data: salesData }
+    ]);
+}
+
+function updateSummaryCards() {
+    const totalProducts = productAnalyticsData.products.length;
+    const activeProducts = productAnalyticsData.products.filter(p => p.status === 'Active').length;
+    const avgPerformance = Math.round(productAnalyticsData.products.reduce((sum, p) => sum + p.performance, 0) / totalProducts);
+    const topPerformer = productAnalyticsData.products.reduce((top, p) => p.performance > top.performance ? p : top);
+
+    document.getElementById('total-products').textContent = totalProducts;
+    document.getElementById('active-products').textContent = activeProducts;
+    document.getElementById('avg-performance').textContent = avgPerformance + '%';
+    document.getElementById('top-performer').textContent = topPerformer.name.length > 12 ? topPerformer.name.substring(0, 12) + '...' : topPerformer.name;
+}
+
+function updateProductTable() {
+    const tbody = document.getElementById('product-table');
+    tbody.innerHTML = '';
+
+    productAnalyticsData.products.forEach(product => {
+        const row = tbody.insertRow();
+        const performanceColor = product.performance >= 80 ? 'success' : product.performance >= 60 ? 'warning' : 'danger';
+        const statusColor = product.status === 'Active' ? 'success' : product.status === 'Inactive' ? 'warning' : 'danger';
+        
+        row.innerHTML = `
+            <td>${product.id}</td>
+            <td>${product.name}</td>
+            <td>${product.category}</td>
+            <td>$${product.price.toFixed(2)}</td>
+            <td>${product.unitsSold.toLocaleString()}</td>
+            <td>$${product.revenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <div class="progress me-2" style="width: 60px; height: 20px;">
+                        <div class="progress-bar bg-${performanceColor}" style="width: ${product.performance}%"></div>
+                    </div>
+                    <span>${product.performance}%</span>
+                </div>
+            </td>
+            <td><span class="badge bg-${statusColor}">${product.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="viewProductDetails('${product.id}')">View</button>
+            </td>
+        `;
+    });
+}
+
+function updateInsightsLists() {
+    // Top Performers
+    const topPerformers = productAnalyticsData.products
+        .filter(p => p.performance >= 85)
+        .sort((a, b) => b.performance - a.performance)
+        .slice(0, 3);
+
+    const topPerformersList = document.getElementById('top-performers-list');
+    topPerformersList.innerHTML = topPerformers.map(product => `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>${product.name.length > 20 ? product.name.substring(0, 20) + '...' : product.name}</span>
+            <span class="badge bg-success">${product.performance}%</span>
+        </div>
+    `).join('');
+
+    // Underperformers
+    const underperformers = productAnalyticsData.products
+        .filter(p => p.performance < 75)
+        .sort((a, b) => a.performance - b.performance)
+        .slice(0, 3);
+
+    const underperformersList = document.getElementById('underperformers-list');
+    underperformersList.innerHTML = underperformers.map(product => `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>${product.name.length > 20 ? product.name.substring(0, 20) + '...' : product.name}</span>
+            <span class="badge bg-warning">${product.performance}%</span>
+        </div>
+    `).join('');
+
+    // New Products
+    const newProducts = productAnalyticsData.products
+        .filter(p => p.isNew)
+        .sort((a, b) => b.performance - a.performance)
+        .slice(0, 3);
+
+    const newProductsList = document.getElementById('new-products-list');
+    newProductsList.innerHTML = newProducts.map(product => `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>${product.name.length > 20 ? product.name.substring(0, 20) + '...' : product.name}</span>
+            <span class="badge bg-info">${product.performance}%</span>
+        </div>
+    `).join('');
+}
+
+function viewProductDetails(productId) {
+    const product = productAnalyticsData.products.find(p => p.id === productId);
+    if (product) {
+        alert(`Product Details:\n\nName: ${product.name}\nCategory: ${product.category}\nPrice: $${product.price}\nUnits Sold: ${product.unitsSold}\nRevenue: $${product.revenue.toLocaleString()}\nPerformance: ${product.performance}%\nStatus: ${product.status}`);
+    }
+}
+</script>
+{% endblock %}

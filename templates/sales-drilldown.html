@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>💰 Sales Analytics</h1>
+        <p>Multi-level sales dashboard with category and subcategory drilldown</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Total Revenue</h6>
+                <h2 id="total-revenue">$0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Units Sold</h6>
+                <h2 id="units-sold">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Avg Order Value</h6>
+                <h2 id="avg-order">$0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Top Category</h6>
+                <h2 id="top-category">-</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chart Area -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0" id="chart-title">Sales by Category</h5>
+                    <button class="back-btn" id="back-btn" style="display: none;" onclick="goBack()">
+                        ← Back
+                    </button>
+                </div>
+                <div id="main-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Detailed Breakdown</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Revenue</th>
+                                <th>Units Sold</th>
+                                <th>Avg Price</th>
+                                <th>Growth</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-table">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+// Sales data structure
+const salesData = {
+    categories: [
+        {
+            name: 'Electronics',
+            revenue: 125000,
+            units: 450,
+            subcategories: [
+                { name: 'Laptops', revenue: 75000, units: 150, avg_price: 500 },
+                { name: 'Smartphones', revenue: 35000, units: 250, avg_price: 140 },
+                { name: 'Tablets', revenue: 15000, units: 50, avg_price: 300 }
+            ]
+        },
+        {
+            name: 'Clothing',
+            revenue: 85000,
+            units: 1200,
+            subcategories: [
+                { name: 'Men\'s Wear', revenue: 45000, units: 600, avg_price: 75 },
+                { name: 'Women\'s Wear', revenue: 30000, units: 450, avg_price: 67 },
+                { name: 'Kids Wear', revenue: 10000, units: 150, avg_price: 67 }
+            ]
+        },
+        {
+            name: 'Home & Garden',
+            revenue: 65000,
+            units: 320,
+            subcategories: [
+                { name: 'Furniture', revenue: 35000, units: 80, avg_price: 438 },
+                { name: 'Decor', revenue: 20000, units: 180, avg_price: 111 },
+                { name: 'Garden', revenue: 10000, units: 60, avg_price: 167 }
+            ]
+        },
+        {
+            name: 'Sports',
+            revenue: 45000,
+            units: 280,
+            subcategories: [
+                { name: 'Fitness', revenue: 25000, units: 150, avg_price: 167 },
+                { name: 'Outdoor', revenue: 15000, units: 100, avg_price: 150 },
+                { name: 'Team Sports', revenue: 5000, units: 30, avg_price: 167 }
+            ]
+        }
+    ]
+};
+
+let currentLevel = 'category';
+let currentCategory = null;
+let mainChart = null;
+
+// Initialize dashboard
+function initDashboard() {
+    updateSummaryCards();
+    renderCategoryChart();
+    updateDetailTable();
+}
+
+// Update summary cards
+function updateSummaryCards() {
+    const totalRevenue = salesData.categories.reduce((sum, cat) => sum + cat.revenue, 0);
+    const totalUnits = salesData.categories.reduce((sum, cat) => sum + cat.units, 0);
+    const avgOrder = totalRevenue / totalUnits;
+    const topCategory = salesData.categories.reduce((max, cat) => 
+        cat.revenue > max.revenue ? cat : max, salesData.categories[0]);
+
+    document.getElementById('total-revenue').textContent = `$${totalRevenue.toLocaleString()}`;
+    document.getElementById('units-sold').textContent = totalUnits.toLocaleString();
+    document.getElementById('avg-order').textContent = `$${avgOrder.toFixed(2)}`;
+    document.getElementById('top-category').textContent = topCategory.name;
+}
+
+// Render category chart
+function renderCategoryChart() {
+    const chartData = salesData.categories.map(cat => ({
+        x: cat.name,
+        y: cat.revenue
+    }));
+
+    const options = {
+        series: [{
+            name: 'Revenue',
+            data: chartData
+        }],
+        chart: {
+            type: 'bar',
+            height: 400,
+            toolbar: {
+                show: true
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 8,
+                horizontal: false,
+                dataLabels: {
+                    position: 'top',
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function (val) {
+                return '$' + val.toLocaleString();
+            }
+        },
+        xaxis: {
+            categories: salesData.categories.map(cat => cat.name)
+        },
+        yaxis: {
+            labels: {
+                formatter: function (val) {
+                    return '$' + val.toLocaleString();
+                }
+            }
+        },
+        colors: ['#3498db', '#2ecc71', '#f39c12', '#e74c3c'],
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return '$' + val.toLocaleString();
+                }
+            }
+        }
+    };
+
+    if (mainChart) {
+        mainChart.destroy();
+    }
+    
+    mainChart = new ApexCharts(document.querySelector("#main-chart"), options);
+    mainChart.render();
+
+    // Add click handler for drilldown
+    mainChart.addEventListener('dataPointSelection', function(event, chartContext, config) {
+        const categoryIndex = config.dataPointIndex;
+        drilldownToSubcategory(categoryIndex);
+    });
+}
+
+// Drill down to subcategory
+function drilldownToSubcategory(categoryIndex) {
+    currentCategory = salesData.categories[categoryIndex];
+    currentLevel = 'subcategory';
+    
+    document.getElementById('chart-title').textContent = `Sales by Subcategory - ${currentCategory.name}`;
+    document.getElementById('back-btn').style.display = 'block';
+    
+    const chartData = currentCategory.subcategories.map(sub => ({
+        x: sub.name,
+        y: sub.revenue
+    }));
+
+    const options = {
+        series: [{
+            name: 'Revenue',
+            data: chartData
+        }],
+        chart: {
+            type: 'bar',
+            height: 400,
+            toolbar: {
+                show: true
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 8,
+                horizontal: false,
+                dataLabels: {
+                    position: 'top',
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function (val) {
+                return '$' + val.toLocaleString();
+            }
+        },
+        xaxis: {
+            categories: currentCategory.subcategories.map(sub => sub.name)
+        },
+        yaxis: {
+            labels: {
+                formatter: function (val) {
+                    return '$' + val.toLocaleString();
+                }
+            }
+        },
+        colors: ['#9b59b6', '#8e44ad', '#663399'],
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return '$' + val.toLocaleString();
+                }
+            }
+        }
+    };
+
+    if (mainChart) {
+        mainChart.destroy();
+    }
+    
+    mainChart = new ApexCharts(document.querySelector("#main-chart"), options);
+    mainChart.render();
+    
+    updateDetailTable();
+}
+
+// Go back to category level
+function goBack() {
+    currentLevel = 'category';
+    currentCategory = null;
+    
+    document.getElementById('chart-title').textContent = 'Sales by Category';
+    document.getElementById('back-btn').style.display = 'none';
+    
+    renderCategoryChart();
+    updateDetailTable();
+}
+
+// Update detail table
+function updateDetailTable() {
+    const tableBody = document.getElementById('detail-table');
+    tableBody.innerHTML = '';
+    
+    let data = currentLevel === 'category' ? salesData.categories : currentCategory.subcategories;
+    
+    data.forEach(item => {
+        const row = document.createElement('tr');
+        const growth = Math.random() * 40 - 10; // Random growth between -10% and 30%
+        const growthClass = growth > 0 ? 'text-success' : 'text-danger';
+        const growthSymbol = growth > 0 ? '↑' : '↓';
+        
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>$${item.revenue.toLocaleString()}</td>
+            <td>${item.units.toLocaleString()}</td>
+            <td>$${item.avg_price ? item.avg_price.toFixed(2) : (item.revenue / item.units).toFixed(2)}</td>
+            <td class="${growthClass}">${growthSymbol} ${Math.abs(growth).toFixed(1)}%</td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.back-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #2980b9;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.text-success {
+    color: #27ae60 !important;
+}
+
+.text-danger {
+    color: #e74c3c !important;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1rem;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}

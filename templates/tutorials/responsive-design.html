@@ -1,0 +1,476 @@
+{% extends "base.html" %}
+
+{% block title %}Responsive Design Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">📱 Responsive Design Tutorial</h1>
+        <p class="tutorial-subtitle">Master responsive web design with Bootstrap 5's mobile-first approach</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Mobile-first design principles</li>
+                    <li>Breakpoint system</li>
+                    <li>Responsive utilities</li>
+                    <li>Flexible layouts</li>
+                    <li>Responsive best practices</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>CSS fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>Grid system understanding</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                📱 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Responsive Breakpoints Demo</h3>
+                
+                <div class="d-none d-xs-block d-sm-none p-3 bg-primary text-white mb-2">
+                    Extra small (xs) - Visible only on very small screens
+                </div>
+                <div class="d-none d-sm-block d-md-none p-3 bg-success text-white mb-2">
+                    Small (sm) - Visible on small screens and up
+                </div>
+                <div class="d-none d-md-block d-lg-none p-3 bg-info text-white mb-2">
+                    Medium (md) - Visible on medium screens and up
+                </div>
+                <div class="d-none d-lg-block d-xl-none p-3 bg-warning text-white mb-2">
+                    Large (lg) - Visible on large screens and up
+                </div>
+                <div class="d-none d-xl-block d-xxl-none p-3 bg-danger text-white mb-2">
+                    Extra large (xl) - Visible on extra large screens and up
+                </div>
+                <div class="d-none d-xxl-block p-3 bg-dark text-white mb-2">
+                    Extra extra large (xxl) - Visible only on very large screens
+                </div>
+
+                <h3 class="mt-5">Responsive Grid Examples</h3>
+                
+                <div class="container mb-4">
+                    <h5>Responsive Column Layout</h5>
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3 bg-light border">
+                            <strong>Responsive Column</strong><br>
+                            Full on mobile, half on tablet, third on desktop, quarter on large
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3 bg-light border">
+                            <strong>Responsive Column</strong><br>
+                            Full on mobile, half on tablet, third on desktop, quarter on large
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3 bg-light border">
+                            <strong>Responsive Column</strong><br>
+                            Full on mobile, half on tablet, third on desktop, quarter on large
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-12 col-lg-3 p-3 bg-light border">
+                            <strong>Responsive Column</strong><br>
+                            Full on mobile, half on tablet, full on medium, quarter on large
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container mb-4">
+                    <h5>Card Grid Layout</h5>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Card 1</h5>
+                                    <p class="card-text">1 column on mobile, 2 on small, 3 on medium, 4 on large</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Card 2</h5>
+                                    <p class="card-text">Responsive card grid layout</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Card 3</h5>
+                                    <p class="card-text">Automatically adjusts columns</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Card 4</h5>
+                                    <p class="card-text">Equal height cards</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Card 5</h5>
+                                    <p class="card-text">Flexible grid system</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Card 6</h5>
+                                    <p class="card-text">Mobile-first approach</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="mt-5">Responsive Utilities</h3>
+                
+                <div class="container mb-4">
+                    <h5>Responsive Text Alignment</h5>
+                    <div class="text-center text-sm-start text-md-center text-lg-end text-xl-center p-3 bg-light border mb-2">
+                        <strong>Responsive Text Alignment:</strong><br>
+                        Center on mobile, left on small, center on medium, right on large, center on extra large
+                    </div>
+                    <div class="d-none d-lg-block p-3 bg-info text-white">
+                        This text only appears on large screens and up
+                    </div>
+                    <div class="d-block d-lg-none p-3 bg-warning text-dark">
+                        This text appears on mobile and tablet only
+                    </div>
+                </div>
+
+                <div class="container mb-4">
+                    <h5>Responsive Flexbox</h5>
+                    <div class="d-flex flex-column flex-sm-row flex-md-column flex-lg-row align-items-center justify-content-between p-3 bg-light border">
+                        <div class="p-2 bg-primary text-white m-1">Item 1</div>
+                        <div class="p-2 bg-success text-white m-1">Item 2</div>
+                        <div class="p-2 bg-info text-white m-1">Item 3</div>
+                    </div>
+                    <p class="mt-2 text-muted">
+                        <strong>Layout:</strong> Column on mobile, row on small, column on medium, row on large
+                    </p>
+                </div>
+
+                <h3 class="mt-5">Responsive Images and Media</h3>
+                
+                <div class="container mb-4">
+                    <h5>Responsive Images</h5>
+                    <img src="https://via.placeholder.com/1200x400" class="img-fluid rounded" alt="Responsive image">
+                    <p class="mt-2">The image above scales with the container width using .img-fluid</p>
+                </div>
+
+                <div class="container mb-4">
+                    <h5>Responsive Media Objects</h5>
+                    <div class="media">
+                        <img src="https://via.placeholder.com/64x64" class="align-self-start mr-3" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0">Media heading</h5>
+                            <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="mt-5">Responsive Navigation</h3>
+                
+                <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">Responsive Nav</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#responsiveNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="responsiveNav">
+                            <ul class="navbar-nav me-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Services</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <h3 class="mt-5">Responsive Tables</h3>
+                
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Laptop Pro</td>
+                                <td>Electronics</td>
+                                <td>$1,299.00</td>
+                                <td>45</td>
+                                <td><span class="badge bg-success">In Stock</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Wireless Mouse</td>
+                                <td>Accessories</td>
+                                <td>$29.99</td>
+                                <td>120</td>
+                                <td><span class="badge bg-success">In Stock</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>Responsive Breakpoints</h3>
+                <pre><code>&lt;!-- Bootstrap 5 Breakpoints --&gt;
+/* Extra small devices (phones, 576px and down) */
+@media (max-width: 575.98px) { ... }
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) { ... }
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { ... }
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { ... }
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { ... }
+
+/* Extra extra large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) { ... }</code></pre>
+
+                <h3>Responsive Grid Classes</h3>
+                <pre><code>&lt;!-- Responsive columns --&gt;
+&lt;div class="row"&gt;
+  &lt;div class="col-12 col-sm-6 col-md-4 col-lg-3"&gt;
+    Responsive column
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Auto-layout columns --&gt;
+&lt;div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4"&gt;
+  &lt;div class="col"&gt;Card&lt;/div&gt;
+  &lt;div class="col"&gt;Card&lt;/div&gt;
+  &lt;div class="col"&gt;Card&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+                <h3>Responsive Display Utilities</h3>
+                <pre><code>&lt;!-- Hide/show elements at breakpoints --&gt;
+&lt;div class="d-none d-sm-block"&gt;Hidden on mobile, visible on small and up&lt;/div&gt;
+&lt;div class="d-block d-sm-none"&gt;Visible only on mobile&lt;/div&gt;
+&lt;div class="d-none d-md-block d-lg-none"&gt;Visible only on medium&lt;/div&gt;
+
+&lt;!-- Responsive flexbox --&gt;
+&lt;div class="d-flex flex-column flex-md-row"&gt;
+  &lt;div&gt;Column on mobile, row on desktop&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+                <h3>Responsive Images</h3>
+                <pre><code>&lt;!-- Responsive images --&gt;
+&lt;img src="image.jpg" class="img-fluid" alt="Responsive image"&gt;
+
+&lt;!-- Responsive images with figure --&gt;
+&lt;figure class="figure"&gt;
+  &lt;img src="image.jpg" class="figure-img img-fluid rounded" alt="Responsive image"&gt;
+  &lt;figcaption class="figure-caption text-center"&gt;A caption for the image&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+
+                <h3>Responsive Navigation</h3>
+                <pre><code>&lt;!-- Responsive navbar --&gt;
+&lt;nav class="navbar navbar-expand-lg navbar-light bg-light"&gt;
+  &lt;div class="container-fluid"&gt;
+    &lt;a class="navbar-brand" href="#"&gt;Brand&lt;/a&gt;
+    &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"&gt;
+      &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div class="collapse navbar-collapse" id="navbarNav"&gt;
+      &lt;ul class="navbar-nav me-auto"&gt;
+        &lt;li class="nav-item"&gt;
+          &lt;a class="nav-link" href="#"&gt;Home&lt;/a&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Responsive Design Principles</h3>
+                <p>Responsive design ensures your website looks and functions well across all devices and screen sizes.</p>
+                
+                <h4>Mobile-First Approach</h4>
+                <ul>
+                    <li>Design for mobile devices first</li>
+                    <li>Progressively enhance for larger screens</li>
+                    <li>Focus on core functionality</li>
+                    <li>Prioritize performance on mobile</li>
+                    <li>Touch-friendly interface design</li>
+                </ul>
+
+                <h4>Bootstrap Breakpoints</h4>
+                <ul>
+                    <li><strong>xs</strong>: 0px and up (no prefix needed)</li>
+                    <li><strong>sm</strong>: 576px and up (small phones to tablets)</li>
+                    <li><strong>md</strong>: 768px and up (tablets to small desktops)</li>
+                    <li><strong>lg</strong>: 992px and up (desktops)</li>
+                    <li><strong>xl</strong>: 1200px and up (large desktops)</li>
+                    <li><strong>xxl</strong>: 1400px and up (extra large desktops)</li>
+                </ul>
+
+                <h4>Responsive Grid System</h4>
+                <ul>
+                    <li><strong>12-column system</strong>: Flexible layout foundation</li>
+                    <li><strong>Breakpoint-specific classes</strong>: col-{breakpoint}-{number}</li>
+                    <li><strong>Auto-layout</strong>: Equal-width columns without numbers</li>
+                    <li><strong>Row columns</strong>: row-cols-{breakpoint}-{number}</li>
+                    <li><strong>Ordering and offsetting</strong>: Control layout flow</li>
+                </ul>
+
+                <h3>Responsive Utilities</h3>
+                
+                <h4>Display Utilities</h4>
+                <ul>
+                    <li><strong>d-none</strong>: Hide element</li>
+                    <li><strong>d-block</strong>: Show as block</li>
+                    <li><strong>d-flex</strong>: Show as flex</li>
+                    <li><strong>Responsive</strong>: d-{breakpoint}-{value}</li>
+                    <li><strong>Printing</strong>: d-print-{value}</li>
+                </ul>
+
+                <h4>Flexbox Utilities</h4>
+                <ul>
+                    <li><strong>Direction</strong>: flex-direction responsive classes</li>
+                    <li><strong>Justify content</strong>: Horizontal alignment</li>
+                    <li><strong>Align items</strong>: Vertical alignment</li>
+                    <li><strong>Wrap</strong>: flex-wrap responsive behavior</li>
+                </ul>
+
+                <h4>Text Utilities</h4>
+                <ul>
+                    <li><strong>Alignment</strong>: text-{breakpoint}-{alignment}</li>
+                    <li><strong>Transform</strong>: text-{breakpoint}-{transform}</li>
+                    <li><strong>Weight and italics</strong>: Responsive typography</li>
+                    <li><strong>Visibility</strong>: Responsive text visibility</li>
+                </ul>
+
+                <h3>Responsive Media</h3>
+                
+                <h4>Images</h4>
+                <ul>
+                    <li><strong>.img-fluid</strong>: Max-width: 100%, height: auto</li>
+                    <li><strong>.img-thumbnail</strong>: Responsive with padding and border</li>
+                    <li><strong>Figure elements</strong>: Semantic image containers</li>
+                    <li><strong>Responsive images</strong>: srcset and sizes attributes</li>
+                </ul>
+
+                <h4>Tables</h4>
+                <ul>
+                    <li><strong>.table-responsive</strong>: Horizontal scrolling on small screens</li>
+                    <li><strong>Breakpoint-specific</strong>: .table-responsive-{breakpoint}</li>
+                    <li><strong>Stacked tables</strong>: Custom responsive table layouts</li>
+                </ul>
+
+                <h3>Responsive Navigation</h3>
+                <ul>
+                    <li><strong>Collapsible navbars</strong>: Mobile hamburger menu</li>
+                    <li><strong>Dropdown menus</strong>: Space-saving navigation</li>
+                    <li><strong>Tabs and pills</strong>: Responsive tab navigation</li>
+                    <li><strong>Breadcrumbs</strong>: Hierarchical navigation</li>
+                </ul>
+
+                <h3>Best Practices</h3>
+                <ul>
+                    <li>Start with mobile design first</li>
+                    <li>Use relative units (%, em, rem, vh, vw)</li>
+                    <li>Optimize images for different screen sizes</li>
+                    <li>Test on actual devices, not just emulators</li>
+                    <li>Consider touch interactions on mobile</li>
+                    <li>Prioritize content hierarchy</li>
+                    <li>Ensure accessibility across all screen sizes</li>
+                </ul>
+
+                <h3>Performance Considerations</h3>
+                <ul>
+                    <li>Optimize images for mobile devices</li>
+                    <li>Minimize HTTP requests</li>
+                    <li>Use responsive images with srcset</li>
+                    <li>Load critical CSS first</li>
+                    <li>Consider lazy loading for images</li>
+                    <li>Test performance on slow connections</li>
+                </ul>
+
+                <h3>Testing Responsive Design</h3>
+                <ul>
+                    <li>Browser developer tools device emulation</li>
+                    <li>Real device testing</li>
+                    <li>Viewport testing at all breakpoints</li>
+                    <li>Touch interaction testing</li>
+                    <li>Performance testing on mobile</li>
+                    <li>Cross-browser compatibility testing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

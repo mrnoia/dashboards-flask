@@ -1,0 +1,435 @@
+{% extends "base.html" %}
+
+{% block title %}Tables & Data Display Tutorial{% endblock %}
+
+{% block content %}
+<div class="tutorial-container">
+    <!-- Tutorial Header -->
+    <div class="tutorial-header">
+        <h1 class="tutorial-title">📊 Tables & Data Display Tutorial</h1>
+        <p class="tutorial-subtitle">Master Bootstrap 5 tables and data visualization components</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>What You'll Learn:</h5>
+                <ul class="feature-list">
+                    <li>Basic table styling</li>
+                    <li>Responsive table design</li>
+                    <li>Table variations and options</li>
+                    <li>Data pagination and sorting</li>
+                    <li>Advanced table features</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Prerequisites:</h5>
+                <ul class="feature-list">
+                    <li>Basic HTML knowledge</li>
+                    <li>JavaScript fundamentals</li>
+                    <li>Bootstrap 5 basics</li>
+                    <li>CSS styling understanding</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Tabs -->
+    <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                📊 Preview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                💻 Code
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explanation-tab" data-bs-toggle="tab" data-bs-target="#explanation" type="button" role="tab">
+                📖 Explanation
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content tutorial-content" id="tutorialTabContent">
+        <!-- Preview Tab -->
+        <div class="tab-pane fade show active" id="preview" role="tabpanel">
+            <div class="preview-section">
+                <h3>Basic Table</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>John</td>
+                                <td>Doe</td>
+                                <td>john.doe@example.com</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jane</td>
+                                <td>Smith</td>
+                                <td>jane.smith@example.com</td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Bob</td>
+                                <td>Johnson</td>
+                                <td>bob.johnson@example.com</td>
+                                <td><span class="badge bg-danger">Inactive</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="mt-5">Dark Table</h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Stock</th>
+                                <th scope="col">Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Laptop Pro</td>
+                                <td>Electronics</td>
+                                <td>$1,299.00</td>
+                                <td>45</td>
+                                <td>
+                                    <div class="text-warning">
+                                        ★★★★☆
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Wireless Mouse</td>
+                                <td>Accessories</td>
+                                <td>$29.99</td>
+                                <td>120</td>
+                                <td>
+                                    <div class="text-warning">
+                                        ★★★★★
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>USB-C Hub</td>
+                                <td>Accessories</td>
+                                <td>$49.99</td>
+                                <td>78</td>
+                                <td>
+                                    <div class="text-warning">
+                                        ★★★★☆
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="mt-5">Bordered Table with Contextual Rows</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">Customer</th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-success">
+                                <td>#ORD-001</td>
+                                <td>Alice Brown</td>
+                                <td>Premium Package</td>
+                                <td>$299.00</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td>#ORD-002</td>
+                                <td>Charlie Davis</td>
+                                <td>Standard Package</td>
+                                <td>$99.00</td>
+                                <td>Processing</td>
+                            </tr>
+                            <tr class="table-danger">
+                                <td>#ORD-003</td>
+                                <td>David Wilson</td>
+                                <td>Basic Package</td>
+                                <td>$49.00</td>
+                                <td>Cancelled</td>
+                            </tr>
+                            <tr class="table-info">
+                                <td>#ORD-004</td>
+                                <td>Eva Martinez</td>
+                                <td>Enterprise Package</td>
+                                <td>$599.00</td>
+                                <td>Pending</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="mt-5">Data Display Components</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">List Group</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Total Revenue
+                                        <span class="badge bg-primary rounded-pill">$125,430</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Active Users
+                                        <span class="badge bg-success rounded-pill">2,847</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Conversion Rate
+                                        <span class="badge bg-info rounded-pill">3.2%</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Avg. Order Value
+                                        <span class="badge bg-warning rounded-pill">$44.05</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Description Lists</h5>
+                            </div>
+                            <div class="card-body">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Product Name:</dt>
+                                    <dd class="col-sm-8">Dashboard Analytics Pro</dd>
+                                    
+                                    <dt class="col-sm-4">Version:</dt>
+                                    <dd class="col-sm-8">v2.4.1</dd>
+                                    
+                                    <dt class="col-sm-4">License:</dt>
+                                    <dd class="col-sm-8">Enterprise</dd>
+                                    
+                                    <dt class="col-sm-4">Last Updated:</dt>
+                                    <dd class="col-sm-8">December 15, 2023</dd>
+                                    
+                                    <dt class="col-sm-4">Status:</dt>
+                                    <dd class="col-sm-8">
+                                        <span class="badge bg-success">Active</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <div class="code-section">
+                <h3>Basic Table Structure</h3>
+                <pre><code>&lt;!-- Basic Table --&gt;
+&lt;table class="table"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Header 1&lt;/th&gt;
+      &lt;th scope="col"&gt;Header 2&lt;/th&gt;
+      &lt;th scope="col"&gt;Header 3&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Data 1&lt;/td&gt;
+      &lt;td&gt;Data 2&lt;/td&gt;
+      &lt;td&gt;Data 3&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;!-- Responsive Table --&gt;
+&lt;div class="table-responsive"&gt;
+  &lt;table class="table table-striped table-hover"&gt;
+    &lt;thead class="table-dark"&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;#&lt;/th&gt;
+        &lt;th scope="col"&gt;Name&lt;/th&gt;
+        &lt;th scope="col"&gt;Email&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th scope="row"&gt;1&lt;/th&gt;
+        &lt;td&gt;John Doe&lt;/td&gt;
+        &lt;td&gt;john@example.com&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+
+                <h3>Table Variations</h3>
+                <pre><code>&lt;!-- Striped Table --&gt;
+&lt;table class="table table-striped"&gt;
+
+&lt;!-- Bordered Table --&gt;
+&lt;table class="table table-bordered"&gt;
+
+&lt;!-- Borderless Table --&gt;
+&lt;table class="table table-borderless"&gt;
+
+&lt;!-- Dark Table --&gt;
+&lt;table class="table table-dark"&gt;
+
+&lt;!-- Table with Hover --&gt;
+&lt;table class="table table-hover"&gt;
+
+&lt;!-- Small Table --&gt;
+&lt;table class="table table-sm"&gt;</code></pre>
+
+                <h3>Contextual Table Classes</h3>
+                <pre><code>&lt;!-- Table Header Colors --&gt;
+&lt;thead class="table-dark"&gt;&lt;/thead&gt;
+&lt;thead class="table-light"&gt;&lt;/thead&gt;
+
+&lt;!-- Row Colors --&gt;
+&lt;tr class="table-primary"&gt;&lt;/tr&gt;
+&lt;tr class="table-success"&gt;&lt;/tr&gt;
+&lt;tr class="table-danger"&gt;&lt;/tr&gt;
+&lt;tr class="table-warning"&gt;&lt;/tr&gt;
+&lt;tr class="table-info"&gt;&lt;/tr&gt;
+&lt;tr class="table-light"&gt;&lt;/tr&gt;
+&lt;tr class="table-dark"&gt;&lt;/tr&gt;</code></pre>
+
+                <h3>List Group for Data Display</h3>
+                <pre><code>&lt;ul class="list-group"&gt;
+  &lt;li class="list-group-item"&gt;Simple item&lt;/li&gt;
+  &lt;li class="list-group-item active"&gt;Active item&lt;/li&gt;
+  &lt;li class="list-group-item disabled"&gt;Disabled item&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ul class="list-group list-group-flush"&gt;
+  &lt;li class="list-group-item d-flex justify-content-between align-items-center"&gt;
+    Item Name
+    &lt;span class="badge bg-primary rounded-pill"&gt;Value&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            </div>
+        </div>
+
+        <!-- Explanation Tab -->
+        <div class="tab-pane fade" id="explanation" role="tabpanel">
+            <div class="explanation-section">
+                <h3>Bootstrap Tables</h3>
+                <p>Bootstrap tables provide a flexible and responsive way to display tabular data with minimal markup.</p>
+                
+                <h4>Table Structure</h4>
+                <ul>
+                    <li><strong>.table</strong>: Base class for all tables</li>
+                    <li><strong>.table-striped</strong>: Adds zebra-striping to rows</li>
+                    <li><strong>.table-bordered</strong>: Adds borders on all sides</li>
+                    <li><strong>.table-borderless</strong>: Removes all borders</li>
+                    <li><strong>.table-hover</strong>: Enables hover state on rows</li>
+                    <li><strong>.table-sm</strong>: Makes table more compact</li>
+                </ul>
+
+                <h4>Responsive Tables</h4>
+                <ul>
+                    <li>Wrap tables in <strong>.table-responsive</strong> for horizontal scrolling</li>
+                    <li>Use <strong>.table-responsive-sm/md/lg/xl</strong> for breakpoint-specific responsiveness</li>
+                    <li>Essential for mobile devices and small screens</li>
+                </ul>
+
+                <h4>Table Styling</h4>
+                <ul>
+                    <li><strong>.table-dark</strong>: Dark theme for table</li>
+                    <li><strong>.table-light</strong>: Light theme for header</li>
+                    <li><strong>Contextual classes</strong>: Color rows and cells (success, danger, warning, info, etc.)</li>
+                    <li><strong>.thead-dark/light</strong>: Style table headers</li>
+                </ul>
+
+                <h3>Data Display Components</h3>
+                
+                <h4>List Groups</h4>
+                <ul>
+                    <li>Flexible component for displaying lists of content</li>
+                    <li>Supports badges, actions, and custom content</li>
+                    <li>Can be used as navigation elements</li>
+                    <li><strong>.list-group-flush</strong>: Removes outer borders</li>
+                </ul>
+
+                <h4>Description Lists</h4>
+                <ul>
+                    <li>Semantic way to display key-value pairs</li>
+                    <li>Use <strong>dl</strong>, <strong>dt</strong>, and <strong>dd</strong> elements</li>
+                    <li>Grid system integration with <strong>.row</strong> classes</li>
+                    <li>Ideal for metadata and specifications</li>
+                </ul>
+
+                <h4>Badges and Labels</h4>
+                <ul>
+                    <li><strong>.badge</strong>: Small indicators and labels</li>
+                    <li>Contextual colors for status indication</li>
+                    <li><strong>.rounded-pill</strong>: Pill-shaped badges</li>
+                    <li>Perfect for status indicators and counts</li>
+                </ul>
+
+                <h3>Best Practices</h3>
+                <ul>
+                    <li>Always use <strong>.table-responsive</strong> for mobile compatibility</li>
+                    <li>Use semantic HTML5 elements (thead, tbody, th, td)</li>
+                    <li>Add proper scope attributes to table headers</li>
+                    <li>Use contextual colors to convey meaning, not just decoration</li>
+                    <li>Consider pagination for large datasets</li>
+                    <li>Test tables on various screen sizes</li>
+                </ul>
+
+                <h3>Advanced Features</h3>
+                <ul>
+                    <li>Combine with JavaScript for sorting and filtering</li>
+                    <li>Use with DataTables plugin for advanced functionality</li>
+                    <li>Implement pagination for large datasets</li>
+                    <li>Add search functionality for better UX</li>
+                    <li>Consider server-side processing for very large tables</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
